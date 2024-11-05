@@ -1,0 +1,65 @@
+*,
+*:before,
+*:after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  --loader-size: 200px;
+  --children: 5;
+  --background-color: #FFFFFF;
+  --color: #e71618;
+  --speed: 1.5s;
+  background: #FFFFFF;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.page-loader {
+  width: var(--loader-size);
+  height: var(--loader-size);
+  background: var(--color);
+  background-image: linear-gradient(
+    var(--color),
+    var(--background-color),
+    var(--color)
+  );
+  background-size: 50%;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  position: relative;
+  animation: load_rotate var(--speed) infinite forwards;
+}
+.page-loader::after {
+  content: "";
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background: var(--background-color);
+  border-radius: inherit;
+}
+@keyframes load_rotate {
+  from {
+    transform: rotateZ(-720deg);
+  }
+  to {
+    transform: rotateZ(0);
+  }
+}
+
+.neon-loader {
+  filter: drop-shadow(0 0 5px var(--background-color))
+    drop-shadow(0 0 10px var(--color));
+}
+.neon-loader::after {
+  box-shadow: inset 0 0 10px var(--background-color),
+    inset 0 0 20px var(--color);
+}
+
