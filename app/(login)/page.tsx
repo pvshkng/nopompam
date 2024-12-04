@@ -1,7 +1,6 @@
 import LoginComponent from "@/components/Login/LoginComponent";
 import { cn } from "@/lib/utils";
 import GradientBackground from "@/components/_common/GradientBackground/GradientBackground";
-import { signIn } from "@/auth";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 

@@ -1,13 +1,8 @@
-"use server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { getEntraIdToken } from "@/lib/actions/auth/getToken";
 
 export default async function sqlQuery(query: string) {
-  //const session: any = await getServerSession(authOptions);
-  //const token = session?.user?.accessToken || "";
   const token = await getEntraIdToken();
-  const baseUrl = process.env.DATABRICKS_SERVER_HOSTNAME;
+  const baseUrl = process.env.DATABRICKS_SERVER_HOSTNAME || "";
   const url = `https://${baseUrl}/api/2.0/sql/statements/`;
   const warehouse_id = process.env.DATABRICKS_WAREHOUSE_ID;
   const wait_timeout = "50s";
