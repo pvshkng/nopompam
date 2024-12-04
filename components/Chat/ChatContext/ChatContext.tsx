@@ -37,10 +37,12 @@ export function ChatProvider({
   email,
 }: {
   children: React.ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialMessages: any[];
   _id: string | null;
   email: string;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const chatHook: any = useChat(initialMessages, _id, email);
   return (
     <ChatContext.Provider value={chatHook}>{children}</ChatContext.Provider>

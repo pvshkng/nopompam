@@ -1,16 +1,11 @@
 "use client";
 
 import "@/components/Login/auth-loader.css";
-// import { useSession, signIn as adSignin } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
-import { Separator } from "@/components/ui/_index";
 import { cn } from "@/lib/utils";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { login } from "@/lib/actions/auth/login";
-import GradientBackground from "@/components/_common/GradientBackground/GradientBackground";
-import { signIn } from "@/auth";
 
 export default function LoginComponent() {
   const [loading, setLoading] = useState(false);
@@ -33,14 +28,10 @@ export default function LoginComponent() {
             className={cn(
               "flex items-center justify-center px-2 font-bold",
               "text-sm p-2 text-white"
-              //"lg:text-xl lg:px-3 lg:py-2 lg:gap-3"
             )}
             onClick={async () => {
               setLoading(true);
               await login();
-              // 'use server'
-              //await signIn("google", { redirect: true, redirectTo: "/chat" });
-              //adSignin("azure-ad", { redirect: true, callbackUrl: "/chat" });
             }}
           >
             <div className="flex flex-row gap-2 min-h-[28px] min-w-[200px] px-2 items-center justify-center">

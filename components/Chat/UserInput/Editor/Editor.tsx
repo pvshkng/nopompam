@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
 import StarterKit from "@tiptap/starter-kit";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -11,17 +14,19 @@ import items from "@/components/Chat/UserInput/Editor/extensions/items";
 import renderItems from "@/components/Chat/UserInput/Editor/extensions/renderItems";
 import "@/components/Chat/UserInput/Editor/extensions/slash.css";
 
-export default function Editor(props) {
+export default function Editor(props: {
+  isEditorActive: any;
+  setEditorStatus: any;
+}) {
   const { isEditorActive, setEditorStatus } = props;
   const [isSlashCommandActive, setIsSlashCommandActive] = useState(false);
   const {
     userInput,
     setUserInput,
     handleSend,
-    handleKeypress,
-    isLoading,
     usecase,
     setUsecase,
+    isLoading,
   } = useChatContext();
 
   const extensions = [
@@ -36,15 +41,20 @@ export default function Editor(props) {
         items: (props: any) => items({ ...props, setUsecase: setUsecase }),
         //render: renderItems,
 
-        render: (props) => {
+        // @ts-ignore
+        render: (_props: any) => {
           const renderer = renderItems();
           return {
-            onStart: (...args) => {
+            // @ts-ignore
+            onStart: (...args: any) => {
               setIsSlashCommandActive(true);
+              // @ts-ignore
               renderer.onStart(...args);
             },
-            onExit: (...args) => {
+            // @ts-ignore
+            onExit: (...args: any) => {
               setIsSlashCommandActive(false);
+              // @ts-ignore
               renderer.onExit(...args);
             },
             // ... rest of your render configuration

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import "./deletionSpinner.css";
 import { deleteTopic } from "@/lib/actions/mongodb/_index";

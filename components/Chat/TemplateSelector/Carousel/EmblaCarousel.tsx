@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import "./embla.css";
 
 import React, { useCallback, useEffect, useState } from "react";

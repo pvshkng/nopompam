@@ -1,6 +1,4 @@
-//Turnaround summarization
-//explore semantic routing layer before sending prompt to BE
-//add rag reference component under msgArea
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { ChatProvider } from "@/components/Chat/ChatContext/ChatContext";
 import { auth } from "@/auth";
@@ -16,7 +14,7 @@ export default async function Chat({
 }) {
   const session = await auth();
   if (!session) {
-    redirect("/")
+    redirect("/");
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const { name, email, image } = session?.user!;
@@ -26,13 +24,14 @@ export default async function Chat({
   _id && email ? (chats = await queryChat(_id, email)) : (chats = []);
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   !chats && redirect("/");
-  
+
   //const templates = await queryTemplates();
   //const suggestions = await querySuggestions();
 
   if (session) {
     return (
       <>
+        {/* @ts-ignore */}
         <ChatProvider initialMessages={chats} _id={_id} email={email}>
           <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden">
             {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}

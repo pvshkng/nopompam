@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest } from "next/server";
 import * as prmpt from "@langchain/core/prompts";
-import * as msg from "@langchain/core/messages";
+// import * as msg from "@langchain/core/messages";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 import { PassThrough } from "stream";
@@ -62,8 +63,6 @@ export async function POST(request: NextRequest) {
         .filter(Boolean)
     : [];
 
-  console.log("memory = ", memory);
-
   const chain = conversation.pipe(llm);
   chain.invoke(
     {
@@ -114,7 +113,7 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // @ts-expect-error
+  // @ts-nocheck
   return new Response(stream, {
     headers: {
       Connection: "keep-alive",

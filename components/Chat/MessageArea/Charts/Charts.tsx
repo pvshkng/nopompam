@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import "chart.js/auto";
 import {
   Chart as ChartJS,
@@ -5,13 +7,10 @@ import {
   LineElement,
   PointElement,
   LinearScale,
-  Title,
-  Colors,
   CategoryScale,
   ChartData,
 } from "chart.js";
-import { Bar, Pie, Line, Chart } from "react-chartjs-2";
-import { Suspense } from "react";
+import { Bar, Pie, Line } from "react-chartjs-2";
 import { useState, useEffect } from "react";
 import ChartSkeleton from "./ChartSkeleton";
 
@@ -24,6 +23,7 @@ ChartJS.register(
 );
 
 ChartJS.defaults.plugins.legend.display = false;
+
 function formatData(c: { chart_type: string; data: ChartData }) {
   let colorIndex = 0;
   const palette = [
@@ -64,7 +64,9 @@ export function ToolChart({ data }: { data: string }) {
     try {
       const parsedData = JSON.parse(data);
       setC(parsedData);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }, [data]);
 
   if (!c || !c.chart_type || !c.data || !c.data.labels || !c.data.datasets) {
@@ -76,73 +78,16 @@ export function ToolChart({ data }: { data: string }) {
       console.log("c = ", c);
     }, 100);
 
+    // @ts-ignore
     return <Bar data={formatData(c)} width={440} height={300} />;
   }
   if (c.chart_type === "line") {
+    // @ts-ignore
     return <Line data={formatData(c)} width={440} height={300} />;
   }
   if (c.chart_type === "pie") {
     ChartJS.defaults.plugins.legend.display = true;
+    // @ts-ignore
     return <Pie data={formatData(c)} width={440} height={300} />;
   }
-}
-
-const bar_data = {
-  type: "bar",
-  data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "dataset_label_1",
-        data: [65, 59, 80, 81, 56, 55, 40],
-      },
-    ],
-  },
-};
-
-const line_data = {
-  type: "line",
-  data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "dataset_label_1",
-        data: [65, 59, 80, 81, 56, 55, 40],
-      },
-    ],
-  },
-};
-
-const pie_data = {
-  type: "pie",
-  data: {
-    labels: ["Red", "Blue", "Yellow"],
-    datasets: [
-      {
-        label: "My First Dataset",
-        data: [300, 50, 100],
-      },
-    ],
-  },
-};
-
-{
-  /* <Bar
-          data={formatData(bar_data.data)}
-          width={440}
-          height={300}
-          options={options}
-        />
-        <Line
-          data={formatData(line_data.data)}
-          width={440}
-          height={300}
-          options={options}
-        />
-        <Pie
-          data={formatData(pie_data.data)}
-          width={440}
-          height={300}
-          options={options}
-        /> */
 }

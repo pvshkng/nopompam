@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import "./SuggestionBar.css";
@@ -21,7 +23,7 @@ function useHorizontalScroll(speed = 5) {
       el.addEventListener("wheel", onWheel);
       return () => el.removeEventListener("wheel", onWheel);
     }
-  }, []);
+  }, [speed]);
   return elRef;
 }
 
@@ -35,7 +37,7 @@ export default function SuggestionBar(props: any) {
       suggestion.prompt.toLowerCase().includes(userInput.toLowerCase()) && suggestion.usecase.includes(usecase)
     );
     setFilteredSuggestion(filtered);
-  }, [userInput, usecase]);
+  }, [userInput, usecase, suggestions]);
   return (
     <>
       <div
