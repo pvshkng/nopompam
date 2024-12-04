@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 //import { Toaster } from "@/components/ui/sonner";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,12 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full w-full")}>
+    <html lang="en" className={cn("size-full")}>
       {/* <AuthProvider> */}
-        <body className={cn(inter.className, "h-full w-full")}>
-          {children}
-        </body>
-       {/*  <Toaster richColors theme="light" closeButton/> */}
+      <body className={cn(inter.className, "size-full")}>{children}</body>
+      {/*  <Toaster richColors theme="light" closeButton/> */}
       {/* </AuthProvider> */}
     </html>
   );

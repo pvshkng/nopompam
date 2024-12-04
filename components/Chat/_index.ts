@@ -4,7 +4,7 @@ import Sidebar from "@/components/Chat/Sidebar/Sidebar";
 import TemplateSelector from "@/components/Chat/TemplateSelector/TemplateSelector";
 import MessageArea from "@/components/Chat/MessageArea/MessageArea";
 import ChatWrapper from "@/components/Chat/ChatWrapper/ChatWrapper";
-import ChatBackground from "@/components/Chat/ChatWrapper/ChatBackground";
+import GradientBackground from "@/components/_common/GradientBackground/GradientBackground";
 
 export {
   UserInput,
@@ -13,5 +13,5 @@ export {
   TemplateSelector,
   MessageArea,
   ChatWrapper,
-  ChatBackground,
+  GradientBackground,
 };

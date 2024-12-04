@@ -2,16 +2,17 @@
 
 import { cn } from "@/lib/utils";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useChatContext } from "../../ChatContext/ChatContext";
+import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
 import StarterKit from "@tiptap/starter-kit";
 import { EditorContent, useEditor } from "@tiptap/react";
 import Placeholder from "@tiptap/extension-placeholder";
-import Commands from "./commands";
-import items from "./items";
-import renderItems from "./renderItems";
-import "./slash.css";
+import Commands from "@/components/Chat/UserInput/Editor/extensions/commands";
+import items from "@/components/Chat/UserInput/Editor/extensions/items";
+import renderItems from "@/components/Chat/UserInput/Editor/extensions/renderItems";
+import "@/components/Chat/UserInput/Editor/extensions/slash.css";
 
-export default function Editor(props: any) {
+export default function Editor(props) {
+  const { isEditorActive, setEditorStatus } = props;
   const [isSlashCommandActive, setIsSlashCommandActive] = useState(false);
   const {
     userInput,
@@ -67,14 +68,17 @@ export default function Editor(props: any) {
   });
 
   useEffect(() => {
-    console.log("uc = ", usecase);
-  }, [usecase, setUsecase]);
+    console.log("editor?.isInitialized = ", editor?.isInitialized);
+    if (editor?.isInitialized) {
+      setEditorStatus(true);
+    }
+  }, [editor?.isInitialized, isEditorActive, setEditorStatus]);
 
   return editor?.isInitialized ? (
     <EditorContent
       className={
         cn(
-          "mx-4 my-0 w-full h-auto max-h-[150px]",
+          "w-full h-auto max-h-[150px]",
           "text-sm break-all !outline-none !border-none bg-transparent resize-none overflow-auto",
           "transition-all placeholder:truncate"
         )
@@ -86,7 +90,6 @@ export default function Editor(props: any) {
         setUserInput(e.currentTarget.innerText);
       }}
       onKeyDown={(e) => {
-        
         if (e.key === "Enter" && !e.shiftKey && !isLoading) {
           if (!isSlashCommandActive) {
             e.preventDefault();
@@ -97,6 +100,6 @@ export default function Editor(props: any) {
       }}
     />
   ) : (
-    <>Loading</>
+    <></>
   );
 }

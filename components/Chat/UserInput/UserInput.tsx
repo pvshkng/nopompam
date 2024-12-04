@@ -10,6 +10,7 @@ import SuggestionBar from "./SuggestionBar";
 import { useChatContext } from "../ChatContext/ChatContext";
 import { Separator } from "@/components/ui/_index";
 import Editor from "./Editor/Editor";
+import EditorLoading from "./EditorLoading/EditorLoading";
 
 interface UserInputProps {
   suggestions?: any;
@@ -27,7 +28,7 @@ export default function UserInput(props: UserInputProps) {
   } = useChatContext();
 
   const { suggestions } = props;
-  const [isSuggested, setIsSuggested] = useState(false);
+  const [isEditorActive, setEditorStatus] = useState(false);
 
   /* useEffect(() => {
     let input = document.getElementById("userInput");
@@ -47,11 +48,12 @@ export default function UserInput(props: UserInputProps) {
           "relative bg-gradient-to-r from-neutral-900 to-stone-800",
           "border-1 border-[#302d2c] text-white ",
           "z-[2] flex flex-col py-3 mx-auto rounded-2xl w-full max-w-[800px]",
-          "shadow-[0_0px_20px_rgba(232,78,49,0.1)]",
+          "shadow-[0_0px_20px_rgba(232,78,49,0.1)]"
           //"z-[2] flex flex-col pt-1 pb-0 mx-auto rounded-t-2xl border-1 border-[#302d2c] bg-[#0f0909] text-white w-full max-w-[800px]",
         )}
       >
-        <div className="flex flex-row">
+        <div className="px-4 flex flex-row">
+          {!isEditorActive && <EditorLoading />}
           {/* <textarea
               autoFocus
               autoComplete="off"
@@ -72,15 +74,21 @@ export default function UserInput(props: UserInputProps) {
               }}
             /> */}
 
-          <Editor />
+          <Editor
+            isEditorActive={isEditorActive}
+            setEditorStatus={setEditorStatus}
+          />
 
-          <button
-            onClick={() => handleSend()}
-            disabled={isLoading}
-            className="mr-4"
-          >
-            <Image src="/icon/enter.svg" width={24} height={24} alt="send" />
-          </button>
+          {isEditorActive && (
+            <button
+              onClick={() => handleSend()}
+              disabled={isLoading}
+              className=""
+              hidden={!isEditorActive}
+            >
+              <Image src="/icon/enter.svg" width={24} height={24} alt="send" />
+            </button>
+          )}
         </div>
 
         {/* Index section */}

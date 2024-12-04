@@ -1,5 +1,5 @@
 .fadeOut {
-  animation: fadeOut 0.5s;
+  animation: fadeOut 1s;
 }
 
 .fadeIn {
@@ -20,7 +20,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-50px);
   }
   to {
     opacity: 1;

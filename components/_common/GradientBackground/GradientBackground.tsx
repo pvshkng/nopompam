@@ -1,12 +1,8 @@
-import "./ChatBackground.css";
+import "./GradientBackground.css";
 
-export default function ChatBackground() {
+export default function GradientBackground() {
   return (
     <>
-      {/* <div
-      id="bg"
-      className="fixed top-0 left-0 right-0 bottom-0 bg-gradient-to-r from-zinc-900 via-stone-900 to-zinc-900 overflow-hidden"
-    /> */}
       <div id="slider" className="fixed top-0 left-0 right-0 bottom-0">
         <div className="bolaMov1"></div>
         <div className="bolaMov2"></div>

@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Chat/UserInput/Editor/_Editor.tsx_"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Chat/UserInput/Editor/_Editor.tsx_", "app/loading.tsx_"],
   "exclude": ["node_modules"]
 }
