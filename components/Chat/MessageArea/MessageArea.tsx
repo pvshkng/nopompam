@@ -99,6 +99,55 @@ export default function MessageArea(props: MessageAreaProps) {
                   : "bg-gradient-to-br from-orange-50 to-orange-200 rounded-bl-[0] message-in-ai"
               )}
             >
+
+{/* TOOL CALLING COMPONENT */}
+              {/* <div className="w-full"> */}
+              {/* @ts-ignore */}
+              {m.toolInvocations?.map((toolInvocation) => {
+                const { toolName, toolCallId, state } = toolInvocation;
+
+                if (state === "result") {
+                  if (toolName === "queryBenefits") {
+                    const { result } = toolInvocation;
+                    return (
+                      <div key={toolCallId}>
+                        <QueryBenefits {...result} />
+                      </div>
+                    );
+                  } else if (toolName === "sendDocument") {
+                    const { result } = toolInvocation;
+                    return (
+                      <div key={toolCallId}>
+                        <SendDocument {...result} />
+                      </div>
+                    );
+                  } else if (toolName === "sendResignationForm") {
+                    const { result } = toolInvocation;
+                    return (
+                      <div key={toolCallId} className="flex w-full">
+                        <SendResignationForm {...result} />
+                      </div>
+                    );
+                  } else if (toolName === "sendJobOpeningForm") {
+                    const { result } = toolInvocation;
+                    return (
+                      <div key={toolCallId} className="flex w-full">
+                        <SendJobOpeningForm {...result} />
+                      </div>
+                    );
+                  }
+                } else {
+                  return (
+                    <div key={toolCallId}>
+                      {toolName === "displayWeather" ? (
+                        <div>Loading...</div>
+                      ) : null}
+                    </div>
+                  );
+                }
+              })}
+              {/* </div> */}
+
               {m.content === "" ? (
                 <>{/* <div className="loader" /> */}</>
               ) : (
@@ -163,53 +212,7 @@ export default function MessageArea(props: MessageAreaProps) {
                 </>
               )}
 
-              {/* TOOL CALLING COMPONENT */}
-              {/* <div className="w-full"> */}
-              {/* @ts-ignore */}
-              {m.toolInvocations?.map((toolInvocation) => {
-                const { toolName, toolCallId, state } = toolInvocation;
-
-                if (state === "result") {
-                  if (toolName === "queryBenefits") {
-                    const { result } = toolInvocation;
-                    return (
-                      <div key={toolCallId}>
-                        <QueryBenefits {...result} />
-                      </div>
-                    );
-                  } else if (toolName === "sendDocument") {
-                    const { result } = toolInvocation;
-                    return (
-                      <div key={toolCallId}>
-                        <SendDocument {...result} />
-                      </div>
-                    );
-                  } else if (toolName === "sendResignationForm") {
-                    const { result } = toolInvocation;
-                    return (
-                      <div key={toolCallId} className="flex w-full">
-                        <SendResignationForm {...result} />
-                      </div>
-                    );
-                  } else if (toolName === "sendJobOpeningForm") {
-                    const { result } = toolInvocation;
-                    return (
-                      <div key={toolCallId} className="flex w-full">
-                        <SendJobOpeningForm {...result} />
-                      </div>
-                    );
-                  }
-                } else {
-                  return (
-                    <div key={toolCallId}>
-                      {toolName === "displayWeather" ? (
-                        <div>Loading...</div>
-                      ) : null}
-                    </div>
-                  );
-                }
-              })}
-              {/* </div> */}
+              
             </div>
           </div>
         );
