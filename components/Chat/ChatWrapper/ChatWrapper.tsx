@@ -7,14 +7,24 @@ import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import "../UserInput/UserInputFading.css";
+import { useChat } from "@ai-sdk/react";
 
 export default function ChatWrapper(props: any) {
   const { name, image } = props;
-  const { messages } = useChatContext();
+  //const { messages } = useChatContext();
   const containerRef = useRef(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
+
+  const {
+    messages,
+    isLoading,
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+  } = useChat({});
 
   useEffect(() => {
     if (isScrolledToBottom) {
@@ -66,47 +76,75 @@ export default function ChatWrapper(props: any) {
               <></>
             ) : (
               <>
-                <c.MessageArea name={name} image={image} />
+                <c.MessageArea
+                  child={{
+                    name,
+                    image,
+                    messages,
+                    isLoading,
+                  }}
+                />
               </>
             )}
 
-            {!isChatInitiated && (
+            {/* {!isChatInitiated && (
               <div
                 className={cn(
                   "size-full flex items-center justify-center",
                   messages.length > 0 ? "fadeOut" : ""
                 )}
               >
-                <c.UserInput />
+                <c.UserInput child={{}} />
               </div>
-            )}
+            )} */}
           </div>
         </div>
 
         <div
           className={cn(
-            "cursor-pointer right-1/2 translate-x-1/2 bottom-4 z-10 rounded-full bg-[#ececec] border w-8 h-8 flex items-center justify-center",
+            "p-1 cursor-pointer right-1/2 translate-x-1/2 bottom-0 z-10 rounded-t-md flex items-center justify-center",
+            "relative bg-gradient-to-r from-neutral-800 to-stone-900",
+            "border-1 border-[#302d2c] text-neutral-500 text-xs font-semibold",
+            "shadow-[0_0px_20px_rgba(232,78,49,0.1)]",
             isCurrentBottom ? "hidden" : "absolute"
+            //"absolute"
           )}
           onClick={() => {
             scrollToBottom();
           }}
         >
-          <Image
+          {/* <Image
             src="/icon/to-bottom.svg"
             alt="arrow-downward"
             height={24}
             width={24}
-          />
+          /> */}
+          Scroll to bottom
         </div>
       </main>
-      {isChatInitiated ? (
-        <div className="fadeIn">
-          <c.UserInput />
-        </div>
-      ) : (
-        <></>
-      )}
+
+      <div
+        className={
+          /* Styling */
+          !isChatInitiated
+            ? cn(
+                "size-full flex items-center justify-center",
+                messages.length > 0 ? "fadeOut" : ""
+              )
+            : "fadeIn"
+        }
+      >
+        <c.UserInput
+          child={{
+            messages,
+            isLoading,
+            input,
+            setInput,
+            handleInputChange,
+            handleSubmit,
+          }}
+        />
+      </div>
     </>
   );
 }

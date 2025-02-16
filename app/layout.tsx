@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Serif } from "next/font/google";
 //import AuthProvider from "@/components/AuthProvider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 //import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const noto_serif = Noto_Serif({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "chat.ai",
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("size-full")}>
       {/* <AuthProvider> */}
-      <body className={cn(inter.className, "size-full")}>{children}</body>
+      <body className={cn(noto_serif.className, "size-full")}>{children}</body>
       {/*  <Toaster richColors theme="light" closeButton/> */}
       {/* </AuthProvider> */}
     </html>

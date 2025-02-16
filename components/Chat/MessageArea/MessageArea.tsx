@@ -11,14 +11,20 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import * as ui from "@/components/ui/_index";
 import VisualizePanel from "./VisualizePanel";
-import "./MessageArea.css";
+//import "./MessageArea.css";
 import "./Typewriter.css";
 import "./StreamingEffect.css";
 import "@/lib/LaTeX/katex.min.css";
 
+import {
+  QueryBenefits,
+  SendDocument,
+  SendResignationForm,
+  SendJobOpeningForm
+} from "@/lib/ai/tools";
+
 type MessageAreaProps = {
-  name?: string | undefined | "User";
-  image: any;
+  child: any;
 };
 
 const components: Partial<any> = {
@@ -45,8 +51,8 @@ const isLast = (messages, m) => {
 };
 
 export default function MessageArea(props: MessageAreaProps) {
-  const { name, image } = props;
-  const { isLoading, messages, setMessages } = useChatContext();
+  const { child } = props;
+  const { name, image, messages, isLoading } = props.child;
   const assistantName = "Assistant";
 
   // Handling Chart Visualization Panel
@@ -85,19 +91,19 @@ export default function MessageArea(props: MessageAreaProps) {
           >
             <div
               className={cn(
-                "relative inline-block leading-6 p-2 transition-[float] rounded-3xl my-3",
+                "relative inline-block leading-6 p-2 transition-[float] rounded-2xl my-3",
                 "[&>*]:text-left",
                 "border",
                 m.role == "user"
-                  ? "max-w-[80%] bg-neutral-900 rounded-br-[0] border-neutral-800 text-neutral-300 message-in-user"
-                  : "bg-gray-300 rounded-bl-[0] message-in-ai"
+                  ? "max-w-[100%] bg-neutral-900 rounded-br-[0] border-neutral-800 text-neutral-300 message-in-user"
+                  : "bg-gradient-to-br from-orange-50 to-orange-200 rounded-bl-[0] message-in-ai"
               )}
             >
               {m.content === "" ? (
-                <div className="loader" />
+                <>{/* <div className="loader" /> */}</>
               ) : (
                 <>
-                  <div className="group flex flex-row items-center gap-2">
+                  {/* <div className="group flex flex-row items-center gap-2">
                     <div
                       // check if need bg
                       className={`flex items-center justify-center ${
@@ -108,9 +114,7 @@ export default function MessageArea(props: MessageAreaProps) {
                         <ui.AvatarImage
                           width={40}
                           height={40}
-                          src={
-                            m.role === "user" ? image : "/icon/bot.svg"
-                          }
+                          src={m.role === "user" ? image : "/icon/bot.svg"}
                         />
                         <ui.AvatarFallback className="font-black text-neutral-400">
                           {m.role === "user" ? name?.charAt(0) : "G"}
@@ -120,12 +124,15 @@ export default function MessageArea(props: MessageAreaProps) {
                     <div className="font-semibold mr-2">
                       {m.role === "user" ? name : assistantName}
                     </div>
-                  </div>
+                  </div> */}
 
                   <ReactMarkdown
                     className={cn(
                       "stream-section m-2 prose text-sm",
-                      isLoading && isLast(messages, m) && "typewriting",
+                      m.role !== "user" &&
+                        isLoading &&
+                        isLast(messages, m) &&
+                        "typewriting",
                       m.role === "user" ? "text-neutral-400" : "text-black"
                     )}
                     remarkPlugins={[remarkGfm, remarkMath]}
@@ -143,18 +150,66 @@ export default function MessageArea(props: MessageAreaProps) {
                       )}
                     >
                       {isShowGenChartBtn && i === messages.length - 1 && (
-                        <VisualizePanel />
+                        <>{/* <VisualizePanel /> */}</>
                       )}
 
-                      <ActionPanel
+                      {/* <ActionPanel
                         isLast={isLast(messages, m)}
                         messageId={m._id}
                         message={m.content}
-                      />
+                      /> */}
                     </div>
                   )}
                 </>
               )}
+
+              {/* TOOL CALLING COMPONENT */}
+              {/* <div className="w-full"> */}
+              {/* @ts-ignore */}
+              {m.toolInvocations?.map((toolInvocation) => {
+                const { toolName, toolCallId, state } = toolInvocation;
+
+                if (state === "result") {
+                  if (toolName === "queryBenefits") {
+                    const { result } = toolInvocation;
+                    return (
+                      <div key={toolCallId}>
+                        <QueryBenefits {...result} />
+                      </div>
+                    );
+                  } else if (toolName === "sendDocument") {
+                    const { result } = toolInvocation;
+                    return (
+                      <div key={toolCallId}>
+                        <SendDocument {...result} />
+                      </div>
+                    );
+                  } else if (toolName === "sendResignationForm") {
+                    const { result } = toolInvocation;
+                    return (
+                      <div key={toolCallId} className="flex w-full">
+                        <SendResignationForm {...result} />
+                      </div>
+                    );
+                  } else if (toolName === "sendJobOpeningForm") {
+                    const { result } = toolInvocation;
+                    return (
+                      <div key={toolCallId} className="flex w-full">
+                        <SendJobOpeningForm {...result} />
+                      </div>
+                    );
+                  }
+                } else {
+                  return (
+                    <div key={toolCallId}>
+                      {toolName === "displayWeather" ? (
+                        <div>Loading...</div>
+                      ) : null}
+                    </div>
+                  );
+                }
+              })}
+              {/* </div> */}
             </div>
           </div>
         );
