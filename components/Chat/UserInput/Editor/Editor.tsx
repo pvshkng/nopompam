@@ -21,14 +21,6 @@ export default function Editor(props: {
   setEditorStatus: any;
   child: any;
 }) {
-  /* const {
-    messages,
-    input,
-    setInput,
-    handleInputChange,
-    handleSubmit,
-    isLoading,
-  } = useChat({}); */
 
   const { messages, isLoading, input, setInput, handleInputChange, handleSubmit } = props.child;
 
@@ -79,6 +71,7 @@ export default function Editor(props: {
   ];
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: extensions,
     //content: content,
     editorProps: {

@@ -16,19 +16,15 @@ export default function ChatWrapper(props: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
   let { initialMessages, _id, email, name, image } = props;
-  // if (!_id) {
-  //   _id = generateId();
-  // }
-  //const { messages } = useChatContext();
   const containerRef = useRef(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
-  const [isNewSession, setIsNewSession] = useState(true);
 
   const {
     messages,
     isLoading,
+    status,
     input,
     setInput,
     handleInputChange,
@@ -43,7 +39,6 @@ export default function ChatWrapper(props: any) {
     }),
     body: {
       user: email,
-      sessionId: _id ? null : generateId(),
     },
 
     onFinish: () => {

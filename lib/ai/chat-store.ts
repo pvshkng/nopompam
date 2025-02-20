@@ -5,12 +5,6 @@ const options = { ex: 600 }
 
 export async function createChat(user: string) {
     const _id = generateId();
-    // await redis.set(
-    //     `chat:${_id}`,
-    //     JSON.stringify({ _id, user, messages: [] }),
-    //     options
-    //     // 7 days 60 * 60 * 24 * 7
-    // );
     return _id;
 }
 

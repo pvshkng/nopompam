@@ -20,14 +20,11 @@ export default async function Chat({
 
   let messages = [];
   let _id = (await searchParams)._id!;
-  console.log("_id: ", _id);
   if (_id) {
     messages = await getChat(_id);
     messages.length === 0 && redirect("/");
   } else {
-    // to move to client once first chat is created
     _id = await createChat(email!);
-    // redirect(`/chat?_id=${_id}`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
