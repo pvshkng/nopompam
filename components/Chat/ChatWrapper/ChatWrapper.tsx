@@ -8,14 +8,23 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import "../UserInput/UserInputFading.css";
 import { useChat } from "@ai-sdk/react";
+import { createIdGenerator, generateId } from "ai";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function ChatWrapper(props: any) {
-  const { name, image } = props;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  let { initialMessages, _id, email, name, image } = props;
+  // if (!_id) {
+  //   _id = generateId();
+  // }
   //const { messages } = useChatContext();
   const containerRef = useRef(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
+  const [isNewSession, setIsNewSession] = useState(true);
 
   const {
     messages,
@@ -24,7 +33,23 @@ export default function ChatWrapper(props: any) {
     setInput,
     handleInputChange,
     handleSubmit,
-  } = useChat({});
+  } = useChat({
+    id: _id,
+    initialMessages: initialMessages,
+    sendExtraMessageFields: true,
+    generateId: createIdGenerator({
+      prefix: "msgc",
+      size: 16,
+    }),
+    body: {
+      user: email,
+      sessionId: _id ? null : generateId(),
+    },
+
+    onFinish: () => {
+      !searchParams.get("_id") && router.push(`/chat?_id=${_id}`);
+    },
+  });
 
   useEffect(() => {
     if (isScrolledToBottom) {
@@ -72,7 +97,7 @@ export default function ChatWrapper(props: any) {
             id="wrapper"
             className="flex flex-col-reverse mx-auto px-6 bg-transparent h-full w-full max-w-[800px] text-black"
           >
-            {!isChatInitiated ? (
+            {!isChatInitiated && messages.length === 0 ? (
               <></>
             ) : (
               <>
@@ -126,7 +151,7 @@ export default function ChatWrapper(props: any) {
       <div
         className={
           /* Styling */
-          !isChatInitiated
+          !isChatInitiated && messages.length === 0
             ? cn(
                 "size-full flex items-center justify-center",
                 messages.length > 0 ? "fadeOut" : ""

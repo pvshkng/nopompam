@@ -1,12 +1,13 @@
 import { NextRequest } from "next/server";
-import { streamText, smoothStream, convertToCoreMessages } from "ai";
+import { streamText, smoothStream, convertToCoreMessages, appendResponseMessages, createIdGenerator } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { tools } from "@/lib/ai";
+import { saveChat } from "@/lib/ai/chat-store";
 
 export async function POST(req: NextRequest) {
 
     try {
-        const { messages, sessionId } = await req.json();
+        const { messages, id, user } = await req.json();
 
         const client = createGoogleGenerativeAI({
             apiKey: process.env.GOOGLE_API_KEY,
@@ -26,7 +27,26 @@ export async function POST(req: NextRequest) {
             tools,
             maxSteps: 3,
             toolCallStreaming: true,
-            toolChoice: "auto"
+            toolChoice: "auto",
+
+            experimental_generateMessageId: createIdGenerator({
+                prefix: 'msgs',
+                size: 16,
+            }),
+
+
+            //save chat
+            async onFinish({ response }) {
+                await saveChat({
+                    _id: id,
+                    user: user,
+                    messages: appendResponseMessages({
+                        messages,
+                        responseMessages: response.messages,
+                    }),
+                });
+            },
+
         });
 
         return result.toDataStreamResponse();

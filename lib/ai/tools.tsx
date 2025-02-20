@@ -17,7 +17,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -108,13 +107,13 @@ export const SendResignationForm = ({ lastDay, reason }) => {
                   className="flex flex-col items-center justify-center p-0 m-0"
                   align="start"
                 >
-                  <Calendar
+                  {/* <Calendar
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
                     disabled={(date) => date < new Date()}
                     initialFocus
-                  />
+                  /> */}
                 </PopoverContent>
               </Popover>
               <FormMessage />

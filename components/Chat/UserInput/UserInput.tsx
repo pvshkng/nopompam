@@ -67,24 +67,24 @@ export default function UserInput(props: UserInputProps) {
         <div className="px-4 flex flex-row">
           {!isEditorActive && <EditorLoading />}
           {/* <textarea
-              autoFocus
-              autoComplete="off"
-              rows={1}
-              placeholder="Type / for commands"
-              className={cn(
-                "text-sm break-all outline-none border-none bg-transparent mx-4 my-2 w-full h-auto resize-none overflow-auto transition-all placeholder:truncate"
-              )}
-              id="userInput"
-              value={userInput}
-              onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                e.target.style.height = "auto";
-                e.target.style.height = `${Math.min(
-                  e.target.scrollHeight,
-                  150
-                )}px`;
-                setUserInput(e.target.value);
-              }}
-            /> */}
+            autoFocus
+            autoComplete="off"
+            rows={1}
+            placeholder="Type / for commands"
+            className={cn(
+              "text-sm break-all outline-none border-none bg-transparent mx-4 my-2 w-full h-auto resize-none overflow-auto transition-all placeholder:truncate"
+            )}
+            id="userInput"
+            value={input}
+            onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+              e.target.style.height = "auto";
+              e.target.style.height = `${Math.min(
+                e.target.scrollHeight,
+                150
+              )}px`;
+              setInput(e.target.value);
+            }}
+          /> */}
 
           <Editor
             isEditorActive={isEditorActive}
