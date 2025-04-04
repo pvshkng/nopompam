@@ -13,25 +13,29 @@ export function LeftSidebar() {
     /* make side bar open based on click */
 
     <div
+      onClick={() => {
+        !opn && setOpn(true);
+      }}
       className={cn(
-        "relative",
+        opn ? "w-[200px]" : "w-[20px]",
+        "relative z-40",
         "transition-all duration-300 ease-in-out",
-        opn ? "w-[200px]" : "w-[30px]",
-        "z-10 flex flex-col h-full text-white",
-        "bg-zinc-900 backdrop-blur-lg"
+        "flex flex-col h-full text-black",
+        "opacity-50 backdrop-blur-lg"
         //"border-r border-orange-900",
         //"hover:w-[200px]"
       )}
     >
-      <button
-        onClick={() => {
-          setOpn(!opn);
-          console.log(opn);
-        }}
-        className=""
-      >
-        open
-      </button>
+      <div className="z-[1000] fixed top-8 -right-4 rounded-sm bg-stone-500">
+        <button
+          onClick={() => {
+            setOpn(!opn);
+          }}
+          className=""
+        >
+          open
+        </button>
+      </div>
     </div>
   );
 }

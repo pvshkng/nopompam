@@ -41,13 +41,13 @@ export default async function Chat({
       <>
         {/* @ts-ignore */}
         <ChatProvider initialMessages={messages} _id={_id} email={email}>
-          <div className="flex flex-row size-full">
+          <div className="flex flex-row size-full bg-gradient-to-b from-stone-100 to-stone-300 overflow-hidden">
             <LeftSidebar />
 
-            <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden">
+            <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden rounded-tl-2xl bg-white border-2 border-gray-300 shadow-sm">
               {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}
               {/* <c.NavBar name={name} image={image} _id={_id} email={email} /> */}
-              <c.GradientBackground />
+              {/* <c.GradientBackground /> */}
 
               <c.Wrapper
                 initialMessages={messages}
