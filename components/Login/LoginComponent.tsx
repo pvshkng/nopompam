@@ -30,7 +30,7 @@ export default function LoginComponent() {
               "text-sm p-2 text-white"
             )}
             onClick={async () => {
-              setLoading(true);
+              //setLoading(true);
               await login();
             }}
           >

@@ -12,20 +12,32 @@ import { Separator } from "@/components/ui/_index";
 import Editor from "./Editor/Editor";
 import EditorLoading from "./EditorLoading/EditorLoading";
 
+import { useChat } from "@ai-sdk/react";
+
 interface UserInputProps {
   suggestions?: any;
+  child: any;
 }
 
 export default function UserInput(props: UserInputProps) {
   const {
     userInput,
     setUserInput,
-    handleSend,
+    //handleSend,
     handleKeypress,
-    isLoading,
+    //isLoading,
     usecase,
     setUsecase,
   } = useChatContext();
+
+  const {
+    messages,
+    isLoading,
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+  } = props.child;
 
   const { suggestions } = props;
   const [isEditorActive, setEditorStatus] = useState(false);
@@ -41,7 +53,7 @@ export default function UserInput(props: UserInputProps) {
   return (
     <div
       id="userInputWrapper"
-      className="z-[3] flex flex-col items-center justify-center w-full px-auto px-5 mb-8 bg-transparent"
+      className="z-[3] flex flex-col items-center justify-center w-full px-auto px-3 mb-8 bg-transparent"
     >
       <div
         className={cn(
@@ -55,33 +67,41 @@ export default function UserInput(props: UserInputProps) {
         <div className="px-4 flex flex-row">
           {!isEditorActive && <EditorLoading />}
           {/* <textarea
-              autoFocus
-              autoComplete="off"
-              rows={1}
-              placeholder="Type / for commands"
-              className={cn(
-                "text-sm break-all outline-none border-none bg-transparent mx-4 my-2 w-full h-auto resize-none overflow-auto transition-all placeholder:truncate"
-              )}
-              id="userInput"
-              value={userInput}
-              onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                e.target.style.height = "auto";
-                e.target.style.height = `${Math.min(
-                  e.target.scrollHeight,
-                  150
-                )}px`;
-                setUserInput(e.target.value);
-              }}
-            /> */}
+            autoFocus
+            autoComplete="off"
+            rows={1}
+            placeholder="Type / for commands"
+            className={cn(
+              "text-sm break-all outline-none border-none bg-transparent mx-4 my-2 w-full h-auto resize-none overflow-auto transition-all placeholder:truncate"
+            )}
+            id="userInput"
+            value={input}
+            onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+              e.target.style.height = "auto";
+              e.target.style.height = `${Math.min(
+                e.target.scrollHeight,
+                150
+              )}px`;
+              setInput(e.target.value);
+            }}
+          /> */}
 
           <Editor
             isEditorActive={isEditorActive}
             setEditorStatus={setEditorStatus}
+            child={{
+              messages,
+              isLoading,
+              input,
+              setInput,
+              handleInputChange,
+              handleSubmit,
+            }}
           />
 
           {isEditorActive && (
             <button
-              onClick={() => handleSend()}
+              onClick={() => handleSubmit()}
               disabled={isLoading}
               className=""
               hidden={!isEditorActive}

@@ -14,10 +14,16 @@ import items from "@/components/Chat/UserInput/Editor/extensions/items";
 import renderItems from "@/components/Chat/UserInput/Editor/extensions/renderItems";
 import "@/components/Chat/UserInput/Editor/extensions/slash.css";
 
+import { useChat } from "@ai-sdk/react";
+
 export default function Editor(props: {
   isEditorActive: any;
   setEditorStatus: any;
+  child: any;
 }) {
+
+  const { messages, isLoading, input, setInput, handleInputChange, handleSubmit } = props.child;
+
   const { isEditorActive, setEditorStatus } = props;
   const [isSlashCommandActive, setIsSlashCommandActive] = useState(false);
   const {
@@ -26,7 +32,7 @@ export default function Editor(props: {
     handleSend,
     usecase,
     setUsecase,
-    isLoading,
+    //isLoading,
   } = useChatContext();
 
   const extensions = [
@@ -65,6 +71,7 @@ export default function Editor(props: {
   ];
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: extensions,
     //content: content,
     editorProps: {
@@ -97,13 +104,15 @@ export default function Editor(props: {
       disabled={isLoading}
       editor={editor}
       onInput={(e) => {
-        setUserInput(e.currentTarget.innerText);
+        setInput(e.currentTarget.innerText);
       }}
+      //onChange={handleInputChange}
       onKeyDown={(e) => {
         if (e.key === "Enter" && !e.shiftKey && !isLoading) {
           if (!isSlashCommandActive) {
             e.preventDefault();
-            handleSend(userInput, usecase);
+            //handleSend(userInput, usecase);
+            handleSubmit();
             editor?.commands.clearContent();
           }
         }
