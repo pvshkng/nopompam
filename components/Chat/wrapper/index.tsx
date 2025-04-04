@@ -1,6 +1,5 @@
 "use client";
 
-//import "./PseudoScroller.css";
 import * as c from "@/components/Chat/_index";
 import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
 import { useRef, useState, useEffect } from "react";
@@ -11,8 +10,9 @@ import { useChat } from "@ai-sdk/react";
 import { createIdGenerator, generateId } from "ai";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { LeftSidebar } from "@/components/left-sidebar";
 
-export default function ChatWrapper(props: any) {
+export default function Wrapper(props: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
   let { initialMessages, _id, email, name, image } = props;
@@ -78,10 +78,7 @@ export default function ChatWrapper(props: any) {
 
   return (
     <>
-      <main
-        id="scrollWrap"
-        className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden"
-      >
+      <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
         <div
           ref={containerRef}
           onScroll={handleScroll}
@@ -119,7 +116,6 @@ export default function ChatWrapper(props: any) {
             )} */}
           </div>
         </div>
-
         <div
           className={cn(
             "p-1 cursor-pointer right-1/2 translate-x-1/2 bottom-0 z-10 rounded-t-md flex items-center justify-center",

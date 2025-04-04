@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
             //save chat
             async onFinish({ response }) {
-                await saveChat({
+                saveChat({
                     _id: id,
                     user: user,
                     messages: appendResponseMessages({

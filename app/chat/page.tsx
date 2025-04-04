@@ -4,6 +4,7 @@ import { ChatProvider } from "@/components/Chat/ChatContext/ChatContext";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import * as c from "@/components/Chat/_index";
+import { LeftSidebar } from "@/components/left-sidebar/";
 import { queryChat } from "@/lib/actions/mongodb/_index";
 import { createChat, getChat } from "@/lib/ai/chat-store";
 // import { querySuggestions, queryTemplates } from "@/lib/prompts/_index";
@@ -40,17 +41,22 @@ export default async function Chat({
       <>
         {/* @ts-ignore */}
         <ChatProvider initialMessages={messages} _id={_id} email={email}>
-          <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden">
-            {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}
-            {/* <c.NavBar name={name} image={image} _id={_id} email={email} /> */}
-            <c.GradientBackground />
-            <c.ChatWrapper
-              initialMessages={messages}
-              _id={_id}
-              email={email}
-              name={name}
-              image={image}
-            />
+          <div className="flex flex-row size-full">
+            <LeftSidebar />
+
+            <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden">
+              {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}
+              {/* <c.NavBar name={name} image={image} _id={_id} email={email} /> */}
+              <c.GradientBackground />
+
+              <c.Wrapper
+                initialMessages={messages}
+                _id={_id}
+                email={email}
+                name={name}
+                image={image}
+              />
+            </div>
           </div>
         </ChatProvider>
       </>

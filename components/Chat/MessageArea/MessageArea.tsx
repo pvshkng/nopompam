@@ -15,12 +15,13 @@ import VisualizePanel from "./VisualizePanel";
 import "./Typewriter.css";
 import "./StreamingEffect.css";
 import "@/lib/LaTeX/katex.min.css";
+import { useChat } from "@ai-sdk/react";
 
 import {
   QueryBenefits,
   SendDocument,
   SendResignationForm,
-  SendJobOpeningForm
+  SendJobOpeningForm,
 } from "@/lib/ai/tools";
 
 type MessageAreaProps = {
@@ -51,6 +52,8 @@ const isLast = (messages, m) => {
 };
 
 export default function MessageArea(props: MessageAreaProps) {
+  const { status } = useChat();
+
   const { child } = props;
   const { name, image, messages, isLoading } = props.child;
   const assistantName = "Assistant";
@@ -89,24 +92,13 @@ export default function MessageArea(props: MessageAreaProps) {
                 : "text-left clear-none"
             )}
           >
-            <div
-              className={cn(
-                "relative inline-block leading-6 p-2 transition-[float] rounded-2xl my-3",
-                "[&>*]:text-left",
-                "border",
-                m.role == "user"
-                  ? "max-w-[100%] bg-neutral-900 rounded-br-[0] border-neutral-800 text-neutral-300 message-in-user"
-                  : "bg-gradient-to-br from-orange-50 to-orange-200 rounded-bl-[0] message-in-ai"
-              )}
-            >
-
-{/* TOOL CALLING COMPONENT */}
-              {/* <div className="w-full"> */}
+            {/* TOOL CALLING COMPONENT */}
+            <div className="bg-gradient-to-br from-orange-50 to-orange-200 rounded-lg">
               {/* @ts-ignore */}
               {m.toolInvocations?.map((toolInvocation) => {
                 const { toolName, toolCallId, state } = toolInvocation;
 
-                if (state === "result") {
+                if (state === "result" && status === "ready") {
                   if (toolName === "queryBenefits") {
                     const { result } = toolInvocation;
                     return (
@@ -139,15 +131,23 @@ export default function MessageArea(props: MessageAreaProps) {
                 } else {
                   return (
                     <div key={toolCallId}>
-                      {toolName === "displayWeather" ? (
-                        <div>Loading...</div>
-                      ) : null}
+                      <div>Loading...</div>
                     </div>
                   );
                 }
               })}
-              {/* </div> */}
+            </div>
 
+            <div
+              className={cn(
+                "relative inline-block leading-6 p-2 transition-[float] rounded-2xl my-3",
+                "[&>*]:text-left",
+                "border",
+                m.role == "user"
+                  ? "max-w-[100%] bg-neutral-900 rounded-br-[0] border-neutral-800 text-neutral-300 message-in-user"
+                  : "bg-gradient-to-br from-orange-50 to-orange-200 rounded-bl-[0] message-in-ai"
+              )}
+            >
               {m.content === "" ? (
                 <>{/* <div className="loader" /> */}</>
               ) : (
@@ -211,8 +211,6 @@ export default function MessageArea(props: MessageAreaProps) {
                   )}
                 </>
               )}
-
-              
             </div>
           </div>
         );
