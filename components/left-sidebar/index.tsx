@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { PlusCircleIcon } from "@/components/icons/plus-circle";
+import { ArrowRightIcon } from "@/components/icons/arrow-right";
 import { SidebarIcon } from "@/components/icons/sidebar";
 import { User } from "@/components/icons/user";
 import { DeleteIcon } from "@/components/icons/delete";
@@ -120,12 +121,14 @@ export function LeftSidebar() {
           "group relative",
           "cursor-pointer z-[1000] absolute top-8 -right-5",
           "flex flex-row items-start justify-start p-2",
-          "rounded-full bg-stone-500",
+          "rounded-full bg-stone-400",
           "opacity-70",
-          "shadow-lg"
+          "shadow-lg",
+          "transition-all duration-500",
+          opn && "rotate-180"
         )}
       >
-        <SidebarIcon />
+        <ArrowRightIcon className="stroke-stone-700" />
         {/* <div
             className={cn(
               "transition-all duration-300 ease-in-out",
