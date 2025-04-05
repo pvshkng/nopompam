@@ -20,7 +20,7 @@
   position: absolute;
   left: -10px;
   bottom: 40px;
-  z-index: 4;
+  z-index: 2;
   animation: rotar 8s infinite ease-in-out;
   transform-origin: 50% -100%;
 }
@@ -34,7 +34,7 @@
   position: absolute;
   top: 130px;
   right: 20%;
-  z-index: 5;
+  z-index: 3;
   animation: gradient 6s infinite;
 }
 .bolaMov3 {
@@ -46,7 +46,7 @@
   position: absolute;
   top: 50%;
   left: 10%;
-  z-index: 8;
+  z-index: 4;
   animation: rotar 12s infinite ease-in-out;
   transform-origin: -50% 100%;
 }
@@ -73,7 +73,7 @@
   position: absolute;
   top: 55%;
   left: 55%;
-  z-index: 6;
+  z-index: 5;
   animation: rotar 5s infinite;
   transform-origin: -100% -120%;
 }

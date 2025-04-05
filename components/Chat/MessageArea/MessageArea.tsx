@@ -93,7 +93,7 @@ export default function MessageArea(props: MessageAreaProps) {
             )}
           >
             {/* TOOL CALLING COMPONENT */}
-            <div className="bg-gradient-to-br from-orange-50 to-orange-200 rounded-lg">
+            <div className="bg-gradient-to-br from-stone-300 to-stone-400 rounded-lg">
               {/* @ts-ignore */}
               {m.toolInvocations?.map((toolInvocation) => {
                 const { toolName, toolCallId, state } = toolInvocation;
@@ -144,8 +144,12 @@ export default function MessageArea(props: MessageAreaProps) {
                 "[&>*]:text-left",
                 "border",
                 m.role == "user"
-                  ? "max-w-[100%] bg-neutral-900 rounded-br-[0] border-neutral-800 text-neutral-300 message-in-user"
-                  : "bg-gradient-to-br from-orange-50 to-orange-200 rounded-bl-[0] message-in-ai"
+                  ? cn(
+                      "max-w-[100%] message-in-user",
+                      "bg-neutral-50 rounded-br-[0] border-neutral-300",
+                      "border-none"
+                    )
+                  : "bg-gradient-to-br from-stone-300 to-stone-400 rounded-bl-[0] message-in-ai"
               )}
             >
               {m.content === "" ? (
@@ -182,7 +186,7 @@ export default function MessageArea(props: MessageAreaProps) {
                         isLoading &&
                         isLast(messages, m) &&
                         "typewriting",
-                      m.role === "user" ? "text-neutral-400" : "text-black"
+                      m.role === "user" ? "text-neutral-700" : "text-black"
                     )}
                     remarkPlugins={[remarkGfm, remarkMath]}
                     rehypePlugins={[rehypeKatex]}

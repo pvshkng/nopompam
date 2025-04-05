@@ -57,10 +57,10 @@ export default function UserInput(props: UserInputProps) {
     >
       <div
         className={cn(
-          "relative bg-gradient-to-r from-neutral-900 to-stone-800",
-          "border-1 border-[#302d2c] text-white ",
+          "relative bg-gradient-to-br from-stone-100 to-stone-300",
+          "border-1 border-[#302d2c] text-black ",
           "z-[2] flex flex-col py-3 mx-auto rounded-2xl w-full max-w-[800px]",
-          "shadow-[0_0px_20px_rgba(232,78,49,0.1)]"
+          "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
           //"z-[2] flex flex-col pt-1 pb-0 mx-auto rounded-t-2xl border-1 border-[#302d2c] bg-[#0f0909] text-white w-full max-w-[800px]",
         )}
       >

@@ -44,7 +44,7 @@ export default async function Chat({
           <div className="flex flex-row size-full bg-gradient-to-b from-stone-100 to-stone-300 overflow-hidden">
             <LeftSidebar />
 
-            <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden rounded-tl-2xl bg-white border-2 border-gray-300 shadow-sm">
+            <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden rounded-tl-2xl bg-white border-2 border-gray-300 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
               {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}
               {/* <c.NavBar name={name} image={image} _id={_id} email={email} /> */}
               {/* <c.GradientBackground /> */}
