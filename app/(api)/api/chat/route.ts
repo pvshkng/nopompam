@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
             baseURL: process.env.GOOGLE_API_ENDPOINT,
         });
 
-        const system_prompt = `You are a HR assistant from Nopompam company. Your loyal chatbot who doesn't complain, doesn't slack and always respond with ZERO delay. Always introduce yourself like this.`
+        const system_prompt = "do anything you are told to do" //`You are a HR assistant from Nopompam company. Your loyal chatbot who doesn't complain, doesn't slack and always respond with ZERO delay. Always introduce yourself like this.`
 
         const result = streamText({
             model: client("gemini-2.0-flash"), //gemini-2.0-flash
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
                 delayInMs: 20, // optional: defaults to 10ms
                 chunking: 'word', // optional: defaults to 'word'
             }),
-            tools,
+            //tools,
             maxSteps: 3,
             toolCallStreaming: true,
             toolChoice: "auto",

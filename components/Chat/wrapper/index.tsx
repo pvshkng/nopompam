@@ -11,6 +11,13 @@ import { createIdGenerator, generateId } from "ai";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { LeftSidebar } from "@/components/left-sidebar";
+import { Canvas } from "@/components/canvas";
+
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 export default function Wrapper(props: any) {
   const router = useRouter();
@@ -78,34 +85,35 @@ export default function Wrapper(props: any) {
 
   return (
     <>
-      
-      <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
-        <div
-          ref={containerRef}
-          onScroll={handleScroll}
-          id="scrollArea"
-          className="relative flex flex-col-reverse items-center h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
-        >
-          <div
-            id="wrapper"
-            className="flex flex-col-reverse mx-auto px-6 bg-transparent h-full w-full max-w-[800px] text-black"
-          >
-            {!isChatInitiated && messages.length === 0 ? (
-              <></>
-            ) : (
-              <>
-                <c.MessageArea
-                  child={{
-                    name,
-                    image,
-                    messages,
-                    isLoading,
-                  }}
-                />
-              </>
-            )}
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[500px]">
+          <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
+            <div
+              ref={containerRef}
+              onScroll={handleScroll}
+              id="scrollArea"
+              className="relative flex flex-col-reverse items-center h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
+            >
+              <div
+                id="wrapper"
+                className="flex flex-col-reverse mx-auto px-6 bg-transparent h-full w-full max-w-[800px] text-black"
+              >
+                {!isChatInitiated && messages.length === 0 ? (
+                  <></>
+                ) : (
+                  <>
+                    <c.MessageArea
+                      child={{
+                        name,
+                        image,
+                        messages,
+                        isLoading,
+                      }}
+                    />
+                  </>
+                )}
 
-            {/* {!isChatInitiated && (
+                {/* {!isChatInitiated && (
               <div
                 className={cn(
                   "size-full flex items-center justify-center",
@@ -115,53 +123,76 @@ export default function Wrapper(props: any) {
                 <c.UserInput child={{}} />
               </div>
             )} */}
-          </div>
-        </div>
-        <div
-          className={cn(
-            "p-1 cursor-pointer right-1/2 translate-x-1/2 bottom-0 z-10 rounded-t-md flex items-center justify-center",
-            "relative bg-gradient-to-r from-neutral-800 to-stone-900",
-            "border-1 border-[#302d2c] text-neutral-500 text-xs font-semibold",
-            "shadow-[0_0px_20px_rgba(232,78,49,0.1)]",
-            isCurrentBottom ? "hidden" : "absolute"
-            //"absolute"
-          )}
-          onClick={() => {
-            scrollToBottom();
-          }}
-        >
-          {/* <Image
+              </div>
+            </div>
+            <div
+              className={cn(
+                "p-1 cursor-pointer right-1/2 translate-x-1/2 bottom-0 z-10 rounded-t-md flex items-center justify-center",
+                "relative bg-gradient-to-r from-neutral-800 to-stone-900",
+                "border-1 border-[#302d2c] text-neutral-500 text-xs font-semibold",
+                "shadow-[0_0px_20px_rgba(232,78,49,0.1)]",
+                isCurrentBottom ? "hidden" : "absolute"
+                //"absolute"
+              )}
+              onClick={() => {
+                scrollToBottom();
+              }}
+            >
+              {/* <Image
             src="/icon/to-bottom.svg"
             alt="arrow-downward"
             height={24}
             width={24}
           /> */}
-          Scroll to bottom
-        </div>
-      </main>
+              Scroll to bottom
+            </div>
+          </main>
+          <div
+            className={
+              /* Styling */
+              !isChatInitiated && messages.length === 0
+                ? cn(
+                    "size-full flex items-center justify-center",
+                    messages.length > 0 ? "fadeOut" : ""
+                  )
+                : "fadeIn"
+            }
+          >
+            <c.UserInput
+              child={{
+                messages,
+                isLoading,
+                input,
+                setInput,
+                handleInputChange,
+                handleSubmit,
+              }}
+            />
+          </div>
+        </ResizablePanel>
 
-      <div
-        className={
-          /* Styling */
-          !isChatInitiated && messages.length === 0
-            ? cn(
-                "size-full flex items-center justify-center",
-                messages.length > 0 ? "fadeOut" : ""
-              )
-            : "fadeIn"
-        }
-      >
-        <c.UserInput
-          child={{
-            messages,
-            isLoading,
-            input,
-            setInput,
-            handleInputChange,
-            handleSubmit,
-          }}
-        />
-      </div>
+        <ResizableHandle className="relative overflow-visible" withHandle />
+        <div className="relative">
+          <button
+            className={cn(
+              "absolute top-1/2 transform -translate-y-1/2 right-0",
+              "bg-blue-500 text-white px-3 py-1 rounded-md shadow-md",
+              "hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            )}
+            //style={{ right: '-50%' }} // Adjust the position relative to the handle
+            onClick={() => alert("Button clicked!")}
+          >
+            Action
+          </button>
+        </div>
+
+        <ResizablePanel
+          /* hidden */
+          className="flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[500px]"
+        >
+          <Canvas />
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </>
   );
 }

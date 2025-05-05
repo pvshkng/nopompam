@@ -1,7 +1,7 @@
 import { generateId } from "ai";
 import { redis } from "@/lib/crud/redis";
 
-const options = { ex: 600 }
+const options = { /* ex: 0 */ }
 
 export async function createChat(user: string) {
     const _id = generateId();

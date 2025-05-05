@@ -7,6 +7,7 @@ import { ArrowRightIcon } from "@/components/icons/arrow-right";
 import { SidebarIcon } from "@/components/icons/sidebar";
 import { User } from "@/components/icons/user";
 import { DeleteIcon } from "@/components/icons/delete";
+import { useEffect } from "react";
 
 const history = [
   {
@@ -88,6 +89,22 @@ const history = [
 ];
 export function LeftSidebar() {
   const [opn, setOpn] = useState(true);
+
+/*   useEffect(() => {
+    function handleResize() {
+      // Only auto-close if the sidebar wasn't manually opened
+      setOpn((prevOpn) => (prevOpn ? prevOpn : window.innerWidth >= 1000));
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    // Detect width on every render
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); */
 
   function handleOpen() {
     setOpn(true);

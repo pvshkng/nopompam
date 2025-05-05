@@ -16,6 +16,7 @@ import "./Typewriter.css";
 import "./StreamingEffect.css";
 import "@/lib/LaTeX/katex.min.css";
 import { useChat } from "@ai-sdk/react";
+import { components } from "@/components/markdown/markdown-component";
 
 import {
   QueryBenefits,
@@ -28,23 +29,6 @@ type MessageAreaProps = {
   child: any;
 };
 
-const components: Partial<any> = {
-  // @ts-ignore
-  pre: ({ children, className, ...props }) => (
-    <pre className={className} {...props}>
-      {children}
-    </pre>
-  ),
-  // @ts-ignore
-  code: ({ node, inline, className, children }) => {
-    const match = /language-(\w+)/.exec(className || "");
-    if (match && match[1] === "chart") {
-      return <ToolChart data={children} />;
-    }
-
-    return <code>{children}</code>;
-  },
-};
 
 // @ts-ignore
 const isLast = (messages, m) => {
