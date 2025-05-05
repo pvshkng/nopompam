@@ -29,7 +29,6 @@ type MessageAreaProps = {
   child: any;
 };
 
-
 // @ts-ignore
 const isLast = (messages, m) => {
   return messages[messages.length - 1] === m;
@@ -178,6 +177,12 @@ export default function MessageArea(props: MessageAreaProps) {
                   >
                     {m.content}
                   </ReactMarkdown>
+
+                  {m.annotations?.map((a) => (
+                    <div>ANNOTATION: {JSON.stringify(a, null, 2)}</div>
+                  ))}
+
+                  {JSON.stringify(m, null, 2)}
 
                   {/* Action Container */}
                   {m.role === "assistant" && (

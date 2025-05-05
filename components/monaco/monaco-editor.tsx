@@ -11,7 +11,7 @@ export function MonacoWithShiki() {
     async function setupShiki() {
       // Create a Shiki highlighter
       const highlighter = await createHighlighter({
-        themes: ["kanagawa-dragon"], // Add your preferred themes
+        themes: ["github-light"], // Add your preferred themes
         langs: ["javascript", "typescript", "html", "css"], // Add your preferred languages
       });
 
@@ -28,11 +28,22 @@ export function MonacoWithShiki() {
 
   return (
     <Editor
-      className={cn("[&_pre]:!bg-stone-600",)}
+      className={cn(
+        //"[&_*]:!bg-stone-800",
+        "[&_pre_.line]:relative",
+        "[&_pre_.line]:before:content-[attr(data-line)]",
+        "[&_pre_.line]:before:absolute",
+        "[&_pre_.line]:before:left-0",
+        "[&_pre_.line]:before:text-zinc-400",
+        "[&_pre_.line]:before:w-4",
+        "[&_pre_.line]:before:text-right",
+        //"[&_pre_.line]:before:mr-4",
+        "[&_pre_.line]:before:select-none"
+      )}
       height="100dvh"
       defaultLanguage="sql"
       defaultValue="// Write your code here"
-      theme="kanagawa-dragon"
+      theme="github-light"
       onMount={handleEditorDidMount}
     />
   );

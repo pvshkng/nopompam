@@ -49,7 +49,7 @@ export default function Wrapper(props: any) {
     },
 
     onFinish: () => {
-      !searchParams.get("_id") && router.push(`/chat?_id=${_id}`);
+      //!searchParams.get("_id") && router.push(`/chat?_id=${_id}`);
     },
   });
 
