@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
                     maxSteps: 3,
                     toolCallStreaming: true,
                     toolChoice: "auto",
+                    
 
                     experimental_generateMessageId: createIdGenerator({
                         prefix: 'msgs',

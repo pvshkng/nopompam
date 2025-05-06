@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import * as c from "@/components/Chat/_index";
 import { LeftSidebar } from "@/components/left-sidebar/";
 import { queryChat } from "@/lib/actions/mongodb/_index";
-import { createChat, getChat } from "@/lib/ai/chat-store";
+import { createChat, getChat, getChatsByUser } from "@/lib/ai/chat-store";
 // import { querySuggestions, queryTemplates } from "@/lib/prompts/_index";
 
 export default async function Chat({
@@ -18,11 +18,12 @@ export default async function Chat({
   const session = await auth();
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const { name, email, image } = session?.user!;
+  //const threads = await getChatsByUser(email!);
 
   let messages = [];
   let _id = (await searchParams)._id!;
   if (_id) {
-    messages = await getChat(_id);
+    messages = await getChat(email, _id);
     messages.length === 0 && redirect("/");
   } else {
     _id = await createChat(email!);
@@ -42,7 +43,7 @@ export default async function Chat({
         {/* @ts-ignore */}
         <ChatProvider initialMessages={messages} _id={_id} email={email}>
           <div className="flex flex-row size-full bg-gradient-to-b from-stone-100 to-stone-300 overflow-hidden">
-            <LeftSidebar />
+            <LeftSidebar /* threads={threads} */ email={email} />
 
             <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden rounded-tl-2xl bg-white border-2 border-gray-300 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
               {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}

@@ -8,89 +8,24 @@ import { SidebarIcon } from "@/components/icons/sidebar";
 import { User } from "@/components/icons/user";
 import { DeleteIcon } from "@/components/icons/delete";
 import { useEffect } from "react";
+import { getChatsByUser } from "@/lib/ai/chat-store";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-const history = [
-  {
-    text: "Hello, how can I help you?",
-    date: "2023-10-01",
-  },
-  {
-    text: "What is your name?",
-    date: "2023-10-02",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from?",
-    date: "2023-10-03",
-  },
-  {
-    text: "Where are you from??",
-    date: "2023-10-03",
-  },
-];
-export function LeftSidebar() {
+export function LeftSidebar(props) {
+  const { email } = props;
+  const router = useRouter();
   const [opn, setOpn] = useState(true);
+  const [threads, setThreads] = useState([]); //await getChatsByUser(email!)
 
-/*   useEffect(() => {
+  useEffect(() => {
+    (async () => {
+      const threads = await getChatsByUser(email!);
+      console.log("threads: ", threads);
+      setThreads(threads);
+    })();
+  }, []);
+  /*   useEffect(() => {
     function handleResize() {
       // Only auto-close if the sidebar wasn't manually opened
       setOpn((prevOpn) => (prevOpn ? prevOpn : window.innerWidth >= 1000));
@@ -206,9 +141,17 @@ export function LeftSidebar() {
               "gap-2"
             )}
           >
-            {history.map((h, i) => (
-              <div
+            {threads.map((h, i) => (
+              <Link
+                replace
                 key={i}
+                href={{
+                  pathname: "/chat",
+                  query: {
+                    _id: h._id,
+                  },
+                }}
+                prefetch={false}
                 className={cn(
                   "flex flex-row justify-between items-center",
                   "p-2 rounded-md w-full",
@@ -218,8 +161,10 @@ export function LeftSidebar() {
                 )}
               >
                 <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  <div>{h.text}</div>
-                  <div className="text-stone-600">{h.date}</div>
+                  <div>{h.title || "undefined"}</div>
+                  <div className="text-stone-600">
+                    {h.timestamp || "undefined"}
+                  </div>
                 </div>
                 <button
                   className={cn(
@@ -237,7 +182,7 @@ export function LeftSidebar() {
                 Confirm?
               </div> */}
                 </button>
-              </div>
+              </Link>
             ))}
           </div>
           <div className={cn("text-stone-500 text-xs w-full text-center")}>
