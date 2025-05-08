@@ -60,7 +60,7 @@ export async function getChat(user: string, _id: string) {
 }
 
 export async function saveChat({ _id, user, messages }) {
-    //console.log("Saving chat: ", { _id, user, messages });
+    console.log("Saving chat: ", { _id, user, messages });
     const key = chatId(user, _id);
     await redis.set(key,
         JSON.stringify({

@@ -17,13 +17,8 @@ import "./StreamingEffect.css";
 import "@/lib/LaTeX/katex.min.css";
 import { useChat } from "@ai-sdk/react";
 import { components } from "@/components/markdown/markdown-component";
-
-import {
-  QueryBenefits,
-  SendDocument,
-  SendResignationForm,
-  SendJobOpeningForm,
-} from "@/lib/ai/tools";
+import { ToolComponents } from "./message-tool-components";
+import { ToolAnnotation } from "./message-tool-annotation";
 
 type MessageAreaProps = {
   child: any;
@@ -65,149 +60,106 @@ export default function MessageArea(props: MessageAreaProps) {
 
   return (
     <div id="msgArea" className={cn("text-sm py-7 mb-auto")}>
-      {messages.map((m, i) => {
-        return (
+      {messages.map((m, i) => (
+        <div
+          key={m.id}
+          className={cn(
+            "whitespace-normal break-words text-sm",
+            m.role == "user" ? "text-right clear-both" : "text-left clear-none"
+          )}
+        >
           <div
-            key={i}
             className={cn(
+              "stream-section",
+
+              "relative inline-block leading-6 p-2 transition-[float] rounded-2xl my-1",
+              "[&>*]:text-left",
+
               m.role == "user"
-                ? "text-right clear-both"
-                : "text-left clear-none"
+                ? cn(
+                    "max-w-[100%]",
+                    "bg-gradient-to-br from-stone-300 to-stone-400 rounded-br-[0]"
+                  )
+                : "rounded-bl-[0] w-full"
             )}
           >
-            {/* TOOL CALLING COMPONENT */}
-            <div className="bg-gradient-to-br from-stone-300 to-stone-400 rounded-lg">
-              {/* @ts-ignore */}
-              {m.toolInvocations?.map((toolInvocation) => {
-                const { toolName, toolCallId, state } = toolInvocation;
+            {/* Tool Annotation */}
+            {m.parts.some((p) => p.type === "tool-invocation") && (
+              <div className="flex flex-col gap-1 my-2">
+                {m.parts.map((p, k) => (
+                  <>
+                    {p.type === "tool-invocation" &&
+                      (!isLoading || i !== m.length - 1) && (
+                        <div
+                          key={`tool-${m.id}-${k}`}
+                          className="flex flex-col w-full"
+                        >
+                          <ToolAnnotation tool={p.toolInvocation} />
+                        </div>
+                      )}
+                  </>
+                ))}
+              </div>
+            )}
 
-                if (state === "result" && status === "ready") {
-                  if (toolName === "queryBenefits") {
-                    const { result } = toolInvocation;
-                    return (
-                      <div key={toolCallId}>
-                        <QueryBenefits {...result} />
-                      </div>
-                    );
-                  } else if (toolName === "sendDocument") {
-                    const { result } = toolInvocation;
-                    return (
-                      <div key={toolCallId}>
-                        <SendDocument {...result} />
-                      </div>
-                    );
-                  } else if (toolName === "sendResignationForm") {
-                    const { result } = toolInvocation;
-                    return (
-                      <div key={toolCallId} className="flex w-full">
-                        <SendResignationForm {...result} />
-                      </div>
-                    );
-                  } else if (toolName === "sendJobOpeningForm") {
-                    const { result } = toolInvocation;
-                    return (
-                      <div key={toolCallId} className="flex w-full">
-                        <SendJobOpeningForm {...result} />
-                      </div>
-                    );
-                  }
-                } else {
+            {m.parts.map((p, j) => {
+              switch (p.type) {
+                case "text":
                   return (
-                    <div key={toolCallId}>
-                      <div>Loading...</div>
+                    <div key={`${m.id}-${j}`}>
+                      <ReactMarkdown
+                        className={cn(
+                          "m-2 prose text-sm",
+                          m.role !== "user" &&
+                            isLoading &&
+                            isLast(messages, m) &&
+                            "typewriting",
+                          m.role === "user" ? "text-neutral-700" : "text-black"
+                        )}
+                        remarkPlugins={[remarkGfm, remarkMath]}
+                        rehypePlugins={[rehypeKatex]}
+                        components={components}
+                      >
+                        {m.content}
+                      </ReactMarkdown>
                     </div>
                   );
-                }
-              })}
-            </div>
+              }
+            })}
 
-            <div
-              className={cn(
-                "relative inline-block leading-6 p-2 transition-[float] rounded-2xl my-3",
-                "[&>*]:text-left",
-                "border",
-                m.role == "user"
-                  ? cn(
-                      "max-w-[100%] message-in-user",
-                      "bg-neutral-50 rounded-br-[0] border-neutral-300",
-                      "border-none"
-                    )
-                  : "bg-gradient-to-br from-stone-300 to-stone-400 rounded-bl-[0] message-in-ai"
-              )}
-            >
-              {m.content === "" ? (
-                <>{/* <div className="loader" /> */}</>
-              ) : (
-                <>
-                  {/* <div className="group flex flex-row items-center gap-2">
-                    <div
-                      // check if need bg
-                      className={`flex items-center justify-center ${
-                        m.role === "user" ? "bg-black " : "bg-gray-200 "
-                      } rounded-full min-w-8 min-h-8`}
-                    >
-                      <ui.Avatar>
-                        <ui.AvatarImage
-                          width={40}
-                          height={40}
-                          src={m.role === "user" ? image : "/icon/bot.svg"}
-                        />
-                        <ui.AvatarFallback className="font-black text-neutral-400">
-                          {m.role === "user" ? name?.charAt(0) : "G"}
-                        </ui.AvatarFallback>
-                      </ui.Avatar>
-                    </div>
-                    <div className="font-semibold mr-2">
-                      {m.role === "user" ? name : assistantName}
-                    </div>
-                  </div> */}
+            <ToolComponents m={m} />
 
-                  <ReactMarkdown
+            {
+              <>
+                {m.annotations?.map((a) => (
+                  <div>ANNOTATION: {JSON.stringify(a, null, 2)}</div>
+                ))}
+
+                {/* {JSON.stringify(m, null, 2)} */}
+
+                {/* Action Container */}
+                {m.role === "assistant" && (
+                  <div
                     className={cn(
-                      "stream-section m-2 prose text-sm",
-                      m.role !== "user" &&
-                        isLoading &&
-                        isLast(messages, m) &&
-                        "typewriting",
-                      m.role === "user" ? "text-neutral-700" : "text-black"
+                      "absolute -bottom-4 -right-0 flex flex-row gap-1"
                     )}
-                    remarkPlugins={[remarkGfm, remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
-                    components={components}
                   >
-                    {m.content}
-                  </ReactMarkdown>
+                    {isShowGenChartBtn && i === messages.length - 1 && (
+                      <>{/* <VisualizePanel /> */}</>
+                    )}
 
-                  {m.annotations?.map((a) => (
-                    <div>ANNOTATION: {JSON.stringify(a, null, 2)}</div>
-                  ))}
-
-                  {JSON.stringify(m, null, 2)}
-
-                  {/* Action Container */}
-                  {m.role === "assistant" && (
-                    <div
-                      className={cn(
-                        "absolute -bottom-4 -right-0 flex flex-row gap-1"
-                      )}
-                    >
-                      {isShowGenChartBtn && i === messages.length - 1 && (
-                        <>{/* <VisualizePanel /> */}</>
-                      )}
-
-                      {/* <ActionPanel
-                        isLast={isLast(messages, m)}
-                        messageId={m._id}
-                        message={m.content}
-                      /> */}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+                    {/* <ActionPanel
+                      isLast={isLast(messages, m)}
+                      messageId={m._id}
+                      message={m.content}
+                    /> */}
+                  </div>
+                )}
+              </>
+            }
           </div>
-        );
-      })}
+        </div>
+      ))}
     </div>
   );
 }

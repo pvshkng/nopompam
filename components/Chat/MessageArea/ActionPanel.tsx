@@ -15,7 +15,8 @@ export default function ActionPanel(props: any) {
         className={cn(
           "action-panel",
           "flex flex-row item-center justify-center py-1 px-2 gap-2",
-          "bg-[#e0e0e0] rounded-full border-[1px] border-gray-200",
+          "bg-stone-100 rounded-full",
+          //"border-[1px] border-gray-200",
           "transition-all",
           "hover:-translate-y-1",
           "hover:shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]",

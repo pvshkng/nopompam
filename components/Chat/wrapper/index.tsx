@@ -49,7 +49,7 @@ export default function Wrapper(props: any) {
     },
 
     onFinish: () => {
-      //!searchParams.get("_id") && router.push(`/chat?_id=${_id}`);
+      !searchParams.get("_id") && router.push(`/chat?_id=${_id}`);
     },
   });
 
@@ -172,19 +172,7 @@ export default function Wrapper(props: any) {
         </ResizablePanel>
 
         <ResizableHandle className="relative overflow-visible" withHandle />
-        <div className="relative">
-          <button
-            className={cn(
-              "absolute top-1/2 transform -translate-y-1/2 right-0",
-              "bg-blue-500 text-white px-3 py-1 rounded-md shadow-md",
-              "hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            )}
-            //style={{ right: '-50%' }} // Adjust the position relative to the handle
-            onClick={() => alert("Button clicked!")}
-          >
-            Action
-          </button>
-        </div>
+        {/*  */}
 
         <ResizablePanel
           /* hidden */
