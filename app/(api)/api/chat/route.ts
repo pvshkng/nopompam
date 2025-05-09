@@ -26,7 +26,7 @@ async function invokeAgent(state: StreamState): Promise<StreamState> {
     const result = streamText({
         model: client("gemini-2.0-flash"), //gemini-2.0-flash
         messages: convertToCoreMessages([...messages]),
-        tools,
+        //tools,
         maxSteps: 3,
         experimental_generateMessageId: createIdGenerator({
             prefix: 'msgs',

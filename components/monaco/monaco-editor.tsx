@@ -4,6 +4,12 @@ import { shikiToMonaco } from "@shikijs/monaco";
 import { createHighlighter } from "shiki";
 import { cn } from "@/lib/utils";
 
+// TODO:
+// [Shiki] 10 instances have been created.\
+// Shiki is supposed to be used as a singleton,
+// consider refactoring your code to cache your highlighter instance;
+// Or call `highlighter.dispose()` to release unused instances.
+
 export function MonacoWithShiki() {
   const editorRef = useRef(null);
 
@@ -30,6 +36,8 @@ export function MonacoWithShiki() {
     <Editor
       className={cn(
         //"[&_*]:!bg-stone-800",
+        "size-full",
+        "[&_*]:!border-none",
         "[&_pre_.line]:relative",
         "[&_pre_.line]:before:content-[attr(data-line)]",
         "[&_pre_.line]:before:absolute",
@@ -40,7 +48,7 @@ export function MonacoWithShiki() {
         //"[&_pre_.line]:before:mr-4",
         "[&_pre_.line]:before:select-none"
       )}
-      height="100dvh"
+      height={undefined}
       defaultLanguage="sql"
       defaultValue="// Write your code here"
       theme="github-light"

@@ -68,6 +68,25 @@ export default function MessageArea(props: MessageAreaProps) {
             m.role == "user" ? "text-right clear-both" : "text-left clear-none"
           )}
         >
+          {/* Tool Annotation */}
+          {m.parts.some((p) => p.type === "tool-invocation") && (
+            <div className="flex flex-col gap-1 my-2">
+              {m.parts.map((p, k) => (
+                <>
+                  {p.type === "tool-invocation" &&
+                    (!isLoading || i !== m.length - 1) && (
+                      <div
+                        key={`tool-${m.id}-${k}`}
+                        className="flex flex-col w-full"
+                      >
+                        <ToolAnnotation tool={p.toolInvocation} />
+                      </div>
+                    )}
+                </>
+              ))}
+            </div>
+          )}
+
           <div
             className={cn(
               "stream-section",
@@ -83,25 +102,6 @@ export default function MessageArea(props: MessageAreaProps) {
                 : "rounded-bl-[0] w-full"
             )}
           >
-            {/* Tool Annotation */}
-            {m.parts.some((p) => p.type === "tool-invocation") && (
-              <div className="flex flex-col gap-1 my-2">
-                {m.parts.map((p, k) => (
-                  <>
-                    {p.type === "tool-invocation" &&
-                      (!isLoading || i !== m.length - 1) && (
-                        <div
-                          key={`tool-${m.id}-${k}`}
-                          className="flex flex-col w-full"
-                        >
-                          <ToolAnnotation tool={p.toolInvocation} />
-                        </div>
-                      )}
-                  </>
-                ))}
-              </div>
-            )}
-
             {m.parts.map((p, j) => {
               switch (p.type) {
                 case "text":

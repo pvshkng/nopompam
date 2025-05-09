@@ -171,7 +171,11 @@ export default function Wrapper(props: any) {
           </div>
         </ResizablePanel>
 
-        <ResizableHandle className="relative overflow-visible" withHandle />
+        <ResizableHandle
+          className="relative overflow-visible"
+          withHandle
+          onClick={() => {}}
+        />
         {/*  */}
 
         <ResizablePanel

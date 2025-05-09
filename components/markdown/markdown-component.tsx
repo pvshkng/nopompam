@@ -1,4 +1,4 @@
-import { JSX, useLayoutEffect, useState } from "react";
+import { JSX, useLayoutEffect, useState, useMemo, memo } from "react";
 import { BundledLanguage } from "shiki";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment } from "react";
@@ -72,67 +72,86 @@ function isBundledLanguage(lang: string): lang is BundledLanguage {
   return bundledLanguages.includes(lang);
 }
 
-function HighlightedCodeBlock({
-  code,
-  language,
-}: {
-  code: string;
-  language: BundledLanguage;
-}) {
-  const [nodes, setNodes] = useState<JSX.Element | null>(null);
-  const [html, setHtml] = useState<string>("");
+const HighlightedCodeBlock = memo(
+  ({ code, language }: { code: string; language: BundledLanguage }) => {
+    const [html, setHtml] = useState<string>("");
 
-  useLayoutEffect(() => {
-    let isMounted = true;
+    // Memoize the className concatenation
+    const containerClassName = useMemo(
+      () =>
+        cn(
+          "flex flex-col mx-auto size-full",
+          "[&_div]:border",
+          "[&_div]:border-stone-800",
+          "!text-white"
+        ),
+      []
+    );
 
-    codeToHtml(code, {
-      lang: language,
-      theme: "kanagawa-dragon",
-      transformers: [
-        {
-          code(node) {
-            node.children = node.children.map((line, index) => {
-              if ("properties" in line) {
-                line.properties["data-line"] = String(index + 1);
-              }
-              return line;
-            });
-          },
-        },
-      ],
-    }).then((generatedHtml) => {
-      if (isMounted) {
-        setHtml(generatedHtml);
-      }
-    });
+    const codeContainerClassName = useMemo(
+      () =>
+        cn(
+          "rounded-b-md",
+          "!border-t-0",
+          "[&_pre]:p-2",
+          "[&_pre]:overflow-x-auto",
+          "[&_pre]:text-sm",
+          "[&_pre]:!bg-stone-600",
+          "[&_pre]:max-width-full",
+          "[&_pre]:relative",
+          "[&_pre_code_.line]:pl-8",
+          "[&_pre_.line]:relative",
+          "[&_pre_.line]:before:content-[attr(data-line)]",
+          "[&_pre_.line]:before:absolute",
+          "[&_pre_.line]:before:left-0",
+          "[&_pre_.line]:before:text-zinc-400",
+          "[&_pre_.line]:before:w-4",
+          "[&_pre_.line]:before:text-right",
+          "[&_pre_.line]:before:select-none"
+        ),
+      []
+    );
 
-    // highlight(code, language).then((highlightedCode) => {
-    //   if (isMounted) {
-    //     setNodes(highlightedCode);
-    //   }
-    // });
-    // .catch((error) => {
-    //   console.error("Error highlighting code:", error);
-    //   if (isMounted) {
-    //     setNodes(
-    //       <pre>
-    //         <code className={`language-${language}`}>{code}</code>
-    //       </pre>
-    //     );
-    //   }
-    // });
+    useLayoutEffect(() => {
+      let isMounted = true;
 
-    return () => {
-      isMounted = false;
-    };
-  }, [code, language]);
+      const highlightCode = async () => {
+        try {
+          const generatedHtml = await codeToHtml(code, {
+            lang: language,
+            theme: "kanagawa-dragon",
+            transformers: [
+              {
+                code(node) {
+                  node.children = node.children.map((line, index) => {
+                    if ("properties" in line) {
+                      line.properties["data-line"] = String(index + 1);
+                    }
+                    return line;
+                  });
+                },
+              },
+            ],
+          });
 
-  return (
-    //nodes ?? (
-    <>
+          if (isMounted) {
+            setHtml(generatedHtml);
+          }
+        } catch (error) {
+          console.error("Error highlighting code:", error);
+        }
+      };
+
+      highlightCode();
+
+      return () => {
+        isMounted = false;
+      };
+    }, [code, language]); // Only re-run when code or language changes
+
+    return (
       <div
         className={cn(
-          //max-w-[90%] max-sm:max-w-full px-2
           "flex flex-col mx-auto size-full",
           "[&_div]:border",
           "[&_div]:border-stone-800",
@@ -149,22 +168,16 @@ function HighlightedCodeBlock({
         >
           {language}
           copy
-          {/* <CopyButton code={props.children} /> */}
         </div>
         <div
           className={cn(
             "rounded-b-md",
             "!border-t-0",
-
-            //Code Span
             "[&_pre]:p-2",
             "[&_pre]:overflow-x-auto",
-            //"[&_pre]:rounded-b-md",
             "[&_pre]:text-sm",
-            "[&_pre]:!bg-stone-600",
+            "[&_pre]:!bg-stone-800",
             "[&_pre]:max-width-full",
-
-            // Line number styling
             "[&_pre]:relative",
             "[&_pre_code_.line]:pl-8",
             "[&_pre_.line]:relative",
@@ -174,20 +187,14 @@ function HighlightedCodeBlock({
             "[&_pre_.line]:before:text-zinc-400",
             "[&_pre_.line]:before:w-4",
             "[&_pre_.line]:before:text-right",
-            //"[&_pre_.line]:before:mr-4",
             "[&_pre_.line]:before:select-none"
           )}
           dangerouslySetInnerHTML={{ __html: html }}
-        >
-          {/* <pre> */}
-          {/*   <code className={`language-${language}`}>{code}</code> */}
-          {/* </pre> */}
-        </div>
+        />
       </div>
-    </>
-    /*     <pre>
-        <code className={`language-${language}`}>{code}</code>
-      </pre> */
-  );
-  //);
-}
+    );
+  }
+);
+
+// Add display name for debugging
+HighlightedCodeBlock.displayName = "HighlightedCodeBlock";
