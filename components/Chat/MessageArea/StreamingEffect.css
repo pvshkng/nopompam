@@ -1,5 +1,5 @@
 .stream-section > * {
-  animation: streamIn 0.5s ease-in-out forwards;
+  animation: streamIn 0.2s ease-in-out forwards;
 }
 
 @keyframes streamIn {
@@ -12,10 +12,10 @@
 }
 
 .stream-section * {
-  animation: streamIn 0.5s ease-in-out forwards;
+  animation: streamIn 0.2s ease-in-out forwards;
 }
 
 .stream-section * {
   opacity: 0;
-  animation: streamIn 0.5s ease-in-out forwards;
+  animation: streamIn 0.2s ease-in-out forwards;
 }

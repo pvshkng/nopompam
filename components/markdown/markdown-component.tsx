@@ -152,6 +152,10 @@ const HighlightedCodeBlock = memo(
     return (
       <div
         className={cn(
+          "!opacity-100",
+          "!animate-none",
+          "[&_*]:!opacity-100",
+          "[&_*]:!animate-none",
           "flex flex-col mx-auto size-full",
           "[&_div]:border",
           "[&_div]:border-stone-800",
