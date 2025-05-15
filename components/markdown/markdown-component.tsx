@@ -86,9 +86,10 @@ const HighlightedCodeBlock = memo(
             transformers: [
               {
                 code(node) {
-                  node.children = node.children.map((line, index) => {
-                    if ("properties" in line) {
-                      line.properties["data-line"] = String(index + 1);
+                let lineNumber = 1;
+                  node.children = node.children.map((line) => {
+                      if ("properties" in line) {
+                      line.properties["data-line"] = String(lineNumber++);
                     }
                     return line;
                   });

@@ -19,14 +19,25 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
+// TODO: to rename to ChatRoot
 export default function Wrapper(props: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  let { initialMessages, _id, email, name, image } = props;
+  let {
+    initialMessages,
+    _id,
+    email,
+    name,
+    image,
+    loadedArtifacts = [],
+  } = props;
   const containerRef = useRef(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
+  const [canvasSwapped, isCanvasSwapped] = useState(false);
+  const [canvasOpened, isCanvasOpened] = useState(false);
+  const [artifacts, setArtifacts] = useState(loadedArtifacts);
 
   const {
     messages,
@@ -182,7 +193,12 @@ export default function Wrapper(props: any) {
           /* hidden */
           className="flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[500px]"
         >
-          <Canvas />
+          <Canvas
+            canvasOpened={canvasOpened}
+            isCanvasOpened={isCanvasOpened}       
+            artifacts={artifacts}
+            setArtifacts={setArtifacts}
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
     </>
