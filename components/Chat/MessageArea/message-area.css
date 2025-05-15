@@ -28,7 +28,7 @@
   height: 5px !important;
 }
 
-pre {
+/* pre {
   margin: 0 !important;
   margin-bottom: 1rem !important;
   max-width: 100%;
@@ -46,10 +46,7 @@ pre:has(code) {
 
 pre:not(:has(code)) {
   background-color: transparent !important;
-}
-
-code {
-}
+} */
 
 blockquote {
   font-size: 10px;
@@ -116,4 +113,44 @@ table tbody tr > td {
 
 .green-icon {
   filter: invert(0);
+}
+
+ul,
+ol {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+li {
+  list-style-type: disc !important;
+  margin-bottom: 10px;
+}
+
+ol {
+  list-style-type: decimal !important;
+}
+
+p,
+li,
+dd,
+dt {
+  /* font-size: 1rem; */
+  line-height: 1.5rem;
+}
+
+p {
+  padding: 0.25rem;
+}
+
+dd {
+  margin-left: 1.5rem;
+}
+
+blockquote {
+  font-style: italic;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  padding: 1.5rem;
+
+  border-left: 3px solid #ccc;
 }

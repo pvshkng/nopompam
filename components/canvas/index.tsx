@@ -16,6 +16,7 @@ export function Canvas(props: any) {
       {/* <section className={cn("flex flex-col gap-4", "size-full")}> */}
       <Tabs defaultValue="" className={cn("flex flex-col size-full ")}>
         <TabsList
+          key={""}
           className={cn(
             "flex w-full items-end justify-start gap-1",
             "!pb-0 !mb-0",

@@ -12,7 +12,6 @@ export const components: Partial<any> = {
   pre: ({ children, className, ...props }) => {
     let code = "";
     let language: string = "md";
-
     if (children && children.props) {
       const match = /language-(\w+)/.exec(children.props.className || "");
       if (match) {
@@ -75,42 +74,6 @@ function isBundledLanguage(lang: string): lang is BundledLanguage {
 const HighlightedCodeBlock = memo(
   ({ code, language }: { code: string; language: BundledLanguage }) => {
     const [html, setHtml] = useState<string>("");
-
-    // Memoize the className concatenation
-    const containerClassName = useMemo(
-      () =>
-        cn(
-          "flex flex-col mx-auto size-full",
-          "[&_div]:border",
-          "[&_div]:border-stone-800",
-          "!text-white"
-        ),
-      []
-    );
-
-    const codeContainerClassName = useMemo(
-      () =>
-        cn(
-          "rounded-b-md",
-          "!border-t-0",
-          "[&_pre]:p-2",
-          "[&_pre]:overflow-x-auto",
-          "[&_pre]:text-sm",
-          "[&_pre]:!bg-stone-600",
-          "[&_pre]:max-width-full",
-          "[&_pre]:relative",
-          "[&_pre_code_.line]:pl-8",
-          "[&_pre_.line]:relative",
-          "[&_pre_.line]:before:content-[attr(data-line)]",
-          "[&_pre_.line]:before:absolute",
-          "[&_pre_.line]:before:left-0",
-          "[&_pre_.line]:before:text-zinc-400",
-          "[&_pre_.line]:before:w-4",
-          "[&_pre_.line]:before:text-right",
-          "[&_pre_.line]:before:select-none"
-        ),
-      []
-    );
 
     useLayoutEffect(() => {
       let isMounted = true;

@@ -11,9 +11,9 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import * as ui from "@/components/ui/_index";
 import VisualizePanel from "./VisualizePanel";
-//import "./MessageArea.css";
-import "./Typewriter.css";
-import "./StreamingEffect.css";
+import "./message-area.css";
+import "./typewriter.css";
+import "./streaming-effect.css";
 import "@/lib/LaTeX/katex.min.css";
 import { useChat } from "@ai-sdk/react";
 import { components } from "@/components/markdown/markdown-component";
@@ -91,7 +91,7 @@ export default function MessageArea(props: MessageAreaProps) {
             className={cn(
               "stream-section",
 
-              "relative inline-block leading-6 p-2 transition-[float] rounded-2xl my-1",
+              "relative inline-block leading-6 transition-[float] rounded-2xl my-1",
               "[&>*]:text-left",
 
               m.role == "user"
@@ -120,7 +120,7 @@ export default function MessageArea(props: MessageAreaProps) {
                         rehypePlugins={[rehypeKatex]}
                         components={components}
                       >
-                        {m.content}
+                        {p.text}
                       </ReactMarkdown>
                     </div>
                   );

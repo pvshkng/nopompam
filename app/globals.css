@@ -120,6 +120,7 @@ nextjs-portal {
 
 *::-webkit-scrollbar {
   width: 5px !important;
+  height: 5px !important;
 }
 
 *::-webkit-scrollbar-track {
