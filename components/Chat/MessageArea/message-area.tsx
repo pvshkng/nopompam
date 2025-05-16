@@ -19,6 +19,8 @@ import { useChat } from "@ai-sdk/react";
 import { components } from "@/components/markdown/markdown-component";
 import { ToolComponents } from "./message-tool-components";
 import { ToolAnnotation } from "./message-tool-annotation";
+import { DocumentsReference } from "@/components/tools/documents-reference";
+import { generateId } from "ai";
 
 type MessageAreaProps = {
   child: any;
@@ -69,8 +71,8 @@ export default function MessageArea(props: MessageAreaProps) {
           )}
         >
           {/* Tool Annotation */}
-          {m.parts.some((p) => p.type === "tool-invocation") && (
-            <div className="flex flex-col gap-1 my-2">
+          {m.parts.some((p, i) => p.type === "tool-invocation") && (
+            <div key={generateId(5)} className="flex flex-col gap-1 my-2">
               {m.parts.map((p, k) => (
                 <>
                   {p.type === "tool-invocation" &&
@@ -124,9 +126,17 @@ export default function MessageArea(props: MessageAreaProps) {
                       </ReactMarkdown>
                     </div>
                   );
+
+                case "tool-invocation":
+                  if (p.toolInvocation.toolName === "documentSearch") {
+                    return (
+                      <DocumentsReference result={p.toolInvocation.result} />
+                    );
+                  }
               }
             })}
 
+            {/* Message tail tool component */}
             <ToolComponents m={m} />
 
             {

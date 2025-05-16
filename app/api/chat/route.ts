@@ -4,8 +4,9 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { StateGraph } from "@langchain/langgraph";
 import { tools } from "@/lib/ai";
 import { saveChat } from "@/lib/ai/chat-store";
+import { documentSearch } from "@/lib/ai/tool/document-search";
 
-const system_prompt = "do anything you are told to do";
+const system_prompt = "do anything you are told to do. Always respond with text to let user know first if you are gonna use tool";
 
 
 
@@ -19,6 +20,8 @@ type StreamState = {
 async function invokeAgent(state: StreamState): Promise<StreamState> {
     const { _id, user, messages, dataStream, } = state;
     console.log("invokeAgent state: ", state);
+    dataStream.writeSource({ title: "Book1", id: "1", sourceType: "doc", });
+    dataStream.writeData({ step: 'Start!!' });
     const client = createGoogleGenerativeAI({
         apiKey: process.env.GOOGLE_API_KEY,
         baseURL: process.env.GOOGLE_API_ENDPOINT,
@@ -27,6 +30,7 @@ async function invokeAgent(state: StreamState): Promise<StreamState> {
         model: client("gemini-2.0-flash"), //gemini-2.0-flash
         messages: convertToCoreMessages([...messages]),
         //tools,
+        tools: { documentSearch },
         maxSteps: 3,
         experimental_generateMessageId: createIdGenerator({
             prefix: 'msgs',

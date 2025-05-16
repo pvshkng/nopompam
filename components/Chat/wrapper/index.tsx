@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { LeftSidebar } from "@/components/left-sidebar";
 import { Canvas } from "@/components/canvas";
+import { BottomScrollButton } from "@/components/Chat/MessageArea/scroll-to-bottom";
 
 import {
   ResizableHandle,
@@ -38,6 +39,7 @@ export default function Wrapper(props: any) {
   const [canvasSwapped, isCanvasSwapped] = useState(false);
   const [canvasOpened, isCanvasOpened] = useState(false);
   const [artifacts, setArtifacts] = useState(loadedArtifacts);
+  const [streamData, setStreamData] = useState<any[]>([]);
 
   const {
     messages,
@@ -47,6 +49,8 @@ export default function Wrapper(props: any) {
     setInput,
     handleInputChange,
     handleSubmit,
+    data,
+    setData,
   } = useChat({
     id: _id,
     initialMessages: initialMessages,
@@ -62,7 +66,12 @@ export default function Wrapper(props: any) {
     onFinish: () => {
       !searchParams.get("_id") && router.push(`/chat?_id=${_id}`);
     },
+    streamProtocol: "data",
   });
+
+  useEffect(() => {
+    console.log("streamData: ", data);
+  }, [data, setData]);
 
   useEffect(() => {
     if (isScrolledToBottom) {
@@ -81,7 +90,7 @@ export default function Wrapper(props: any) {
 
   const scrollToBottom = () => {
     if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      containerRef.current.scrollTop = containerRef.current.scrollHeight!;
     }
   };
 
@@ -97,7 +106,7 @@ export default function Wrapper(props: any) {
   return (
     <>
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[500px]">
+        <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[100px]">
           <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
             <div
               ref={containerRef}
@@ -136,27 +145,10 @@ export default function Wrapper(props: any) {
             )} */}
               </div>
             </div>
-            <div
-              className={cn(
-                "p-1 cursor-pointer right-1/2 translate-x-1/2 bottom-0 z-10 rounded-t-md flex items-center justify-center",
-                "relative bg-gradient-to-r from-neutral-800 to-stone-900",
-                "border-1 border-[#302d2c] text-neutral-500 text-xs font-semibold",
-                "shadow-[0_0px_20px_rgba(232,78,49,0.1)]",
-                isCurrentBottom ? "hidden" : "absolute"
-                //"absolute"
-              )}
-              onClick={() => {
-                scrollToBottom();
-              }}
-            >
-              {/* <Image
-            src="/icon/to-bottom.svg"
-            alt="arrow-downward"
-            height={24}
-            width={24}
-          /> */}
-              Scroll to bottom
-            </div>
+            <BottomScrollButton
+              scrollToBottom={scrollToBottom}
+              isCurrentBottom={isCurrentBottom}
+            />
           </main>
           <div
             className={
@@ -183,22 +175,23 @@ export default function Wrapper(props: any) {
         </ResizablePanel>
 
         <ResizableHandle
-          className="relative overflow-visible"
+          className="hidden relative overflow-visible"
           withHandle
+          
           onClick={() => {}}
         />
-        {/*  */}
 
         <ResizablePanel
           /* hidden */
-          className="flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[500px]"
+          
+          className="hidden flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[100px]"
         >
-          <Canvas
+          {/* <Canvas
             canvasOpened={canvasOpened}
-            isCanvasOpened={isCanvasOpened}       
+            isCanvasOpened={isCanvasOpened}
             artifacts={artifacts}
             setArtifacts={setArtifacts}
-          />
+          /> */}
         </ResizablePanel>
       </ResizablePanelGroup>
     </>

@@ -53,7 +53,8 @@ export function LeftSidebar(props) {
       }}
       className={cn(
         opn ? "w-[300px]" : "w-[20px]",
-        "relative z-40",
+        "relative",
+        "z-40",
         "transition-all duration-300 ease-in-out",
         "flex flex-col h-full text-black"
         //"fixed top-0 left-0"
