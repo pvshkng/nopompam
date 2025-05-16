@@ -13,22 +13,23 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export function LeftSidebar(props) {
+  const { sidebarToggled, setSidebarToggled } = props;
   const { email } = props;
   const router = useRouter();
-  const [opn, setOpn] = useState(true);
+
   const [threads, setThreads] = useState([]); //await getChatsByUser(email!)
 
   useEffect(() => {
     (async () => {
       const threads = await getChatsByUser(email!);
-      console.log("threads: ", threads);
       setThreads(threads);
     })();
   }, []);
+
   /*   useEffect(() => {
     function handleResize() {
       // Only auto-close if the sidebar wasn't manually opened
-      setOpn((prevOpn) => (prevOpn ? prevOpn : window.innerWidth >= 1000));
+      setSidebarToggled((prevsidebarToggled) => (prevsidebarToggled ? prevsidebarToggled : window.innerWidth >= 1000));
     }
 
     window.addEventListener("resize", handleResize);
@@ -42,17 +43,18 @@ export function LeftSidebar(props) {
   }, []); */
 
   function handleOpen() {
-    setOpn(true);
+    setSidebarToggled(true);
   }
   return (
     /* make side bar open based on click */
 
     <div
       onClick={() => {
-        !opn && setOpn(true);
+        !sidebarToggled && setSidebarToggled(true);
       }}
       className={cn(
-        opn ? "w-[300px]" : "w-[20px]",
+        sidebarToggled ? "w-[300px]" : "w-[20px]",
+        !sidebarToggled && "cursor-pointer",
         "relative",
         "z-40",
         "transition-all duration-300 ease-in-out",
@@ -68,7 +70,7 @@ export function LeftSidebar(props) {
       {/* Toggler */}
       <div
         onClick={() => {
-          setOpn(!opn);
+          setSidebarToggled(!sidebarToggled);
         }}
         className={cn(
           "group relative",
@@ -78,7 +80,7 @@ export function LeftSidebar(props) {
           "opacity-70",
           "shadow-lg",
           "transition-all duration-500",
-          opn && "rotate-180"
+          sidebarToggled && "rotate-180"
         )}
       >
         <ArrowRightIcon className="stroke-stone-700" />
@@ -97,7 +99,7 @@ export function LeftSidebar(props) {
       <div
         className={cn(
           "transition-all duration-300 overflow-hidden",
-          opn ? "" : "hidden opacity-0",
+          sidebarToggled ? "" : "hidden opacity-0",
           //"bg-red-500",
           "m-1 my-9 p-1",
           "size-full flex flex-col items-center justify-start"

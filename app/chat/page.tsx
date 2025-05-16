@@ -7,6 +7,7 @@ import * as c from "@/components/Chat/_index";
 import { LeftSidebar } from "@/components/left-sidebar/";
 import { queryChat } from "@/lib/actions/mongodb/_index";
 import { createChat, getChat, getChatsByUser } from "@/lib/ai/chat-store";
+import { cn } from "@/lib/utils";
 // import { querySuggestions, queryTemplates } from "@/lib/prompts/_index";
 
 export default async function Chat({
@@ -43,9 +44,7 @@ export default async function Chat({
         {/* @ts-ignore */}
         <ChatProvider initialMessages={messages} _id={_id} email={email}>
           <div className="flex flex-row size-full bg-gradient-to-b from-stone-100 to-stone-300 overflow-hidden">
-            <LeftSidebar /* threads={threads} */ email={email} />
-
-            <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden rounded-tl-2xl bg-white border-2 border-gray-300 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+            
               {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}
               {/* <c.NavBar name={name} image={image} _id={_id} email={email} /> */}
               {/* <c.GradientBackground /> */}
@@ -57,7 +56,7 @@ export default async function Chat({
                 name={name}
                 image={image}
               />
-            </div>
+           
           </div>
         </ChatProvider>
       </>

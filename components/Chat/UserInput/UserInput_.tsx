@@ -11,7 +11,6 @@ import { useChatContext } from "../ChatContext/ChatContext";
 import { Separator } from "@/components/ui/_index";
 import Editor from "./Editor/Editor";
 import EditorLoading from "./EditorLoading/EditorLoading";
-import { PaperPlaneIcon } from "@radix-ui/react-icons";
 
 import { useChat } from "@ai-sdk/react";
 
@@ -33,7 +32,6 @@ export default function UserInput(props: UserInputProps) {
 
   const {
     messages,
-    status,
     isLoading,
     input,
     setInput,
@@ -62,13 +60,14 @@ export default function UserInput(props: UserInputProps) {
         className={cn(
           "relative bg-gradient-to-br from-stone-100 to-stone-300",
           "border-1 border-[#302d2c] text-black ",
-          "flex flex-col py-1 mx-auto rounded-2xl w-full max-w-[800px]", //z-[2]
+          "flex flex-col py-3 mx-auto rounded-2xl w-full max-w-[800px]", //z-[2] 
           "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
           //"z-[2] flex flex-col pt-1 pb-0 mx-auto rounded-t-2xl border-1 border-[#302d2c] bg-[#0f0909] text-white w-full max-w-[800px]",
         )}
       >
-        <div className="px-1 flex flex-row">
-          <textarea
+        <div className="px-4 flex flex-row">
+          {!isEditorActive && <EditorLoading />}
+          {/* <textarea
             autoFocus
             autoComplete="off"
             rows={1}
@@ -86,34 +85,42 @@ export default function UserInput(props: UserInputProps) {
               )}px`;
               setInput(e.target.value);
             }}
-            onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit();
-              }
+          /> */}
+
+          <Editor
+            isEditorActive={isEditorActive}
+            setEditorStatus={setEditorStatus}
+            child={{
+              messages,
+              isLoading,
+              input,
+              setInput,
+              handleInputChange,
+              handleSubmit,
             }}
           />
 
-          <button
-            onClick={() => handleSubmit()}
-            disabled={isLoading}
-            className={cn("flex items-center justify-center mx-3")}
-            hidden={!isEditorActive}
-          >
-            <PaperPlaneIcon width={24} height={24} color="gray" />
-            {/* <Image src="/icon/enter.svg" width={24} height={24} alt="send" /> */}
-          </button>
+          {isEditorActive && (
+            <button
+              onClick={() => handleSubmit()}
+              disabled={isLoading}
+              className=""
+              hidden={!isEditorActive}
+            >
+              <Image src="/icon/enter.svg" width={24} height={24} alt="send" />
+            </button>
+          )}
         </div>
 
         {/* Index section */}
         {/* <div className="flex items-center m-2 gap-1 my-0 border-t-2">
-          <UseCaseSelector setUsecase={setUsecase} usecase={usecase} />
-          <Separator
-            className="border-gray-200 h-[15px] my-1"
-            orientation="vertical"
-          />
-          <PromptSuggestion setIsSuggested={"setIsSuggested"} />
-        </div> */}
+            <UseCaseSelector setUsecase={setUsecase} usecase={usecase} />
+            <Separator
+              className="border-gray-200 h-[15px] my-1"
+              orientation="vertical"
+            />
+            <PromptSuggestion setIsSuggested={setIsSuggested} />
+          </div> */}
       </div>
     </div>
   );
