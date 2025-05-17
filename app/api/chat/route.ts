@@ -9,7 +9,6 @@ export async function POST(req: NextRequest) {
 
     try {
         const { messages, id, user } = await req.json();
-
         const client = createGoogleGenerativeAI({
             apiKey: process.env.GOOGLE_API_KEY,
             baseURL: process.env.GOOGLE_API_ENDPOINT,
@@ -43,8 +42,11 @@ export async function POST(req: NextRequest) {
 
                     //save chat
                     async onFinish({ response }) {
-                        const title = await generateTitle(messages[0].content);
-                        dataStream.writeMessageAnnotation({ title: title });
+                        let title = undefined;
+                        if (messages.length === 1) {
+                            title = await generateTitle(messages[0].content);
+                            dataStream.writeMessageAnnotation({ title: title });
+                        }
                         saveChat({
                             _id: id,
                             title: title,

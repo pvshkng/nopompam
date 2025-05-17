@@ -9,18 +9,16 @@ import { User } from "@/components/icons/user";
 import { DeleteIcon } from "@/components/icons/delete";
 import { useEffect } from "react";
 import { getChatsByUser } from "@/lib/ai/chat-store";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export function LeftSidebar(props) {
   const { sidebarToggled, setSidebarToggled, threads, setThreads } = props;
   const { email } = props;
-  const router = useRouter();
-
 
   useEffect(() => {
     (async () => {
       const threads = await getChatsByUser(email!);
+      //console.log("threads: ", threads);
       setThreads(threads);
     })();
   }, []);
@@ -143,39 +141,44 @@ export function LeftSidebar(props) {
               "gap-2"
             )}
           >
-            {threads.map((h, i) => (
-              <Link
-                replace
-                key={i}
-                href={{
-                  pathname: "/chat",
-                  query: {
-                    _id: h._id,
-                  },
-                }}
-                prefetch={false}
-                className={cn(
-                  "flex flex-row justify-between items-center",
-                  "p-2 rounded-md w-full",
-                  "bg-stone-200 hover:bg-stone-300",
-                  "text-xs",
-                  "cursor-pointer"
-                )}
-              >
-                <div className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  <div>{h.title || "undefined"}</div>
-                  <div className="text-stone-600">
-                    {h.timestamp || "undefined"}
-                  </div>
-                </div>
-                <button
-                  className={cn(
-                    "relative overflow-hidden",
-                    "flex items-center bg-stone-300 hover:bg-stone-200 rounded-md p-1"
-                  )}
-                >
-                  <DeleteIcon />
-                  {/* <div
+            {threads
+              .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+              .map(
+                (h, i) =>
+                  h && (
+                    <Link
+                      replace
+                      key={i}
+                      href={{
+                        pathname: "/chat",
+                        query: {
+                          _id: h?._id!,
+                        },
+                      }}
+                      prefetch={false}
+                      className={cn(
+                        "flex flex-row justify-between items-center",
+                        "p-2 rounded-md w-full",
+                        "bg-stone-200 hover:bg-stone-300",
+                        "text-xs",
+                        "cursor-pointer"
+                      )}
+                    >
+                      <div className="whitespace-nowrap overflow-hidden text-ellipsis">
+                        <div>{h.title || "undefined"}</div>
+                        <div className="text-stone-600 text-[9px]">
+                          {new Date(Number(h.timestamp)).toLocaleString() ||
+                            "undefined"}
+                        </div>
+                      </div>
+                      <button
+                        className={cn(
+                          "relative overflow-hidden",
+                          "flex items-center bg-stone-300 hover:bg-stone-200 rounded-md p-1"
+                        )}
+                      >
+                        <DeleteIcon />
+                        {/* <div
                 className={cn(
                   "absolute flex w-[100px] rounded-md p-1 top-0 right-0 left-0 bottom-0",
                   "bg-red-400 hover:bg-red-500",
@@ -183,9 +186,10 @@ export function LeftSidebar(props) {
               >
                 Confirm?
               </div> */}
-                </button>
-              </Link>
-            ))}
+                      </button>
+                    </Link>
+                  )
+              )}
           </div>
           <div className={cn("text-stone-500 text-xs w-full text-center")}>
             All sessions

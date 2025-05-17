@@ -19,7 +19,6 @@ export async function generateTitle(message: string) {
             model: provider("gemini-2.0-flash-001"),
             prompt: _prompt,
         })
-        console.log("generateTitle result: ", result);
         return result.text
 
     } catch (error) {
