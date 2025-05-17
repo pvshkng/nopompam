@@ -13,11 +13,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export function LeftSidebar(props) {
-  const { sidebarToggled, setSidebarToggled } = props;
+  const { sidebarToggled, setSidebarToggled, threads, setThreads } = props;
   const { email } = props;
   const router = useRouter();
 
-  const [threads, setThreads] = useState([]); //await getChatsByUser(email!)
 
   useEffect(() => {
     (async () => {

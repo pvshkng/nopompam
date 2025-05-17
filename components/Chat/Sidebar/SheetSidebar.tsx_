@@ -5,7 +5,7 @@
 import * as ui from "@/components/ui/_index";
 import { cn, formatDate } from "@/lib/utils";
 import Image from "next/image";
-import TopicDeletionDialog from "./TopicDeletionDialog";
+import TopicDeletionDialog from "./TopicDeletionDialog.tsx_";
 import { useEffect, useState } from "react";
 import { queryTopics } from "@/lib/actions/mongodb/_index";
 import "./loadingSpinner.css";

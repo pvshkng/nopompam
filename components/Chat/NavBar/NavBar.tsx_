@@ -7,7 +7,7 @@ import { signOut } from "next-auth/react";
 import * as ui from "@/components/ui/_index";
 import React from "react";
 import NavBarDropDown from "./NavBarDropDown";
-import SheetSidebar from "../Sidebar/SheetSidebar";
+import SheetSidebar from "../Sidebar/SheetSidebar.tsx_";
 import './navbar.css'
 
 type NavBarPopUpProps = {

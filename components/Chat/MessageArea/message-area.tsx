@@ -141,9 +141,9 @@ export default function MessageArea(props: MessageAreaProps) {
 
             {
               <>
-                {m.annotations?.map((a) => (
+                {/* {m.annotations?.map((a) => (
                   <div>ANNOTATION: {JSON.stringify(a, null, 2)}</div>
-                ))}
+                ))} */}
 
                 {/* {JSON.stringify(m, null, 2)} */}
 

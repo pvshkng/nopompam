@@ -9,7 +9,7 @@ type Chat = {
     messages: Message[];
 };
 
-const options = { /* ex: 0 */ }
+const options = { ex: 60 * 60 * 24 };
 
 function chatId(user?: string, id?: string) {
     const CHAT_FORMAT = "chat:{{user}}:{{id}}";
@@ -29,12 +29,12 @@ export async function getChatsByUser(email: string) {
 
     try {
         const key = chatId(email, "*");
-        console.log("getChatsByUser key: ", key);
+        //console.log("getChatsByUser key: ", key);
         const result: Chat[] | null = await redis.keys(key);
-        console.log("getChatsByUser result: ", result);
+        //console.log("getChatsByUser result: ", result);
         if (result && result.length > 0) {
             const threads = await redis.mget(result);
-            console.log("getChatsByUser res: ", threads);
+            //console.log("getChatsByUser res: ", threads);
             return threads
         } else { return [] }
 
@@ -59,14 +59,14 @@ export async function getChat(user: string, _id: string) {
     }
 }
 
-export async function saveChat({ _id, user, messages }) {
-    console.log("Saving chat: ", { _id, user, messages });
+export async function saveChat({ _id, title, user, messages }) {
+    //console.log("Saving chat: ", { _id, user, messages });
     const key = chatId(user, _id);
     await redis.set(key,
         JSON.stringify({
             _id: _id,
             user: user,
-            title: "Untitled",
+            title: title,
             timestamp: Date.now().toString(),
             messages: messages
         }),

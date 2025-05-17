@@ -41,6 +41,7 @@ export default function Wrapper(props: any) {
   const [artifacts, setArtifacts] = useState(loadedArtifacts);
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
+  const [threads, setThreads] = useState([]);
 
   const {
     messages,
@@ -64,15 +65,21 @@ export default function Wrapper(props: any) {
       user: email,
     },
 
-    onFinish: () => {
-      !searchParams.get("_id") && router.push(`/chat?_id=${_id}`);
+    onFinish: (messages) => {
+      if (!searchParams.get("_id")) {
+        router.replace(`/chat?_id=${_id}`);
+        const title = messages.annotations?.[0]?.title || "New Chat";
+        const newThread = {
+          _id: _id,
+          user: email,
+          title: title,
+          timestamp: "Just now",
+        };
+        setThreads((prevThreads) => [newThread, ...prevThreads]);
+      }
     },
     streamProtocol: "data",
   });
-
-  useEffect(() => {
-    console.log("streamData: ", data);
-  }, [data, setData]);
 
   useEffect(() => {
     if (isScrolledToBottom) {
@@ -111,6 +118,8 @@ export default function Wrapper(props: any) {
         email={email}
         sidebarToggled={sidebarToggled}
         setSidebarToggled={setSidebarToggled}
+        threads={threads}
+        setThreads={setThreads}
       />
 
       <div
