@@ -9,6 +9,28 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
+import type { JSX } from "react";
+import type { BundledLanguage } from "shiki/bundle/web";
+import { toJsxRuntime } from "hast-util-to-jsx-runtime";
+import { Fragment } from "react";
+import { jsx, jsxs } from "react/jsx-runtime";
+import { codeToHast } from "shiki/bundle/web";
+
+export async function highlight(code: string, lang: BundledLanguage) {
+  const out = await codeToHast(code, {
+    lang,
+    theme: "github-dark",
+  });
+
+  return toJsxRuntime(out, {
+    Fragment,
+    jsx,
+    jsxs,
+  }) as JSX.Element;
+}
+
+// TODO: map tool name with user friendly name
+
 export const ToolAnnotation = ({ tool }) => {
   return (
     <React.Fragment>
@@ -19,6 +41,7 @@ export const ToolAnnotation = ({ tool }) => {
           </span> */}
           <hr
             className={cn(
+              "mt-2",
               "relative border-0 text-center h-6 opacity-50",
               "before:content-[''] before:absolute before:left-0 before:top-1/2",
               "before:w-full before:h-px",
@@ -33,8 +56,12 @@ export const ToolAnnotation = ({ tool }) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{tool && tool.toolName}</DialogTitle>
-            <DialogDescription>
-              {JSON.stringify(tool, null, 2)}
+            <DialogDescription className="">
+              {tool && (
+                <div className="prose prose-sm prose-invert max-h-[700px] max-w-[500px] overflow-auto">
+                  {highlight(JSON.stringify(tool, null, 2), "json")}
+                </div>
+              )}
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

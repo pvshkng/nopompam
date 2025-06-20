@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/_index";
 import Editor from "./Editor/Editor";
 import EditorLoading from "./EditorLoading/EditorLoading";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
+import { GalleryHorizontalEnd } from "@/components/icons/gallery-horizontal-end";
 
 import { useChat } from "@ai-sdk/react";
 
@@ -39,6 +40,8 @@ export default function UserInput(props: UserInputProps) {
     setInput,
     handleInputChange,
     handleSubmit,
+    canvasOpened,
+    isCanvasOpened,
   } = props.child;
 
   const { suggestions } = props;
@@ -114,6 +117,23 @@ export default function UserInput(props: UserInputProps) {
           />
           <PromptSuggestion setIsSuggested={"setIsSuggested"} />
         </div> */}
+      </div>
+      <div
+        className={cn(
+          "flex items-center justify-center",
+          "bg-stone-300",
+          "m-1 rounded-full h-full w-[32px] ml-auto",
+          "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+        )}
+      >
+        <button
+          onClick={() => {
+            isCanvasOpened(!canvasOpened);
+          }}
+          className="flex flex-row size-[16px] text-sm text-gray-500 hover:text-gray-700"
+        >
+          <GalleryHorizontalEnd width={16} height={16} />
+        </button>
       </div>
     </div>
   );

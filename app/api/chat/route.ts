@@ -2,12 +2,21 @@ import { NextRequest } from "next/server";
 import { streamText, smoothStream, convertToCoreMessages, appendResponseMessages, createIdGenerator, createDataStreamResponse, createDataStream } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { tools } from "@/lib/ai";
+import { documentSearch } from "@/lib/ai/tool/document-search";
 import { saveChat } from "@/lib/ai/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
+import { experimental_createMCPClient } from "ai"
 
 export async function POST(req: NextRequest) {
 
     try {
+
+        const mcpClient = await experimental_createMCPClient({
+            transport: { type: "sse", url: "https://vector-search-mcp-server.onrender.com/sse" }
+        })
+
+        const mcpTools = await mcpClient.tools()
+
         const { messages, id, user } = await req.json();
         const client = createGoogleGenerativeAI({
             apiKey: process.env.GOOGLE_API_KEY,
@@ -27,7 +36,9 @@ export async function POST(req: NextRequest) {
                         delayInMs: 20, // optional: defaults to 10ms
                         chunking: 'word', // optional: defaults to 'word'
                     }),
-                    //tools,
+                    // ...tools, 
+                    // documentSearch
+                    tools: { ...mcpTools },
                     maxSteps: 3,
                     toolCallStreaming: true,
                     toolChoice: "auto",

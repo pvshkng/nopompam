@@ -16,7 +16,6 @@ export function Canvas(props: any) {
       {/* <section className={cn("flex flex-col gap-4", "size-full")}> */}
       <Tabs defaultValue="" className={cn("flex flex-col size-full ")}>
         <TabsList
-          key={""}
           className={cn(
             "flex w-full items-end justify-start gap-1",
             "!pb-0 !mb-0",
@@ -57,10 +56,10 @@ export function Canvas(props: any) {
           ))}
         </TabsList>
 
-        {widgets.map((w) => (
+        {widgets.map((w, i) => (
           <>
             <TabsContent
-              key={w.id}
+              key={i}
               value={`${w.toolName}-${w.id}`}
               className="flex m-0 p-0 bg-white data-[state=active]:h-[100%] data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
             >

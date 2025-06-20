@@ -37,7 +37,7 @@ export default function Wrapper(props: any) {
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
   const [canvasSwapped, isCanvasSwapped] = useState(false);
-  const [canvasOpened, isCanvasOpened] = useState(false);
+  const [canvasOpened, isCanvasOpened] = useState(true);
   const [artifacts, setArtifacts] = useState(loadedArtifacts);
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
@@ -207,13 +207,19 @@ export default function Wrapper(props: any) {
                   setInput,
                   handleInputChange,
                   handleSubmit,
+                  canvasOpened,
+                  isCanvasOpened,
                 }}
               />
             </div>
           </ResizablePanel>
 
           <ResizableHandle
-            className="hidden relative overflow-visible"
+            /* hidden */
+            className={cn(
+              !canvasOpened && "hidden",
+              "relative overflow-visible"
+            )}
             withHandle
             onClick={() => {}}
           />
@@ -221,14 +227,17 @@ export default function Wrapper(props: any) {
           <ResizablePanel
             /* hidden */
 
-            className="hidden flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[100px]"
+            className={cn(
+              !canvasOpened && "hidden",
+              "flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[100px]"
+            )}
           >
-            {/* <Canvas
-            canvasOpened={canvasOpened}
-            isCanvasOpened={isCanvasOpened}
-            artifacts={artifacts}
-            setArtifacts={setArtifacts}
-          /> */}
+            <Canvas
+              canvasOpened={canvasOpened}
+              isCanvasOpened={isCanvasOpened}
+              artifacts={artifacts}
+              setArtifacts={setArtifacts}
+            />
           </ResizablePanel>
         </ResizablePanelGroup>{" "}
       </div>
