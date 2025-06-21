@@ -38,7 +38,7 @@ export default function Wrapper(props: any) {
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
   const [canvasSwapped, isCanvasSwapped] = useState(false);
-  const [canvasOpened, isCanvasOpened] = useState(true);
+  const [canvasOpened, isCanvasOpened] = useState(false);
   const [artifacts, setArtifacts] = useState(loadedArtifacts);
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
@@ -168,26 +168,13 @@ export default function Wrapper(props: any) {
                       ) : (
                         <>
                           <c.MessageArea
-                            child={{
-                              name,
-                              image,
-                              messages,
-                              isLoading,
-                            }}
+                            name={name}
+                            image={image}
+                            messages={messages}
+                            isLoading={isLoading}
                           />
                         </>
                       )}
-
-                      {/* {!isChatInitiated && (
-              <div
-                className={cn(
-                  "size-full flex items-center justify-center",
-                  messages.length > 0 ? "fadeOut" : ""
-                )}
-              >
-                <c.UserInput child={{}} />
-              </div>
-            )} */}
                     </div>
                   </div>
                   <BottomScrollButton
@@ -197,8 +184,7 @@ export default function Wrapper(props: any) {
                 </main>
                 <div
                   className={
-                    /* Styling */
-                    !isChatInitiated && messages.length === 0
+                    messages.length === 0
                       ? cn(
                           "size-full flex items-center justify-center",
                           messages.length > 0 ? "fadeOut" : ""

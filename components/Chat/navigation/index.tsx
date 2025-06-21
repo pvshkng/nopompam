@@ -8,6 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/_index";
 
 export const Navigation = (props: any) => {
   const { sidebarToggled, setSidebarToggled, threads, setThreads } = props;
@@ -15,13 +16,20 @@ export const Navigation = (props: any) => {
   return (
     <div
       className={cn(
-        "flex flex-row sticky h-12 w-full",
+        "flex flex-row sticky h-10 w-full items-center gap-2",
+        "px-2",
         "border-b border-stone-700 dark:border-stone-700",
         "transition-all duration-300 ease-in-out",
+        "shadow-md"
       )}
     >
+      <p className={cn("font-semibold text-xs")}>Nopompam</p>
+
+      <Separator orientation="vertical" className="h-5" />
       <Sheet>
-        <SheetTrigger>Open</SheetTrigger>
+        <SheetTrigger className={cn("font-semibold text-xs")}>
+          Thread
+        </SheetTrigger>
         <SheetContent side={"left"}>
           {/* <SheetHeader>
             <SheetTitle>Are you absolutely sure?</SheetTitle>
@@ -38,6 +46,7 @@ export const Navigation = (props: any) => {
           />
         </SheetContent>
       </Sheet>
+      <Separator orientation="vertical" className="h-5" />
     </div>
   );
 };

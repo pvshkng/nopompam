@@ -19,12 +19,12 @@ const models = {
 
 export const ModelSelector = (props: any) => {
   return (
-    <div className="px-2 flex bg-stone-700 text-stone-200 overflow-hidden w-24">
+    <div className="px-2 py-1 m-0 flex bg-stone-700 text-stone-200 overflow-hidden w-32">
       <Select>
-        <SelectTrigger className="flex !min-w-0 p-0 m-0 rounded-none border-none text-[10px] overflow-hidden">
+        <SelectTrigger className="flex !min-w-0 !p-0 !m-0 rounded-none border-none text-[10px] overflow-hidden">
           <SelectValue
-            placeholder="Model"
-            className="!min-w-0 [&_span]:!min-w-0 [&_span]:!truncate [&_span]:max-w-full [&_span]:block"
+            placeholder="Select model"
+            className=""
           />
         </SelectTrigger>
 
@@ -33,7 +33,7 @@ export const ModelSelector = (props: any) => {
             key={provider}
             className={cn(
               "!max-h-[200px] overflow-auto rounded-none",
-              "border-stone-800 shadow-none",
+              "border-stone-700 shadow-none",
               "m-0 p-0"
             )}
           >

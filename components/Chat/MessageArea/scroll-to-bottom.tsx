@@ -5,11 +5,12 @@ export function BottomScrollButton(props: any) {
   return (
     <div
       className={cn(
-        "size-10 p-1 cursor-pointer right-3 bottom-4 flex items-center justify-center",
-        "relative bg-stone-600",
+        "size-6 p-1 cursor-pointer right-1/2 bottom-4 flex items-center justify-center",
+        "relative bg-stone-700",
         "text-white text-[10px] font-semibold",
         "shadow-[0_0px_20px_rgba(232,78,49,0.1)]",
-        isCurrentBottom ? "hidden" : "absolute"
+        isCurrentBottom ? "hidden" : "absolute",
+        "animate-bounce"
         //"absolute"
       )}
       onClick={() => {

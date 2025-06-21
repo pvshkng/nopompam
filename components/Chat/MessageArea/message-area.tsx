@@ -21,9 +21,14 @@ import { ToolComponents } from "./message-tool-components";
 import { ToolAnnotation } from "./message-tool-annotation";
 import { DocumentsReference } from "@/components/tools/documents-reference";
 import { generateId } from "ai";
+import { UIMessage } from "@ai-sdk/ui-utils";
+import { MessageBlock } from "./message-block";
 
 type MessageAreaProps = {
-  child: any;
+  name: string;
+  image: string;
+  messages: UIMessage[];
+  isLoading: boolean;
 };
 
 // @ts-ignore
@@ -32,33 +37,7 @@ const isLast = (messages, m) => {
 };
 
 export default function MessageArea(props: MessageAreaProps) {
-  const { status } = useChat();
-
-  const { child } = props;
-  const { name, image, messages, isLoading } = props.child;
-  const assistantName = "Assistant";
-
-  // Handling Chart Visualization Panel
-  // Uncomment to enable
-
-  const [isShowGenChartBtn, setIsShowGenChartBtn] = useState(false);
-
-  useEffect(() => {
-    const msgAreaDiv = document.querySelector("#msgArea");
-    if (msgAreaDiv) {
-      const latestDiv = msgAreaDiv.lastElementChild;
-
-      const containsTable = latestDiv?.querySelector("table") !== null || false;
-
-      if (containsTable) {
-        setIsShowGenChartBtn(true);
-      } else {
-        setIsShowGenChartBtn(false);
-      }
-    } else {
-      return;
-    }
-  }, [isLoading]);
+  const { name, image, messages, isLoading } = props;
 
   return (
     <div id="msgArea" className={cn("text-sm py-7 mb-auto")}>
@@ -71,7 +50,7 @@ export default function MessageArea(props: MessageAreaProps) {
           )}
         >
           {/* Tool Annotation */}
-          {m.parts.some((p, i) => p.type === "tool-invocation") && (
+          {/* {m.parts.some((p, i) => p.type === "tool-invocation") && (
             <div key={generateId(5)} className="flex flex-col gap-1 my-2">
               {m.parts.map((p, k) => (
                 <>
@@ -87,87 +66,9 @@ export default function MessageArea(props: MessageAreaProps) {
                 </>
               ))}
             </div>
-          )}
+          )} */}
 
-          <div
-            className={cn(
-              "stream-section",
-
-              "relative inline-block leading-6 transition-[float] rounded-2xl my-1",
-              "[&>*]:text-left",
-
-              m.role == "user"
-                ? cn(
-                    "max-w-[100%]",
-                    "bg-gradient-to-br from-stone-300 to-stone-400 rounded-br-[0]"
-                  )
-                : "rounded-bl-[0] w-full"
-            )}
-          >
-            {m.parts.map((p, j) => {
-              switch (p.type) {
-                case "text":
-                  return (
-                    <div key={`${m.id}-${j}`}>
-                      <ReactMarkdown
-                        className={cn(
-                          "m-2 prose text-sm",
-                          m.role !== "user" &&
-                            isLoading &&
-                            isLast(messages, m) &&
-                            "typewriting",
-                          m.role === "user" ? "text-neutral-700" : "text-black"
-                        )}
-                        remarkPlugins={[remarkGfm, remarkMath]}
-                        rehypePlugins={[rehypeKatex]}
-                        components={components}
-                      >
-                        {p.text}
-                      </ReactMarkdown>
-                    </div>
-                  );
-
-                case "tool-invocation":
-                  if (p.toolInvocation.toolName === "documentSearch") {
-                    return (
-                      <DocumentsReference result={p.toolInvocation.result} />
-                    );
-                  }
-              }
-            })}
-
-            {/* Message tail tool component */}
-            <ToolComponents m={m} />
-
-            {
-              <>
-                {/* {m.annotations?.map((a) => (
-                  <div>ANNOTATION: {JSON.stringify(a, null, 2)}</div>
-                ))} */}
-
-                {/* {JSON.stringify(m, null, 2)} */}
-
-                {/* Action Container */}
-                {m.role === "assistant" && (
-                  <div
-                    className={cn(
-                      "absolute -bottom-4 -right-0 flex flex-row gap-1"
-                    )}
-                  >
-                    {isShowGenChartBtn && i === messages.length - 1 && (
-                      <>{/* <VisualizePanel /> */}</>
-                    )}
-
-                    {/* <ActionPanel
-                      isLast={isLast(messages, m)}
-                      messageId={m._id}
-                      message={m.content}
-                    /> */}
-                  </div>
-                )}
-              </>
-            }
-          </div>
+          <MessageBlock m={m} isLoading={isLoading} />
         </div>
       ))}
     </div>
