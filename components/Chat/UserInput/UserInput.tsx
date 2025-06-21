@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import UseCaseSelector from "./UseCaseSelector";
+import { ModelSelector } from "./model-selector";
 import PromptSuggestion from "./PromptSuggestion";
 import SuggestionBar from "./SuggestionBar";
 import { useChatContext } from "../ChatContext/ChatContext";
@@ -111,14 +112,15 @@ export default function UserInput(props: UserInputProps) {
 
       <div
         className={cn(
-          "flex items-center justify-center",
+          "flex",
           "m-1 h-full w-full",
           "border border-stone-700",
           "max-w-[800px]"
         )}
       >
         {/* Index section */}
-        <div className="flex flex-row items-start justify-left gap-1 my-0">
+        <div className="flex flex-row gap-1 my-0">
+          <ModelSelector />
           <UseCaseSelector setUsecase={setUsecase} usecase={usecase} />
           <Separator
             className="border-gray-200 h-[15px] my-1"
