@@ -20,7 +20,6 @@ export default async function Login() {
           className={cn(
             "flex flex-col items-center justify-center h-full ",
             "w-full max-lg:w-full",
-            //"bg-gradient-to-br from-mild to-accent",
             "gap-7"
           )}
         >

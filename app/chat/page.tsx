@@ -30,20 +30,12 @@ export default async function Chat({
     _id = await createChat(email!);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  //_id && email ? (messages = await queryChat(_id, email)) : (messages = []);
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  //!messages && redirect("/");
-
-  //const templates = await queryTemplates();
-  //const suggestions = await querySuggestions();
-
   if (session) {
     return (
       <>
         {/* @ts-ignore */}
         <ChatProvider initialMessages={messages} _id={_id} email={email}>
-          <div className="flex flex-row size-full bg-gradient-to-b from-stone-100 to-stone-300 overflow-hidden">
+          
             
               {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}
               {/* <c.NavBar name={name} image={image} _id={_id} email={email} /> */}
@@ -57,7 +49,7 @@ export default async function Chat({
                 image={image}
               />
            
-          </div>
+          
         </ChatProvider>
       </>
     );
