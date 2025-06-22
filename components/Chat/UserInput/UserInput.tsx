@@ -1,5 +1,5 @@
 "use client";
-
+import { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -25,16 +25,7 @@ interface UserInputProps {
   child: any;
 }
 
-export default function UserInput(props: UserInputProps) {
-  const {
-    userInput,
-    setUserInput,
-    //handleSend,
-    handleKeypress,
-    //isLoading,
-    usecase,
-    setUsecase,
-  } = useChatContext();
+function PureUserInput(props: UserInputProps) {
 
   const {
     messages,
@@ -117,11 +108,12 @@ export default function UserInput(props: UserInputProps) {
         </button>
       </div>
       <UserInputOptions
-        usecase={usecase}
-        setUsecase={setUsecase}
+
         canvasOpened={canvasOpened}
         isCanvasOpened={isCanvasOpened}
       />
     </div>
   );
 }
+
+export const UserInput = memo(PureUserInput);

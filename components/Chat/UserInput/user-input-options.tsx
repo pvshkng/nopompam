@@ -6,9 +6,9 @@ import PromptSuggestion from "./PromptSuggestion";
 import SuggestionBar from "./SuggestionBar";
 import { Separator } from "@/components/ui/_index";
 import { GalleryHorizontalEnd } from "@/components/icons/gallery-horizontal-end";
-
+import { Attachment } from "./attachment";
 export const UserInputOptions = (props: any) => {
-  const { usecase, setUsecase, canvasOpened, isCanvasOpened } = props;
+  const { canvasOpened, isCanvasOpened } = props;
   return (
     <>
       <div
@@ -21,8 +21,9 @@ export const UserInputOptions = (props: any) => {
       >
         {/* Index section */}
         <div className="flex flex-row gap-1 my-0 w-full items-center justify-between">
-          <div>
+          <div className="flex flex-row h-full gap-1">
             <ModelSelector />
+            <Attachment />
           </div>
           {/* <UseCaseSelector setUsecase={setUsecase} usecase={usecase} />
           <Separator

@@ -1,6 +1,6 @@
 "use client";
 
-import * as c from "@/components/Chat/_index";
+import { memo } from "react";
 import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
@@ -10,10 +10,11 @@ import { useChat } from "@ai-sdk/react";
 import { createIdGenerator, generateId } from "ai";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { LeftSidebar } from "@/components/left-sidebar";
 import { Canvas } from "@/components/canvas";
-import { BottomScrollButton } from "@/components/Chat/MessageArea/scroll-to-bottom";
+import { BottomScrollButton } from "@/components/Chat/message-area/scroll-to-bottom";
 import { Navigation } from "@/components/Chat/navigation";
+import { MessageArea } from "../message-area/message-area";
+import { UserInput } from "@/components/Chat/UserInput/UserInput";
 
 import {
   ResizableHandle,
@@ -22,7 +23,7 @@ import {
 } from "@/components/ui/resizable";
 
 // TODO: to rename to ChatRoot
-export default function Wrapper(props: any) {
+function PureWrapper(props: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
   let {
@@ -33,7 +34,7 @@ export default function Wrapper(props: any) {
     image,
     loadedArtifacts = [],
   } = props;
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
@@ -42,7 +43,15 @@ export default function Wrapper(props: any) {
   const [artifacts, setArtifacts] = useState(loadedArtifacts);
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
-  const [threads, setThreads] = useState([]);
+
+  // to do centralize this type
+  type Thread = {
+    _id: any;
+    user: any;
+    title: any;
+    timestamp: string;
+  };
+  const [threads, setThreads] = useState<Thread[]>([]);
 
   const {
     messages,
@@ -67,8 +76,10 @@ export default function Wrapper(props: any) {
     },
 
     onFinish: (messages) => {
+      // todo: make this a function
       if (!searchParams.get("_id")) {
         router.replace(`/chat?_id=${_id}`);
+        // @ts-ignore
         const title = messages.annotations?.[0]?.title || "New Chat";
         const newThread = {
           _id: _id,
@@ -99,7 +110,7 @@ export default function Wrapper(props: any) {
 
   const scrollToBottom = () => {
     if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight!;
+      containerRef.current.scrollTop! = containerRef.current.scrollHeight!;
     }
   };
 
@@ -138,18 +149,6 @@ export default function Wrapper(props: any) {
               "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
             )}
           >
-            {/* Overlay */}
-            <div
-              onClick={() => {
-                sidebarToggled && setSidebarToggled(false);
-              }}
-              className={cn(
-                "pointer-events-none",
-                sidebarToggled &&
-                  "max-sm:backdrop-blur-sm max-sm:bg-white/10 max-sm:!cursor-pointer max-sm:!pointer-events-auto",
-                "z-10 transition-all delay-100 absolute flex size-full"
-              )}
-            />
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[100px]">
                 <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
@@ -167,7 +166,7 @@ export default function Wrapper(props: any) {
                         <></>
                       ) : (
                         <>
-                          <c.MessageArea
+                          <MessageArea
                             name={name}
                             image={image}
                             messages={messages}
@@ -192,7 +191,7 @@ export default function Wrapper(props: any) {
                       : "fadeIn"
                   }
                 >
-                  <c.UserInput
+                  <UserInput
                     child={{
                       messages,
                       status,
@@ -240,3 +239,5 @@ export default function Wrapper(props: any) {
     </>
   );
 }
+
+export const Wrapper = memo(PureWrapper);

@@ -7,18 +7,19 @@ import { codeToHast } from "shiki/bundle/web";
 import { codeToHtml } from "shiki";
 // import { CodeBlock } from "./code-container";
 import { cn } from "@/lib/utils";
+import { Copy } from "lucide-react";
 
 export const components: Partial<any> = {
-  pre: ({ children, className, ...props }) => {
+  pre: ({ children, className, ...props }: { children: any; className?: string }) => {
     let code = "";
-    let language: string = "md";
+    let language: BundledLanguage = "md";
     if (children && children.props) {
       const match = /language-(\w+)/.exec(children.props.className || "");
       if (match) {
         const detectedLanguage = match[1];
         language = isBundledLanguage(detectedLanguage)
           ? detectedLanguage
-          : "text";
+          : "md";
       }
 
       // custom tag
@@ -35,7 +36,11 @@ export const components: Partial<any> = {
     return <HighlightedCodeBlock language={language} code={code} />;
   },
 
-  code: ({ className, children, ...props }) => (
+  code: ({
+    className,
+    children,
+    ...props
+  }: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }) => (
     <code className={className} {...props}>
       {children}
     </code>
@@ -82,13 +87,13 @@ const HighlightedCodeBlock = memo(
         try {
           const generatedHtml = await codeToHtml(code, {
             lang: language,
-            theme: "kanagawa-dragon",
+            theme: "min-light",
             transformers: [
               {
                 code(node) {
-                let lineNumber = 1;
+                  let lineNumber = 1;
                   node.children = node.children.map((line) => {
-                      if ("properties" in line) {
+                    if ("properties" in line) {
                       line.properties["data-line"] = String(lineNumber++);
                     }
                     return line;
@@ -120,31 +125,34 @@ const HighlightedCodeBlock = memo(
           "!animate-none",
           "[&_*]:!opacity-100",
           "[&_*]:!animate-none",
-          "flex flex-col mx-auto size-full",
-          "[&_div]:border",
-          "[&_div]:border-stone-800",
+          "flex flex-col mx-auto size-full mb-4",
+          //"[&_div]:border",
+          //"[&_div]:border-stone-800",
           "!text-white"
         )}
       >
         <div
           className={cn(
-            "bg-stone-900",
-            "p-2 px-3 rounded-t-md",
-            "font-black !text-zinc-200",
+            //"rounded-t-md",
+            "bg-stone-300",
+            "px-3",
+            "font-black !text-stone-500",
             "justify-between flex items-center"
           )}
         >
           {language}
-          copy
+          <button>
+            <Copy width={16} height={16} className="my-1" />
+          </button>
         </div>
         <div
           className={cn(
-            "rounded-b-md",
+            //"rounded-b-md",
             "!border-t-0",
             "[&_pre]:p-2",
             "[&_pre]:overflow-x-auto",
             "[&_pre]:text-sm",
-            "[&_pre]:!bg-stone-800",
+            "[&_pre]:!bg-stone-100",
             "[&_pre]:max-width-full",
             "[&_pre]:relative",
             "[&_pre_code_.line]:pl-8",

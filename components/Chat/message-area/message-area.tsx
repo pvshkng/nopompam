@@ -1,28 +1,13 @@
 "use client";
 import React from "react";
 import { cn } from "@/lib/utils";
-import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
-import ActionPanel from "./ActionPanel";
-import ReactMarkdown from "react-markdown";
-import { ToolChart } from "./Charts/Charts";
-import { useState, useEffect } from "react";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import * as ui from "@/components/ui/_index";
-import VisualizePanel from "./VisualizePanel";
 import "./message-area.css";
 import "./typewriter.css";
 import "./streaming-effect.css";
 import "@/lib/LaTeX/katex.min.css";
-import { useChat } from "@ai-sdk/react";
-import { components } from "@/components/markdown/markdown-component";
-import { ToolComponents } from "./message-tool-components";
-import { ToolAnnotation } from "./message-tool-annotation";
-import { DocumentsReference } from "@/components/tools/documents-reference";
-import { generateId } from "ai";
 import { UIMessage } from "@ai-sdk/ui-utils";
 import { MessageBlock } from "./message-block";
+import { memo } from "react";
 
 type MessageAreaProps = {
   name: string;
@@ -36,7 +21,7 @@ const isLast = (messages, m) => {
   return messages[messages.length - 1] === m;
 };
 
-export default function MessageArea(props: MessageAreaProps) {
+export default function PureMessageArea(props: MessageAreaProps) {
   const { name, image, messages, isLoading } = props;
 
   return (
@@ -74,3 +59,5 @@ export default function MessageArea(props: MessageAreaProps) {
     </div>
   );
 }
+
+export const MessageArea = memo(PureMessageArea);

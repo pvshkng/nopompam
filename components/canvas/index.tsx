@@ -25,47 +25,41 @@ export function Canvas(props: any) {
           )}
         >
           {widgets.map((w) => (
-            <>
-              <TabsTrigger
-                key={w.id}
-                value={`${w.toolName}-${w.id}`}
-                className={cn(
-                  //"data-[state=active]:border-stone-400",
-                  //"data-[state=active]:border",
-                  "m-0",
-                  "data-[state=active]:rounded-t-xl",
-                  "data-[state=active]:rounded-b-none",
-                  "data-[state=active]:bg-white",
-                  "data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
-                )}
-              >
-                <div>{w.toolName}</div>
+            <TabsTrigger
+              key={w.id}
+              value={`${w.toolName}-${w.id}`}
+              className={cn(
+                //"data-[state=active]:border-stone-400",
+                //"data-[state=active]:border",
+                "m-0",
+                "data-[state=active]:rounded-t-xl",
+                "data-[state=active]:rounded-b-none",
+                "data-[state=active]:bg-white",
+                "data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+              )}
+            >
+              <div>{w.toolName}</div>
 
-                <div
-                  className="ml-2 cursor-pointer hover:bg-gray-300"
-                  onClick={() => {
-                    setWidgets((prev) =>
-                      prev.filter((item) => item.id !== w.id)
-                    );
-                  }}
-                >
-                  <CloseIcon />
-                </div>
-              </TabsTrigger>
-            </>
+              <div
+                className="ml-2 cursor-pointer hover:bg-gray-300"
+                onClick={() => {
+                  setWidgets((prev) => prev.filter((item) => item.id !== w.id));
+                }}
+              >
+                <CloseIcon />
+              </div>
+            </TabsTrigger>
           ))}
         </TabsList>
 
         {widgets.map((w, i) => (
-          <>
-            <TabsContent
-              key={i}
-              value={`${w.toolName}-${w.id}`}
-              className="flex m-0 p-0 bg-white data-[state=active]:h-[100%] data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
-            >
-              <CodeEditor />
-            </TabsContent>
-          </>
+          <TabsContent
+            key={i}
+            value={`${w.toolName}-${w.id}`}
+            className="flex m-0 p-0 bg-white data-[state=active]:h-[100%] data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+          >
+            <CodeEditor />
+          </TabsContent>
         ))}
       </Tabs>
       {/* </section> */}

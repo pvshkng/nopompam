@@ -2,7 +2,7 @@ import { codeToHtml } from "shiki";
 import { cn } from "@/lib/utils";
 // import { CopyButton } from "./CodeBlockCopy";
 
-export async function CodeBlock(props) {
+export async function CodeBlock(props: any) {
   const html = await codeToHtml(props.children, {
     lang: props.lang,
     theme: "kanagawa-dragon",
@@ -23,15 +23,16 @@ export async function CodeBlock(props) {
     <>
       <div
         className={cn(
-          "flex flex-col mx-auto size-full max-w-[90%] max-sm:max-w-full px-2",
+          "flex flex-col mx-auto size-full max-w-[90%] max-sm:max-w-full px-2 mb-2",
           "[&_div]:border-2",
           "[&_div]:border-zinc-800",
         )}
       >
         <div
           className={cn(
+            //"rounded-t-xl",
             "bg-zinc-900",
-            "p-2 px-3 rounded-t-xl",
+            "p-2 px-3",
             "font-black !text-zinc-200",
             "justify-between flex items-center",
           )}
@@ -42,13 +43,13 @@ export async function CodeBlock(props) {
         </div>
         <div
           className={cn(
-            "rounded-b-xl",
+            //"rounded-b-xl",
             "!border-t-0",
 
             //Code Span
             "[&_pre]:py-2",
             "[&_pre]:overflow-x-auto",
-            "[&_pre]:rounded-b-xl",
+            //"[&_pre]:rounded-b-xl",
             "[&_pre]:text-sm",
             "[&_pre]:!bg-zinc-900",
             "[&_pre]:max-width-full",

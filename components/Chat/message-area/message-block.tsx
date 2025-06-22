@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { Message } from "@ai-sdk/react";
 import { UIMessage } from "@ai-sdk/ui-utils";
+import { memo } from "react";
 
 // Message renderer
 import ReactMarkdown from "react-markdown";
@@ -8,6 +9,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { components } from "@/components/markdown/markdown-component";
+import ActionPanel from "./ActionPanel";
 
 // Tool components
 import { ToolComponents } from "./message-tool-components";
@@ -18,7 +20,7 @@ type MessageBlockProps = {
   m: UIMessage;
   isLoading?: boolean;
 };
-export const MessageBlock = (props: MessageBlockProps) => {
+export const PureMessageBlock = (props: MessageBlockProps) => {
   const { m, isLoading } = props;
 
   return (
@@ -29,8 +31,10 @@ export const MessageBlock = (props: MessageBlockProps) => {
         "[&>*]:text-left",
         m.role == "user"
           ? cn(
+              "relative",
               "max-w-[100%]",
               "border border-stone-700 bg-stone-700"
+
               //"bg-gradient-to-br from-stone-300 to-stone-400 rounded-br-[0]"
             )
           : "rounded-bl-[0] w-full"
@@ -88,18 +92,18 @@ export const MessageBlock = (props: MessageBlockProps) => {
 
           {/* Action Container */}
           {m.role === "assistant" && (
-            <div
-              className={cn("absolute -bottom-4 -right-0 flex flex-row gap-1")}
-            >
-              {/* <ActionPanel
-                 isLast={isLast(messages, m)}
-                 messageId={m._id}
+            
+              <ActionPanel
+                 //isLast={isLast(messages, m)}
+                 messageId={m.id}
                  message={m.content}
-                /> */}
-            </div>
+                />
+            
           )}
         </>
       }
     </div>
   );
 };
+
+export const MessageBlock = memo(PureMessageBlock);

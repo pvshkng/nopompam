@@ -42,8 +42,8 @@ export default function ActionalPanelDialog({
   const [feedback, setFeedback] = useState("");
   const [open, setOpen] = useState(false);
   const [isInserting, setIsInserting] = useState(false);
-  const { email } = useChatContext();
-
+  //const { email } = useChatContext();
+  const email = ""
   const feedbackHandle = async () => {
     setIsInserting(true);
     const feedbackId = uuidv4();
@@ -132,7 +132,6 @@ export default function ActionalPanelDialog({
           disabled={isInserting}
         />
         <Button
-          variant="kbank"
           className="flex items-center justify-center"
           disabled={isInserting}
           onClick={() => {

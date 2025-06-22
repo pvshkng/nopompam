@@ -8,25 +8,20 @@ type Message = {
     _id: string;
 };
 
-export function useChatSettings(
-    initialSettings: Record<string, unknown>,
-    _id: string | null,
-    email: string
+export function useChatOptions(
+    //initialSettings: Record<string, unknown>,
 ) {
     const [maxTurn, setMaxTurn] = useState(3);
     const [model, setModel] = useState(undefined);
-    const [usecase, setUsecase] = useState("auto");
+    const [agent, setAgent] = useState(undefined);
 
     return {
-        maxTurn, setMaxTurn,
-        model, setModel,
-  
+        maxTurn,
+        setMaxTurn,
+        model,
+        setModel,
+        agent,
+        setAgent
 
-
-        usecase,
-        setUsecase,
-
-        _id,
-        email,
     };
 }
