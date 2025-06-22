@@ -5,7 +5,7 @@ import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import "../UserInput/UserInputFading.css";
+
 import { useChat } from "@ai-sdk/react";
 import { createIdGenerator, generateId } from "ai";
 import { useRouter } from "next/navigation";
@@ -78,7 +78,6 @@ function PureWrapper(props: any) {
     onFinish: (messages) => {
       // todo: make this a function
       if (!searchParams.get("_id")) {
-        router.replace(`/chat?_id=${_id}`);
         // @ts-ignore
         const title = messages.annotations?.[0]?.title || "New Chat";
         const newThread = {
@@ -88,6 +87,9 @@ function PureWrapper(props: any) {
           timestamp: "Just now",
         };
         setThreads((prevThreads) => [newThread, ...prevThreads]);
+        // rewrite browser url
+        window.history.replaceState(null, "", `/chat?_id=${_id}`);
+        //router.replace(`/chat?_id=${_id}`);
       }
     },
     streamProtocol: "data",
@@ -181,30 +183,18 @@ function PureWrapper(props: any) {
                     isCurrentBottom={isCurrentBottom}
                   />
                 </main>
-                <div
-                  className={
-                    messages.length === 0
-                      ? cn(
-                          "size-full flex items-center justify-center",
-                          messages.length > 0 ? "fadeOut" : ""
-                        )
-                      : "fadeIn"
-                  }
-                >
-                  <UserInput
-                    child={{
-                      messages,
-                      status,
-                      isLoading,
-                      input,
-                      setInput,
-                      handleInputChange,
-                      handleSubmit,
-                      canvasOpened,
-                      isCanvasOpened,
-                    }}
-                  />
-                </div>
+
+                <UserInput
+                  messages={messages}
+                  status={status}
+                  isLoading={isLoading}
+                  input={input}
+                  setInput={setInput}
+                  handleInputChange={handleInputChange}
+                  handleSubmit={handleSubmit}
+                  canvasOpened={canvasOpened}
+                  isCanvasOpened={isCanvasOpened}
+                />
               </ResizablePanel>
 
               <ResizableHandle
