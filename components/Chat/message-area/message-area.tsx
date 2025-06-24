@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { cn } from "@/lib/utils";
 import "./message-area.css";
 import "./typewriter.css";
@@ -8,12 +8,15 @@ import "@/lib/LaTeX/katex.min.css";
 import { UIMessage } from "@ai-sdk/ui-utils";
 import { MessageBlock } from "./message-block";
 import { memo } from "react";
+import { AnyARecord } from "dns";
 
 type MessageAreaProps = {
   name: string;
   image: string;
   messages: UIMessage[];
   isLoading: boolean;
+  artifacts: any[];
+  setArtifacts: Dispatch<SetStateAction<any[]>>;
 };
 
 // @ts-ignore
@@ -22,7 +25,7 @@ const isLast = (messages, m) => {
 };
 
 export default function PureMessageArea(props: MessageAreaProps) {
-  const { name, image, messages, isLoading } = props;
+  const { name, image, messages, isLoading, artifacts, setArtifacts } = props;
 
   return (
     <div id="msgArea" className={cn("text-sm py-7 mb-auto")}>
@@ -53,7 +56,12 @@ export default function PureMessageArea(props: MessageAreaProps) {
             </div>
           )} */}
 
-          <MessageBlock m={m} isLoading={isLoading} />
+          <MessageBlock
+            m={m}
+            isLoading={isLoading}
+            artifacts={artifacts}
+            setArtifacts={setArtifacts}
+          />
         </div>
       ))}
     </div>

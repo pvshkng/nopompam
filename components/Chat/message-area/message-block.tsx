@@ -15,13 +15,16 @@ import ActionPanel from "./ActionPanel";
 import { ToolComponents } from "./message-tool-components";
 import { ToolAnnotation } from "./message-tool-annotation";
 import { DocumentsReference } from "@/components/tools/documents-reference";
+import { ArtifactPreview } from "@/components/artifact/artifact-preview";
 
 type MessageBlockProps = {
   m: UIMessage;
   isLoading?: boolean;
+  artifacts: any[];
+  setArtifacts: any;
 };
 export const PureMessageBlock = (props: MessageBlockProps) => {
-  const { m, isLoading } = props;
+  const { m, isLoading, artifacts, setArtifacts } = props;
 
   return (
     <div
@@ -64,11 +67,39 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
             );
 
           case "tool-invocation":
+            const { toolInvocation } = p;
+            const { toolName, toolCallId, state } = toolInvocation;
             return (
               <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
-                <ToolAnnotation tool={p.toolInvocation} />{" "}
+                <ToolAnnotation tool={toolInvocation} />
+                {toolName === "createArtifact" && (
+                  <ArtifactPreview
+                    artifactId={toolCallId}
+                    artifacts={artifacts}
+                    setArtifacts={setArtifacts}
+                  />
+                )}
               </div>
             );
+
+          /* if (state === "result") {
+              const { result } = toolInvocation;
+              const artifactId = result?.id;
+
+              return (
+                <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
+                  <ToolAnnotation tool={toolInvocation} />
+                  {toolName === "createArtifact" && (
+                    <ArtifactPreview
+                      artifactId={toolCallId}
+                      artifacts={artifacts}
+                      setArtifacts={setArtifacts}
+                    />
+                  )}
+                </div>
+              );
+            } */
+
           // if (
           //   p.toolInvocation.toolName === "documentSearch" &&
           //   "result" in p.toolInvocation &&
@@ -92,13 +123,11 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
 
           {/* Action Container */}
           {m.role === "assistant" && (
-            
-              <ActionPanel
-                 //isLast={isLast(messages, m)}
-                 messageId={m.id}
-                 message={m.content}
-                />
-            
+            <ActionPanel
+              //isLast={isLast(messages, m)}
+              messageId={m.id}
+              message={m.content}
+            />
           )}
         </>
       }

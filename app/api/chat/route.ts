@@ -6,6 +6,7 @@ import { documentSearch } from "@/lib/ai/tool/document-search";
 import { saveChat } from "@/lib/ai/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
 import { experimental_createMCPClient } from "ai"
+import { createArtifact } from "@/lib/ai/tool/create-artifact"
 
 export async function POST(req: NextRequest) {
 
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
                     }),
                     // ...tools, 
                     // documentSearch
-                    tools: { ...mcpTools },
+                    tools: { createArtifact: createArtifact({ dataStream: dataStream }) },
                     maxSteps: 3,
                     toolCallStreaming: true,
                     toolChoice: "auto",
