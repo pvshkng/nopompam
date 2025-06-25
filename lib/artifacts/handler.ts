@@ -1,5 +1,5 @@
 export type Artifact = {
-    id: string;
+    artifactId: string;
     kind?: string;
     title?: string;
     content: string;
@@ -22,12 +22,12 @@ export function artifactStreamHandler(
 ): Artifact[] {
     // For "id", always use streamItem.content as the new id
     if (streamItem.type === "id") {
-        const exists = prevArtifacts.some(a => a.id === streamItem.content);
+        const exists = prevArtifacts.some(a => a.artifactId === streamItem.content);
         if (!exists) {
             return [
                 ...prevArtifacts,
                 {
-                    id: streamItem.content,
+                    artifactId: streamItem.content,
                     content: "",
                     status: "idle",
                     isVisible: true,
@@ -41,7 +41,7 @@ export function artifactStreamHandler(
     let id = streamItem.id;
     if (!id && prevArtifacts.length > 0) {
         // fallback to last artifact if id is missing
-        id = prevArtifacts[prevArtifacts.length - 1].id;
+        id = prevArtifacts[prevArtifacts.length - 1].artifactId;
     }
     if (!id) return prevArtifacts;
 
@@ -50,21 +50,21 @@ export function artifactStreamHandler(
         //    return [];
         case "kind":
             return prevArtifacts.map(a =>
-                a.id === id ? { ...a, kind: streamItem.content } : a
+                a.artifactId === id ? { ...a, kind: streamItem.content } : a
             );
         case "title":
             return prevArtifacts.map(a =>
-                a.id === id ? { ...a, title: streamItem.content } : a
+                a.artifactId === id ? { ...a, title: streamItem.content } : a
             );
         case "text-delta":
             return prevArtifacts.map(a =>
-                a.id === id
+                a.artifactId === id
                     ? { ...a, content: (a.content || "") + streamItem.content }
                     : a
             );
         case "finish":
             return prevArtifacts.map(a =>
-                a.id === id ? { ...a, status: "finished" } : a
+                a.artifactId === id ? { ...a, status: "finished" } : a
             );
         default:
             return prevArtifacts;

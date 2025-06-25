@@ -3,25 +3,14 @@
 import { cn } from "@/lib/utils";
 import { Trash } from "lucide-react";
 import { User } from "@/components/icons/user";
-import { DeleteIcon } from "@/components/icons/delete";
-import { useEffect } from "react";
-import { getChatsByUser } from "@/lib/ai/chat-store";
 import Link from "next/link";
 import { memo } from "react";
+
 
 export function PureThreadManager(props: any) {
   const { sidebarToggled, setSidebarToggled, threads, setThreads, Close } =
     props;
   const { email } = props;
-
-  useEffect(() => {
-    (async () => {
-      const threads = await getChatsByUser(email!);
-      //console.log("threads: ", threads);
-      setThreads(threads);
-    })();
-  }, []);
-
   return (
     /* make side bar open based on click */
 

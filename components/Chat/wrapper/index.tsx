@@ -24,6 +24,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { set } from "date-fns";
 
 const loadedArtifacts = [];
 
@@ -33,11 +34,12 @@ function PureWrapper(props: any) {
   const searchParams = useSearchParams();
   let {
     initialMessages,
+    initialThreads,
+    initialArtifacts,
     _id,
     email,
     name,
     image,
-    loadedArtifacts = [],
   } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
@@ -47,7 +49,7 @@ function PureWrapper(props: any) {
   const [canvasOpened, isCanvasOpened] = useState(false);
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
-  const [artifacts, setArtifacts] = useState(loadedArtifacts);
+  const [artifacts, setArtifacts] = useState(initialArtifacts);
   // to do centralize this type
   type Thread = {
     _id: any;
@@ -55,7 +57,7 @@ function PureWrapper(props: any) {
     title: any;
     timestamp: string;
   };
-  const [threads, setThreads] = useState<Thread[]>([]);
+  const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
 
   const {
     messages,
@@ -96,13 +98,6 @@ function PureWrapper(props: any) {
   const lastDataIndex = useRef(0);
 
   useEffect(() => {
-    const artifactsInSession = sessionStorage.getItem("artifacts");
-    if (artifactsInSession) {
-      setArtifacts(JSON.parse(artifactsInSession));
-    }
-  }, []);
-
-  useEffect(() => {
     if (!data || data.length === 0) return;
 
     const reducedArtifacts = data.reduce(
@@ -110,13 +105,8 @@ function PureWrapper(props: any) {
       []
     );
     setArtifacts(reducedArtifacts);
-    console.log("data: ", data);
-    console.log("reduced: ", reducedArtifacts);
-    console.log("artifacts: ", artifacts);
 
-    if (data[data.length - 1].type === "finish") {
-      sessionStorage.setItem("artifacts", JSON.stringify(artifacts));
-    }
+    setData([]);
   }, [data]);
 
   useEffect(() => {

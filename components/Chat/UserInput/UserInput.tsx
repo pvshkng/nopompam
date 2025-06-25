@@ -50,9 +50,9 @@ function PureUserInput(props: any) {
         messages.length === 0
           ? cn(
               "size-full flex items-center justify-center",
-              messages.length > 0 ? "fadeOut" : ""
+              messages.length > 0 ? "" /* fadeOut */ : ""
             )
-          : "fadeIn"
+          : "" //fadeIn
       }
     >
       <div
@@ -67,11 +67,11 @@ function PureUserInput(props: any) {
             "relative",
             "border border-stone-700 text-black",
             "flex flex-row mx-auto w-full max-w-[800px]",
-            "shadow-lg"
+            //"shadow-lg"
             //"z-[2] flex flex-col pt-1 pb-0 mx-auto rounded-t-2xl border-1 border-[#302d2c] bg-[#0f0909] text-white w-full max-w-[800px]",
           )}
         >
-          <div className="flex flex-row w-full">
+          <div className="flex flex-row w-full bg-stone-50">
             <textarea
               autoFocus
               autoComplete="off"

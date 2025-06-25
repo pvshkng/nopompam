@@ -47,7 +47,7 @@ export const ToolAnnotation = ({ tool }) => {
               "before:w-full before:h-px",
               "before:bg-gradient-to-r before:from-transparent before:via-neutral-300 before:to-transparent",
               "after:content-[attr(data-content)] after:relative after:inline-block",
-              "after:px-2 after:leading-6 after:text-neutral-300 after:bg-neutral-100",
+              "after:px-2 after:leading-6 after:text-neutral-300 after:bg-neutral-100 after:rounded-xl",
               "text-[10px]"
             )}
             data-content={tool && tool.toolName}

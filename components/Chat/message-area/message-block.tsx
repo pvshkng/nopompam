@@ -22,9 +22,10 @@ type MessageBlockProps = {
   isLoading?: boolean;
   artifacts: any[];
   setArtifacts: any;
+  isLast: boolean
 };
 export const PureMessageBlock = (props: MessageBlockProps) => {
-  const { m, isLoading, artifacts, setArtifacts } = props;
+  const { m, isLoading, artifacts, setArtifacts, isLast } = props;
 
   return (
     <div
@@ -35,8 +36,9 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
         m.role == "user"
           ? cn(
               "relative",
-              "max-w-[100%]",
-              "border border-stone-700 bg-stone-700"
+              "max-w-[80%]",
+              "bg-stone-50 rounded-3xl rounded-br-none",
+              "shadow-sm"
 
               //"bg-gradient-to-br from-stone-300 to-stone-400 rounded-br-[0]"
             )
@@ -51,7 +53,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 <ReactMarkdown
                   className={cn(
                     "m-2 prose text-sm",
-                    m.role === "user" ? "text-stone-200" : "text-black"
+                    m.role === "user" ? "text-stone-500" : "text-black"
                     // m.role !== "user" &&
                     //   isLoading &&
                     //   isLast(messages, m) &&
@@ -122,7 +124,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           {/* {JSON.stringify(m, null, 2)} */}
 
           {/* Action Container */}
-          {m.role === "assistant" && (
+          {m.role === "assistant" && !isLoading && (
             <ActionPanel
               //isLast={isLast(messages, m)}
               messageId={m.id}

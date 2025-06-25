@@ -6,11 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useChatContext } from "../ChatContext/ChatContext";
-import {
-  checkFeedbackExist,
-  insertFeedback,
-  updateFeedback,
-} from "@/lib/actions/sql/_index";
+
 import "./insertingSpinner.css";
 import { toast } from "sonner";
 
@@ -58,8 +54,7 @@ export default function ActionalPanelDialog({
       timeStamp: timeStamp,
     };
 
-    const feedbackExist = await checkFeedbackExist(messageId);
-    if (Object.keys(feedbackExist.result).length !== 0) {
+    if (Object.keys([]).length !== 0) {
       toast.warning(text.already_exist, {
         description: text.already_exist_desc,
         action: {
@@ -67,10 +62,10 @@ export default function ActionalPanelDialog({
           onClick: async () => {
             feedbackObj = {
               ...feedbackObj,
-              feedbackId: feedbackExist.result.data_array[0][0],
+              feedbackId: "",
             };
             try {
-              await updateFeedback(feedbackObj);
+              
               toast.success(text.success, {
                 description: text.success_desc,
               });
@@ -102,7 +97,7 @@ export default function ActionalPanelDialog({
       setIsInserting(false);
     } else {
       try {
-        await insertFeedback(feedbackObj);
+        
         toast.success(text.success, {
           description: text.success_desc,
         });

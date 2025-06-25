@@ -1,16 +1,20 @@
 import { DataStreamWriter, tool, generateId, smoothStream, streamText } from "ai";
 import { z } from "zod";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { storeArtifact } from "@/lib/mongo/artifact-store"
+
+// TODO: move sw else
 const client = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY,
   baseURL: process.env.GOOGLE_API_ENDPOINT,
 });
 interface CreateArtifactProps {
-  //session: any;
+  threadId: string;
+  user: any;
   dataStream: DataStreamWriter;
 }
 
-export const createArtifact = ({ dataStream }: CreateArtifactProps) =>
+export const createArtifact = ({ threadId, user, dataStream }: CreateArtifactProps) =>
   tool({
     description: "Create a text artifact and stream its content.",
     parameters: z.object({
@@ -45,6 +49,17 @@ export const createArtifact = ({ dataStream }: CreateArtifactProps) =>
           'Write about the given topic. Markdown is supported. Use headings wherever appropriate.',
         experimental_transform: smoothStream({ chunking: 'word' }),
         prompt: title,
+        onFinish: async ({ response },) => {
+          // draftContent
+          await storeArtifact({
+            artifactId: id,
+            threadId: threadId,
+            user: user,
+            kind: kind,
+            title: title,
+            content: draftContent,
+          });
+        }
       });
 
       for await (const delta of fullStream) {

@@ -1,4 +1,4 @@
-import * as mg from "@/lib/actions/mongodb/_index";
+import * as mg from "@/lib/mongo/_index";
 import * as c from "@/lib/hooks/useChatCallback";
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";

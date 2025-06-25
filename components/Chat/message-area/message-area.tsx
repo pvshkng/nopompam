@@ -61,6 +61,7 @@ export default function PureMessageArea(props: MessageAreaProps) {
             isLoading={isLoading}
             artifacts={artifacts}
             setArtifacts={setArtifacts}
+            isLast={isLast(messages, m)}
           />
         </div>
       ))}

@@ -1,5 +1,4 @@
-//import { useArtifactStore } from "@/lib/hooks/use-artifact-store";
-
+import '../Chat/message-area/streaming-effect.css'
 export function ArtifactPreview({
   artifactId,
   artifacts,
@@ -9,19 +8,15 @@ export function ArtifactPreview({
   artifacts: any[];
   setArtifacts: any;
 }) {
-  //const artifact = useArtifactStore((state) => state.artifacts[artifactId]);
 
-  //if (!artifact) return null;
-
-  // look up artifact from artifactId
-  const artifact = artifacts.find((a) => a.id === artifactId) || undefined;
+  const artifact = artifacts.find((a) => a.artifactId === artifactId) || undefined;
 
   return (
-    <div className="border rounded p-2 mt-2 bg-neutral-50">
+    <div className="stream-section border rounded p-2 mt-2 bg-neutral-50 mb-4">
       {artifact ? (
         <>
           <div className="font-bold mb-1">{artifact.title}</div>
-          <pre className="whitespace-pre-wrap">{artifact.content}</pre>
+          <pre className="whitespace-pre-wrap max-h-[200px] overflow-auto">{artifact.content}</pre>
         </>
       ) : (
         <div>

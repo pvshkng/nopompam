@@ -3,7 +3,7 @@ import { streamText, smoothStream, convertToCoreMessages, appendResponseMessages
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { tools } from "@/lib/ai";
 import { documentSearch } from "@/lib/ai/tool/document-search";
-import { saveChat } from "@/lib/ai/chat-store";
+import { saveChat } from "@/lib/mongo/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
 import { experimental_createMCPClient } from "ai"
 import { createArtifact } from "@/lib/ai/tool/create-artifact"
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
                     }),
                     // ...tools, 
                     // documentSearch
-                    tools: { createArtifact: createArtifact({ dataStream: dataStream }) },
+                    tools: { createArtifact: createArtifact({ threadId: id, user: user, dataStream: dataStream }) },
                     maxSteps: 3,
                     toolCallStreaming: true,
                     toolChoice: "auto",
