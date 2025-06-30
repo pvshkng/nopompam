@@ -8,7 +8,6 @@ import "@/lib/LaTeX/katex.min.css";
 import { UIMessage } from "@ai-sdk/ui-utils";
 import { MessageBlock } from "./message-block";
 import { memo } from "react";
-import { AnyARecord } from "dns";
 
 type MessageAreaProps = {
   name: string;
@@ -17,6 +16,8 @@ type MessageAreaProps = {
   isLoading: boolean;
   artifacts: any[];
   setArtifacts: Dispatch<SetStateAction<any[]>>;
+  canvasOpened: boolean;
+  isCanvasOpened: boolean;
 };
 
 // @ts-ignore
@@ -25,7 +26,16 @@ const isLast = (messages, m) => {
 };
 
 export default function PureMessageArea(props: MessageAreaProps) {
-  const { name, image, messages, isLoading, artifacts, setArtifacts } = props;
+  const {
+    name,
+    image,
+    messages,
+    isLoading,
+    artifacts,
+    setArtifacts,
+    canvasOpened,
+    isCanvasOpened,
+  } = props;
 
   return (
     <div id="msgArea" className={cn("text-sm py-7 mb-auto")}>
@@ -62,6 +72,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
             artifacts={artifacts}
             setArtifacts={setArtifacts}
             isLast={isLast(messages, m)}
+            canvasOpened={canvasOpened}
+            isCanvasOpened={isCanvasOpened}
           />
         </div>
       ))}

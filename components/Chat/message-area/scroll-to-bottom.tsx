@@ -10,7 +10,8 @@ export function BottomScrollButton(props: any) {
         "text-white text-[10px] font-semibold",
         "shadow-[0_0px_20px_rgba(232,78,49,0.1)]",
         isCurrentBottom ? "hidden" : "absolute",
-        "animate-bounce"
+        "animate-bounce",
+        "shadow-md"
         //"absolute"
       )}
       onClick={() => {

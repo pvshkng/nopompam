@@ -22,10 +22,20 @@ type MessageBlockProps = {
   isLoading?: boolean;
   artifacts: any[];
   setArtifacts: any;
-  isLast: boolean
+  isLast: boolean;
+  canvasOpened: boolean;
+  isCanvasOpened: boolean;
 };
 export const PureMessageBlock = (props: MessageBlockProps) => {
-  const { m, isLoading, artifacts, setArtifacts, isLast } = props;
+  const {
+    m,
+    isLoading,
+    artifacts,
+    setArtifacts,
+    isLast,
+    canvasOpened,
+    isCanvasOpened,
+  } = props;
 
   return (
     <div
@@ -37,8 +47,11 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           ? cn(
               "relative",
               "max-w-[80%]",
-              "bg-stone-50 rounded-3xl rounded-br-none",
-              "shadow-sm"
+              "bg-stone-700",
+              "after:w-0 after:h-0 after:absolute after:-bottom-2 after:right-0",
+              "after:!border-transparent  after:!border-t-stone-700 after:!border-r-stone-700 after:border-[8px]"
+              //"bg-stone-50 rounded-3xl rounded-br-none",
+              //"shadow-sm"
 
               //"bg-gradient-to-br from-stone-300 to-stone-400 rounded-br-[0]"
             )
@@ -53,7 +66,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 <ReactMarkdown
                   className={cn(
                     "m-2 prose text-sm",
-                    m.role === "user" ? "text-stone-500" : "text-black"
+                    m.role === "user" ? "text-stone-300" : "text-black"
                     // m.role !== "user" &&
                     //   isLoading &&
                     //   isLast(messages, m) &&
@@ -79,6 +92,8 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                     artifactId={toolCallId}
                     artifacts={artifacts}
                     setArtifacts={setArtifacts}
+                    canvasOpened={canvasOpened}
+                    isCanvasOpened={isCanvasOpened}
                   />
                 )}
               </div>

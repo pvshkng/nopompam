@@ -166,7 +166,7 @@ function PureWrapper(props: any) {
             )}
           >
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[100px]">
+              <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[450px]">
                 <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
                   <div
                     ref={containerRef}
@@ -189,6 +189,8 @@ function PureWrapper(props: any) {
                             isLoading={isLoading}
                             artifacts={artifacts}
                             setArtifacts={setArtifacts}
+                            canvasOpened={canvasOpened}
+                            isCanvasOpened={isCanvasOpened}
                           />
                         </>
                       )}

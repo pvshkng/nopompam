@@ -53,12 +53,13 @@ export const ToolAnnotation = ({ tool }) => {
             data-content={tool && tool.toolName}
           />
         </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className="w-full max-w-[500px] overflow-auto">
+          <DialogHeader className="w-full max-w-full overflow-hidden">
             <DialogTitle>{tool && tool.toolName}</DialogTitle>
             <DialogDescription className="">
               {tool && (
-                <div className="prose prose-sm prose-invert max-h-[700px] max-w-[500px] overflow-auto">
+                /* to do: fix */
+                <div className="prose prose-sm prose-invert max-h-[700px] w-full overflow-auto text-left text-wrap whitespace-nowrap">
                   {highlight(JSON.stringify(tool, null, 2), "json")}
                 </div>
               )}

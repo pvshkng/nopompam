@@ -22,7 +22,8 @@ export const PureNavigation = (props: any) => {
         "px-2",
         "border-b border-stone-700 dark:border-stone-700",
         "transition-all duration-300 ease-in-out",
-        "shadow-md"
+        "bg-white"
+        //"shadow-md"
       )}
     >
       <p className={cn("font-semibold text-xs text-stone-700")}>Nopompam</p>

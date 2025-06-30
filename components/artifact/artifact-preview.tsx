@@ -1,22 +1,34 @@
-import '../Chat/message-area/streaming-effect.css'
-export function ArtifactPreview({
-  artifactId,
-  artifacts,
-  setArtifacts,
-}: {
+import { cn } from "@/lib/utils";
+import "../Chat/message-area/streaming-effect.css";
+
+type ArtifactPreviewProps = {
   artifactId: string;
   artifacts: any[];
   setArtifacts: any;
-}) {
+  canvasOpened: boolean;
+  isCanvasOpened: any;
+};
 
-  const artifact = artifacts.find((a) => a.artifactId === artifactId) || undefined;
+export function ArtifactPreview(props: ArtifactPreviewProps) {
+  const { artifactId, artifacts, setArtifacts, canvasOpened, isCanvasOpened } =
+    props;
+  const artifact =
+    artifacts.find((a) => a.artifactId === artifactId) || undefined;
 
   return (
-    <div className="stream-section border rounded p-2 mt-2 bg-neutral-50 mb-4">
+    <div
+      className={cn(
+        "stream-section border rounded p-2 bg-neutral-50 m-2",
+        "cursor-pointer"
+      )}
+      onClick={() => {isCanvasOpened(true)}}
+    >
       {artifact ? (
         <>
           <div className="font-bold mb-1">{artifact.title}</div>
-          <pre className="whitespace-pre-wrap max-h-[200px] overflow-auto">{artifact.content}</pre>
+          <pre className="whitespace-pre-wrap max-h-[150px] overflow-auto text-xs">
+            {artifact.content}
+          </pre>
         </>
       ) : (
         <div>

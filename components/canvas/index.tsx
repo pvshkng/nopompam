@@ -6,9 +6,9 @@ import { CloseIcon } from "@/components/icons/close";
 import { CodeEditor } from "./canvas-code-editor";
 
 export function Canvas(props: any) {
-  const [widgets, setWidgets] = useState([
-    { id: "1", toolName: "sql" },
-    { id: "2", toolName: "sql" },
+  const [tabs, setTabs] = useState([
+    { id: "1", toolName: "sql", type: "sql" },
+    { id: "2", toolName: "sql", type: "sql" },
   ]);
 
   return (
@@ -24,7 +24,7 @@ export function Canvas(props: any) {
             "bg-gradient-to-br from-stone-100 to-stone-300"
           )}
         >
-          {widgets.map((w) => (
+          {tabs.map((w) => (
             <TabsTrigger
               key={w.id}
               value={`${w.toolName}-${w.id}`}
@@ -38,12 +38,12 @@ export function Canvas(props: any) {
                 "data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
               )}
             >
-              <div>{w.toolName}</div>
+              <div>{w.toolName.toLocaleUpperCase()}</div>
 
               <div
                 className="ml-2 cursor-pointer hover:bg-gray-300"
                 onClick={() => {
-                  setWidgets((prev) => prev.filter((item) => item.id !== w.id));
+                  setTabs((prev) => prev.filter((item) => item.id !== w.id));
                 }}
               >
                 <CloseIcon />
@@ -52,7 +52,7 @@ export function Canvas(props: any) {
           ))}
         </TabsList>
 
-        {widgets.map((w, i) => (
+        {tabs.map((w, i) => (
           <TabsContent
             key={i}
             value={`${w.toolName}-${w.id}`}

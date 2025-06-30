@@ -1,5 +1,7 @@
 import { MongoClient, Db, Collection, ServerApiVersion } from "mongodb";
+import clientPromise from "./mongo-client";
 
+export const mongoDbClientPromise = clientPromise;
 export const uri: string | undefined = process.env.MONGODB_URI;
 
 let client: MongoClient | null = null;
