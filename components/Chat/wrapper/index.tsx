@@ -50,6 +50,7 @@ function PureWrapper(props: any) {
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
   const [artifacts, setArtifacts] = useState(initialArtifacts);
+  const [tabs, setTabs] = useState(initialArtifacts);
   // to do centralize this type
   type Thread = {
     _id: any;
@@ -230,7 +231,9 @@ function PureWrapper(props: any) {
 
                 className={cn(
                   !canvasOpened && "hidden",
-                  "flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[100px]"
+                  "flex flex-col h-full w-full max-h-full overflow-y-hidden overflow-x-hidden min-w-[400px]",
+                  "bg-white",
+                  "items-start justify-start"
                 )}
               >
                 <Canvas
@@ -238,6 +241,8 @@ function PureWrapper(props: any) {
                   isCanvasOpened={isCanvasOpened}
                   artifacts={artifacts}
                   setArtifacts={setArtifacts}
+                  tabs={tabs}
+                  setTabs={setTabs}
                 />
               </ResizablePanel>
             </ResizablePanelGroup>{" "}
