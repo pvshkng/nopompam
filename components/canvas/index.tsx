@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { CloseIcon } from "@/components/icons/close";
 import { CodeEditor } from "./canvas-code-editor";
-import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+import { Tiptap } from "@/components/tiptap/editor";
 
 export function Canvas(props: any) {
   const { tabs, setTabs } = props;
-  const [content, setContent] = useState(tabs[0].content);
+  const [content, setContent] = useState(null);
 
   const t = {
     artifactId: "edPrBYrAH3rLdJAk",
@@ -74,7 +74,7 @@ export function Canvas(props: any) {
             className="flex flex-col m-0 p-0 bg-white data-[state=active]:h-fit data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
           >
             {/* {t.content} */}
-            <SimpleEditor content={t.content} />
+            <Tiptap />
             {/* <CodeEditor /> */}
           </TabsContent>
         ))}

@@ -7,6 +7,17 @@ import SuggestionBar from "./SuggestionBar";
 import { Separator } from "@/components/ui/_index";
 import { GalleryHorizontalEnd } from "@/components/icons/gallery-horizontal-end";
 import { Attachment } from "./attachment";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
 export const UserInputOptions = (props: any) => {
   const { canvasOpened, isCanvasOpened } = props;
   return (
@@ -36,14 +47,30 @@ export const UserInputOptions = (props: any) => {
             orientation="vertical"
           /> */}
           <div className="h-full">
-            <button
-              onClick={() => {
-                isCanvasOpened(!canvasOpened);
-              }}
-              className="flex bg-stone-700 flex-row size-[16px] items-center justify-center text-sm text-gray-500 hover:text-gray-700 h-full w-8"
-            >
-              <GalleryHorizontalEnd width={16} height={16} stroke={"white"} />
-            </button>
+            <Drawer>
+              <DrawerTrigger
+                onClick={() => {
+                  isCanvasOpened(!canvasOpened);
+                }}
+                className="flex bg-stone-700 flex-row size-[16px] items-center justify-center text-sm text-gray-500 hover:text-gray-700 h-full w-8"
+              >
+                <GalleryHorizontalEnd width={16} height={16} stroke={"white"} />
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                  <DrawerDescription>
+                    This action cannot be undone.
+                  </DrawerDescription>
+                </DrawerHeader>
+                <DrawerFooter>
+                  <button>Submit</button>
+                  <DrawerClose>
+                    <button>Cancel</button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
           </div>
         </div>
       </div>

@@ -167,7 +167,7 @@ function PureWrapper(props: any) {
             )}
           >
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[450px]">
+              <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[400px]">
                 <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
                   <div
                     ref={containerRef}
@@ -220,9 +220,10 @@ function PureWrapper(props: any) {
                 /* hidden */
                 className={cn(
                   !canvasOpened && "hidden",
-                  "relative overflow-visible"
+                  "relative overflow-visible",
+                  "max-md:hidden"
                 )}
-                withHandle
+                withHandle={false}
                 onClick={() => {}}
               />
 
@@ -231,9 +232,10 @@ function PureWrapper(props: any) {
 
                 className={cn(
                   !canvasOpened && "hidden",
-                  "flex flex-col h-full w-full max-h-full overflow-y-hidden overflow-x-hidden min-w-[400px]",
+                  "flex flex-col h-full w-full max-h-full overflow-y-hidden overflow-x-hidden min-w-[300px]",
                   "bg-white",
-                  "items-start justify-start"
+                  "items-start justify-start",
+                  "max-md:hidden"
                 )}
               >
                 <Canvas
