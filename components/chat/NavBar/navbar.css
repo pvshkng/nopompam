@@ -1,0 +1,11 @@
+@keyframes concernPopUpDown {
+    from {
+        transform: translateY(-80px);
+    } to {
+        transform: translateY(0);
+    }
+}
+
+.concern-box {
+    animation: concernPopUpDown .5s ease-out 0s 1 normal none;
+}

@@ -1,0 +1,149 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+"use client";
+
+import * as ui from "@/components/ui/_index";
+import { cn, formatDate } from "@/lib/utils";
+import Image from "next/image";
+import TopicDeletionDialog from "./TopicDeletionDialog.tsx_";
+import { useEffect, useState } from "react";
+import { queryTopics } from "@/lib/actions/mongodb/_index";
+import "./loadingSpinner.css";
+
+export default function SheetSidebar(props: { _id: string; email: string }) {
+  const { _id, email } = props;
+  const [stateTopics, setStateTopics] = useState([]);
+  const [filteredTopics, setFilteredTopics] = useState([]);
+  const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    async function fetchTopics() {
+      const topics = await queryTopics(email);
+
+      // @ts-ignore
+      setStateTopics(topics);
+      setIsLoading(false);
+    }
+    fetchTopics();
+  }, [_id, email]);
+
+  useEffect(() => {
+    const filtered = stateTopics.filter((item) =>
+      // @ts-ignore
+      item.topic.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredTopics(filtered);
+  }, [search, stateTopics]);
+  return (
+    <ui.SheetContent
+      side={"left"}
+      onOpenAutoFocus={(event) => {
+        event.preventDefault();
+        setSearch("");
+      }}
+    >
+      <div className="flex flex-col h-full">
+        <div className={"px-4 pt-4"}>
+          <a href="/chat">
+            <div
+              className={cn(
+                "bg-[#16a34a]",
+                "flex flex-row border rounded-lg px-3 py-4 max-w-full",
+                "transition-all",
+                "hover:-translate-y-1",
+                "active:translate-y-1",
+                "hover:shadow-[rgba(22,163,74,0.4)_0px_0px_0px_2px,_rgba(34,197,94,0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]",
+                "cursor-pointer"
+              )}
+            >
+              <div className="flex m-auto">
+                <Image src="/icon/add.svg" width={18} height={18} alt="add" />
+                <h2 className={"text-white text-md font-bold pl-2"}>
+                  Start new chat
+                </h2>
+              </div>
+            </div>
+          </a>
+          <ui.Separator className="my-4" />
+          <h1 className="pb-4 text-xl font-medium text-[#16a34a]">
+            Past Chats
+          </h1>
+          <ui.Input
+            placeholder="Search"
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            className={cn(
+              search === "" &&
+                "bg-[url('/icon/search.svg')] bg-no-repeat bg-right bg-origin-content"
+            )}
+          />
+        </div>
+        <div className="py-3 h-full px-4 overflow-y-auto">
+          {stateTopics.length !== 0 ? (
+            filteredTopics.length !== 0 ? (
+              filteredTopics.map((t, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "bg-gradient-to-br from-emerald-50 to-white",
+                    "flex flex-row rounded-lg my-3 px-4 py-2 justify-between items-center max-w-full",
+                    "transition-all",
+                    "hover:scale-105",
+                    "active:scale-105",
+                    "cursor-pointer",
+                    "hover:border-[#16a34a] border"
+                  )}
+                >
+                  <Image
+                    src={"/icon/message.svg"}
+                    width={20}
+                    height={20}
+                    alt="message"
+                  />
+                  <a
+                    className="flex flex-col w-full overflow-hidden pl-2"
+                    // @ts-ignore
+                    href={`/chat?_id=${t._id}`}
+                  >
+                    <p className="text-[#16a34a] text-xs font-bold overflow-hidden whitespace-nowrap text-ellipsis max-w-[90%]">
+                      {/* @ts-ignore */}
+                      {t?.topic}
+                    </p>
+                    {/* @ts-ignore */}
+                    <p className="text-[10px]">{formatDate(t?.timestamp)}</p>
+                  </a>
+                  <TopicDeletionDialog
+                    // @ts-ignore
+                    _id={t?._id}
+                    stateTopics={stateTopics}
+                    setStateTopics={setStateTopics}
+                    currentId={_id}
+                  >
+                    <img
+                      src="/icon/trash.svg"
+                      className={cn("transition-all hover:-translate-y-1")}
+                      width={24}
+                      height={24}
+                      alt="trash"
+                    />
+                  </TopicDeletionDialog>
+                </div>
+              ))
+            ) : (
+              <div className="text-center pt-4 text-gray-400">No results</div>
+            )
+          ) : isLoading ? (
+            <div className="loading-spinner" />
+          ) : (
+            <div className="text-center pt-4 text-gray-400">
+              No previous chats
+            </div>
+          )}
+        </div>
+      </div>
+    </ui.SheetContent>
+  );
+}

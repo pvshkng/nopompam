@@ -1,0 +1,82 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { signOut } from "next-auth/react";
+import * as ui from "@/components/ui/_index";
+import React from "react";
+import NavBarDropDown from "./NavBarDropDown";
+import SheetSidebar from "../Sidebar/SheetSidebar.tsx_";
+import './navbar.css'
+
+type NavBarPopUpProps = {
+  name: string;
+  image: any;
+  _id: any;
+  email: any;
+};
+
+export default function NavBar(props: NavBarPopUpProps) {
+  const { name, image, _id, email } = props;
+  return (
+    <ui.Sheet>
+    <div
+      className={cn(
+        "sticky w-full z-[5] top-0 flex justify-between items-center bg-gradient-to-r from-neutral-900 to-stone-800 px-3 py-2",
+        "drop-shadow-md"
+      )}
+    >
+      <div className="left-menu flex">
+        <ui.SheetTrigger>
+        <div className="m-auto item-center align-center cursor-pointer p-1">
+          <Image src="/icon/hamburger.svg" width={32} height={32} alt="menu"/>
+        </div>
+        </ui.SheetTrigger>
+        <a href="/chat" className="flex mx-4">
+          {/* <Image
+            className="mr-2"
+            src="/logo/nav-logo.svg"
+            alt="logo"
+            height={20}
+            width={140}
+          />
+          <ui.Separator orientation="vertical"/>
+          <Image
+            className="ml-2 rounded-[1px]"
+            src="/logo/KBTG.svg"
+            alt="logo"
+            height={10}
+            width={80}
+          /> */}
+        </a>
+      </div>
+      <div className="pr-4">
+        <NavBarDropDown logout={signOut}>
+          <ui.Avatar>
+            <ui.AvatarImage src={image} />
+            <ui.AvatarFallback className="font-black text-green-950">
+              {name?.charAt(0)}
+            </ui.AvatarFallback>
+          </ui.Avatar>
+          <div className="pl-2 max-sm:hidden text-white font-bold">{name}</div>
+        </NavBarDropDown>
+      </div>
+    </div>
+    <div
+      className={cn(
+        "sticky w-full z-[2] top-0 flex items-center bg-gray-100 px-3 py-2",
+        "border-b border-gray-200",
+        "drop-shadow-md",
+        "concern-box"
+      )}
+    >
+      <Image src="/icon/info.svg" width={18} height={18} alt="info" />
+      <p className={cn("text-xs text-gray-700 pl-2")}>
+      คุณกำลังสนทนากับแชตบอทที่ใช้ปัญญาประดิษฐ์ (AI) คำตอบที่ได้รับอาจมีข้อผิดพลาดหรือไม่ถูกต้องเสมอไป กรุณาตรวจสอบข้อมูลจากแหล่งที่เชื่อถือได้เพิ่มเติมเพื่อความแม่นยำ
+      </p>
+    </div>
+    <SheetSidebar _id={_id} email={email}/>
+    </ui.Sheet>
+  );
+}

@@ -1,0 +1,21 @@
+.stream-section > * {
+  animation: streamIn 0.2s ease-in-out forwards;
+}
+
+@keyframes streamIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.stream-section * {
+  animation: streamIn 0.2s ease-in-out forwards;
+}
+
+.stream-section * {
+  opacity: 0;
+  animation: streamIn 0.2s ease-in-out forwards;
+}
