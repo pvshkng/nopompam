@@ -1,25 +1,22 @@
 import { cn } from "@/lib/utils";
 
 import UseCaseSelector from "./UseCaseSelector";
-import { ModelSelector } from "./model-selector";
+import { ModelSelector } from "@/components/chat/model-selector";
 import PromptSuggestion from "./PromptSuggestion";
 import SuggestionBar from "./SuggestionBar";
 import { Separator } from "@/components/ui/_index";
 import { GalleryHorizontalEnd } from "@/components/icons/gallery-horizontal-end";
 import { Attachment } from "./attachment";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 
 export const UserInputOptions = (props: any) => {
-  const { canvasOpened, isCanvasOpened } = props;
+  const {
+    canvasOpened,
+    isCanvasOpened,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    model,
+    setModel,
+  } = props;
   return (
     <>
       <div
@@ -33,7 +30,7 @@ export const UserInputOptions = (props: any) => {
         {/* Index section */}
         <div className="flex flex-row gap-1 my-0 w-full items-center justify-between">
           <div className="flex flex-row h-full gap-1">
-            <ModelSelector />
+            <ModelSelector model={model} setModel={setModel} />
             <Attachment />
           </div>
           {/* <UseCaseSelector setUsecase={setUsecase} usecase={usecase} />
@@ -47,30 +44,14 @@ export const UserInputOptions = (props: any) => {
             orientation="vertical"
           /> */}
           <div className="h-full">
-            <Drawer>
-              <DrawerTrigger
-                onClick={() => {
-                  isCanvasOpened(!canvasOpened);
-                }}
-                className="flex bg-stone-700 flex-row size-[16px] items-center justify-center text-sm text-gray-500 hover:text-gray-700 h-full w-8"
-              >
-                <GalleryHorizontalEnd width={16} height={16} stroke={"white"} />
-              </DrawerTrigger>
-              <DrawerContent>
-                <DrawerHeader>
-                  <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                  <DrawerDescription>
-                    This action cannot be undone.
-                  </DrawerDescription>
-                </DrawerHeader>
-                <DrawerFooter>
-                  <button>Submit</button>
-                  <DrawerClose>
-                    <button>Cancel</button>
-                  </DrawerClose>
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
+            <button
+              onClick={() => {
+                setIsDrawerOpen(!isDrawerOpen);
+              }}
+              className="flex bg-stone-700 flex-row size-[16px] items-center justify-center text-sm text-gray-500 hover:text-gray-700 h-full w-8"
+            >
+              <GalleryHorizontalEnd width={16} height={16} stroke={"white"} />
+            </button>
           </div>
         </div>
       </div>

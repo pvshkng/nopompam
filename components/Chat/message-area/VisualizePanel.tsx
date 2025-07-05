@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
+import { useChatContext } from "@/components/chat/ChatContext/ChatContext";
 
 export default function VisualizePanel() {
   const { handleSend } = useChatContext();

@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
+import { useChatContext } from "@/components/chat/ChatContext/ChatContext";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -11,10 +11,11 @@ import { createIdGenerator, generateId } from "ai";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { Canvas } from "@/components/canvas";
-import { BottomScrollButton } from "@/components/Chat/message-area/scroll-to-bottom";
-import { Navigation } from "@/components/Chat/navigation";
-import { MessageArea } from "../message-area/message-area";
-import { UserInput } from "@/components/Chat/UserInput/UserInput";
+import { MobileCanvas } from "@/components/canvas/mobile";
+import { BottomScrollButton } from "@/components/chat/message-area/scroll-to-bottom";
+import { Navigation } from "@/components/chat/navigation";
+import { MessageArea } from "@/components/chat/message-area/message-area";
+import { UserInput } from "@/components/chat/user-input/UserInput";
 
 import { artifactStreamHandler } from "@/lib/artifacts/handler";
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
@@ -24,13 +25,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { set } from "date-fns";
 
-const loadedArtifacts = [];
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 // TODO: to rename to ChatRoot
 function PureWrapper(props: any) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   let {
     initialMessages,
@@ -41,16 +40,19 @@ function PureWrapper(props: any) {
     name,
     image,
   } = props;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
   const [canvasSwapped, isCanvasSwapped] = useState(false);
   const [canvasOpened, isCanvasOpened] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
   const [artifacts, setArtifacts] = useState(initialArtifacts);
   const [tabs, setTabs] = useState(initialArtifacts);
+  const [model, setModel] = useState("gemini-2.5-pro");
   // to do centralize this type
   type Thread = {
     _id: any;
@@ -59,6 +61,7 @@ function PureWrapper(props: any) {
     timestamp: string;
   };
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const {
     messages,
@@ -80,6 +83,7 @@ function PureWrapper(props: any) {
     }),
     body: {
       user: email,
+      model: "gemini-2.5-pro",
     },
 
     onFinish: (messages) => {
@@ -116,14 +120,18 @@ function PureWrapper(props: any) {
     }
   }, [messages, isScrolledToBottom]);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (messages.length > 0) {
       const timer = setTimeout(() => {
         setIsChatInitiated(true);
       }, 250);
       return () => clearTimeout(timer);
     }
-  }, [messages.length]);
+  }, [messages.length]); */
+
+  useEffect(() => {
+    console.log("model: ", model);
+  }, [model, setModel]);
 
   const scrollToBottom = () => {
     if (containerRef.current) {
@@ -167,7 +175,7 @@ function PureWrapper(props: any) {
             )}
           >
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[400px]">
+              <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[350px]">
                 <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
                   <div
                     ref={containerRef}
@@ -213,13 +221,17 @@ function PureWrapper(props: any) {
                   handleSubmit={handleSubmit}
                   canvasOpened={canvasOpened}
                   isCanvasOpened={isCanvasOpened}
+                  isDrawerOpen={isDrawerOpen}
+                  setIsDrawerOpen={setIsDrawerOpen}
+                  model={model}
+                  setModel={setModel}
                 />
               </ResizablePanel>
 
               <ResizableHandle
                 /* hidden */
                 className={cn(
-                  !canvasOpened && "hidden",
+                  //!canvasOpened && "hidden",
                   "relative overflow-visible",
                   "max-md:hidden"
                 )}
@@ -238,14 +250,22 @@ function PureWrapper(props: any) {
                   "max-md:hidden"
                 )}
               >
-                <Canvas
-                  canvasOpened={canvasOpened}
-                  isCanvasOpened={isCanvasOpened}
-                  artifacts={artifacts}
-                  setArtifacts={setArtifacts}
-                  tabs={tabs}
-                  setTabs={setTabs}
-                />
+                {isDesktop ? (
+                  <Canvas
+                    canvasOpened={canvasOpened}
+                    isCanvasOpened={isCanvasOpened}
+                    artifacts={artifacts}
+                    setArtifacts={setArtifacts}
+                    tabs={tabs}
+                    setTabs={setTabs}
+                  />
+                ) : (
+                  <MobileCanvas
+                    /* className="md:hidden" */
+                    isDrawerOpen={isDrawerOpen}
+                    setIsDrawerOpen={setIsDrawerOpen}
+                  />
+                )}
               </ResizablePanel>
             </ResizablePanelGroup>{" "}
           </div>

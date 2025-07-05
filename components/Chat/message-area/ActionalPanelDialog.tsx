@@ -5,7 +5,6 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, Button, Textarea } from "@/components/ui/_index";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useChatContext } from "../ChatContext/ChatContext";
 
 import "./insertingSpinner.css";
 import { toast } from "sonner";
@@ -24,7 +23,7 @@ const text = {
   error_desc: "เกิดข้อผิดพลาดในการเสนอความคิดเห็น กรุณาลองใหม่อีกครั้ง",
 };
 
-export default function ActionalPanelDialog({
+export function ActionalPanelDialog({
   type,
   messageId,
   message,

@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { memo } from "react";
-import { ThreadManager } from "@/components/Chat/thread-manager";
+import { ThreadManager } from "@/components/chat/thread-manager";
+import { ModelSelector } from "@/components/chat/model-selector";
 import {
   Sheet,
   SheetContent,
@@ -12,35 +13,46 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/_index";
 import { ArrowDownWideNarrow } from "lucide-react";
+import { ChevronLeft, Plus } from "lucide-react";
 export const PureNavigation = (props: any) => {
   const { sidebarToggled, setSidebarToggled, threads, setThreads } = props;
 
   return (
     <div
       className={cn(
-        "flex flex-row sticky h-10 w-full items-center gap-2",
-        "px-2",
-        "border-b border-stone-700 dark:border-stone-700",
-        "transition-all duration-300 ease-in-out",
-        "bg-white"
-        //"shadow-md"
+        "z-10 opacity-70",
+        "absolute flex flex-col items-start justify-center",
+        "p-1.5 gap-2",
+        "transition-all duration-300 ease-in-out"
       )}
     >
-      <p className={cn("font-semibold text-xs text-stone-700")}>Nopompam</p>
-
-      <Separator orientation="vertical" className="h-5" />
+      <a className="flex items-center" href="/chat">
+        <Plus
+          width={16}
+          height={16}
+          strokeWidth={3}
+          stroke={"#44403c"}
+          //className="text-stone-200"
+        />
+      </a>
+      <Separator orientation="horizontal" className="w-full" />
       <Sheet>
         <SheetTrigger
           className={cn(
-            "flex flex-row items-center font-semibold text-xs gap-1 text-stone-700"
+            "[writing-mode:sideways-lr]",
+            "flex flex-row items-center font-black text-xs gap-1",
+            "text-stone-700"
+            //"border border-stone-200",
+            //"shadow-md"
           )}
         >
-          Chat
-          <ArrowDownWideNarrow
+          History
+          <ChevronLeft
             width={16}
             height={16}
-            stroke={"black"}
-            className="text-stone-700"
+            strokeWidth={3}
+            stroke={"#44403c"}
+            //className="text-stone-200"
           />
         </SheetTrigger>
 
@@ -61,7 +73,8 @@ export const PureNavigation = (props: any) => {
           />
         </SheetContent>
       </Sheet>
-      <Separator orientation="vertical" className="h-5" />
+      {/* <Separator orientation="vertical" className="h-5" /> */}
+      {/* <ModelSelector /> */}
     </div>
   );
 };

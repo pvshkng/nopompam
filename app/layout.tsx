@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Serif } from "next/font/google";
+import type { Viewport } from "next";
 //import AuthProvider from "@/components/AuthProvider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
@@ -10,6 +11,12 @@ const noto_serif = Noto_Serif({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "chat.ai",
   description: "chat.ai",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({

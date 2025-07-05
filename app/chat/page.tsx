@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { ChatProvider } from "@/components/Chat/ChatContext/ChatContext";
+import { ChatProvider } from "@/components/chat/ChatContext/ChatContext";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { Wrapper } from "@/components/Chat/wrapper";
+import { Wrapper } from "@/components/chat/wrapper";
 import { createChat, getChat } from "@/lib/ai/chat-store";
 import { getThreads, getThread } from "@/lib/mongo/chat-store";
 import { getArtifacts } from "@/lib/mongo/artifact-store";

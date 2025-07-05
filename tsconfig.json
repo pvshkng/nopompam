@@ -27,6 +27,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "components/Chat/UserInput/Editor/config.ts.bak", "test/ai/generate-title.ts", "components/Chat/Sidebar/TopicDeletionDialog.tsx_", "components/Chat/Sidebar/SheetSidebar.tsx_", "components/Chat/NavBar/NavBar.tsx_", "app/api/chat/route_lg.ts"  ],
+, "components/chat/user-input/Editor/config.ts.bak", "test/ai/generate-title.ts", "components/chat/Sidebar/TopicDeletionDialog.tsx_", "components/chat/Sidebar/SheetSidebar.tsx_", "components/chat/NavBar/NavBar.tsx_", "app/api/chat/route_lg.ts"  ],
   "exclude": ["node_modules"]
 }

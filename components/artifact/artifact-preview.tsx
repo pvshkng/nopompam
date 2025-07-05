@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import "../Chat/message-area/streaming-effect.css";
+import "../chat/message-area/streaming-effect.css";
 
 type ArtifactPreviewProps = {
   artifactId: string;

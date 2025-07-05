@@ -6,7 +6,6 @@ import { User } from "@/components/icons/user";
 import Link from "next/link";
 import { memo } from "react";
 
-
 export function PureThreadManager(props: any) {
   const { sidebarToggled, setSidebarToggled, threads, setThreads, Close } =
     props;
@@ -23,7 +22,9 @@ export function PureThreadManager(props: any) {
         "relative",
         "z-40",
         "transition-all duration-300 ease-in-out",
-        "flex flex-col h-full text-black"
+        "flex flex-col h-full text-black",
+        "bg-neutral-100"
+
         //"fixed top-0 left-0"
         //"border-r border-orange-900",
         //"hover:w-[200px]"

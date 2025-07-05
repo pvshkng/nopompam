@@ -6,6 +6,7 @@ const options = {};
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
+let cached 
 declare global {
     // eslint-disable-next-line no-var
     var _mongoClientPromise: Promise<MongoClient> | undefined;

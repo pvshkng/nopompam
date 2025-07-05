@@ -3,24 +3,10 @@ import { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { useState, useEffect, useRef } from "react";
-import { useChatContext } from "../ChatContext/ChatContext";
-import Editor from "./Editor/Editor";
-import EditorLoading from "./EditorLoading/EditorLoading";
+import { useState } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import "./UserInputFading.css";
-import { useChat } from "@ai-sdk/react";
-
-import UseCaseSelector from "./UseCaseSelector";
-import { ModelSelector } from "./model-selector";
-import PromptSuggestion from "./PromptSuggestion";
-import SuggestionBar from "./SuggestionBar";
-import { Separator } from "@/components/ui/_index";
-import { GalleryHorizontalEnd } from "@/components/icons/gallery-horizontal-end";
-
 import { UserInputOptions } from "./user-input-options";
-
-
 
 function PureUserInput(props: any) {
   const {
@@ -33,6 +19,10 @@ function PureUserInput(props: any) {
     handleSubmit,
     canvasOpened,
     isCanvasOpened,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    model,
+    setModel,
   } = props;
 
   const { suggestions } = props;
@@ -61,14 +51,14 @@ function PureUserInput(props: any) {
         id="userInputWrapper"
         className={cn(
           "flex flex-col items-center justify-center",
-          "w-full px-auto px-3 mb-5 bg-transparent"
+          "w-full px-auto px-3 mb-1 bg-transparent"
         )}
       >
         <div
           className={cn(
             "relative",
             "border border-stone-700 text-black",
-            "flex flex-row mx-auto w-full max-w-[800px]",
+            "flex flex-row mx-auto w-full max-w-[800px]"
             //"shadow-lg"
             //"z-[2] flex flex-col pt-1 pb-0 mx-auto rounded-t-2xl border-1 border-[#302d2c] bg-[#0f0909] text-white w-full max-w-[800px]",
           )}
@@ -116,6 +106,10 @@ function PureUserInput(props: any) {
         <UserInputOptions
           canvasOpened={canvasOpened}
           isCanvasOpened={isCanvasOpened}
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          model={model}
+          setModel={setModel}
         />
       </div>
     </div>

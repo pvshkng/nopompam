@@ -9,7 +9,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoscroll from "embla-carousel-auto-scroll";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useChatContext } from "@/components/Chat/ChatContext/ChatContext";
+import { useChatContext } from "@/components/chat/ChatContext/ChatContext";
 import {
   PrevButton,
   NextButton,

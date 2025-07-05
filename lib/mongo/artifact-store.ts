@@ -1,9 +1,7 @@
 'use server'
 
-import { generateId, type Message } from "ai";
-import { getThreadsCollection, DB, ARTIFACT_COLLECTION, mongoDbClient } from "@/lib/mongo/config";
-import { ObjectId } from "mongodb";
-import { MongoClient, Db, Collection } from "mongodb";
+import { ARTIFACT_COLLECTION, connectToDatabase } from "@/lib/mongo/config";
+
 
 type ArtifactDocument = {
     artifactId: string;
@@ -19,8 +17,8 @@ type ArtifactDocument = {
 
 export async function storeArtifact(artifact: ArtifactDocument,
 ) {
-    console.log("storing artifact: ", artifact);
-    const collection = mongoDbClient.db(DB).collection(ARTIFACT_COLLECTION);
+    const { client, db } = await connectToDatabase();
+    const collection = db.collection(ARTIFACT_COLLECTION);
     try {
         await collection.insertOne({
             artifactId: artifact.artifactId,
@@ -43,9 +41,10 @@ export async function storeArtifact(artifact: ArtifactDocument,
 }
 
 export async function getArtifacts(threadId: string, user: string): Promise<ArtifactDocument[]> {
-    const collection = mongoDbClient.db(DB).collection(ARTIFACT_COLLECTION);
+    const { client, db } = await connectToDatabase();
+    const collection = db.collection(ARTIFACT_COLLECTION);
     const filter = { threadId, user };
     const artifacts = await collection.find<ArtifactDocument>(filter).toArray();
-    
+    // @ts-ignore
     return artifacts.map(({ _id, ...artifact }) => artifact);
 }

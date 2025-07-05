@@ -139,7 +139,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           {/* {JSON.stringify(m, null, 2)} */}
 
           {/* Action Container */}
-          {m.role === "assistant" && !isLoading && (
+          {m.role === "assistant" && (
             <ActionPanel
               //isLast={isLast(messages, m)}
               messageId={m.id}

@@ -13,23 +13,23 @@ export async function POST(req: NextRequest) {
     try {
 
         const mcpClient = await experimental_createMCPClient({
-            transport: { type: "sse", url: "https://vector-search-mcp-server.onrender.com/sse" }
+            transport: { type: "sse", url: "https://vector-search-mcp-server.onrender.com/sse", }, onUncaughtError: () => { }
         })
 
         const mcpTools = await mcpClient.tools()
 
-        const { messages, id, user } = await req.json();
+        const { messages, id, user, model } = await req.json();
         const client = createGoogleGenerativeAI({
             apiKey: process.env.GOOGLE_API_KEY,
             baseURL: process.env.GOOGLE_API_ENDPOINT,
         });
-
+        console.log("selected model: ", model);
         const system_prompt = "do anything you are told to do" //`You are a HR assistant from Nopompam company. Your loyal chatbot who doesn't complain, doesn't slack and always respond with ZERO delay. Always introduce yourself like this.`
 
         return createDataStreamResponse({
             execute: async dataStream => {
                 const result = streamText({
-                    model: client("gemini-2.0-flash"), //gemini-2.0-flash
+                    model: client(model || "gemini-2.0-flash"), //gemini-2.0-flash
                     messages: convertToCoreMessages([{ role: "system", content: system_prompt }, ...messages]),
 
                     experimental_telemetry: { isEnabled: true },
@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
 
     } catch (error) {
         console.error("Error in chat route: ", error);
+        throw error
     }
 
 }
