@@ -1,7 +1,7 @@
 'use server'
 
 import { generateId, type Message } from "ai";
-import { DB, THREAD_COLLECTION, connectToDatabase } from "@/lib/mongo/config";
+import { DB, THREAD_COLLECTION, connectToDatabase } from "@/lib/mongo/client";
 import { ObjectId } from "mongodb";
 
 type Chat = {

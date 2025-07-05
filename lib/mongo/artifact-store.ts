@@ -1,6 +1,6 @@
 'use server'
 
-import { ARTIFACT_COLLECTION, connectToDatabase } from "@/lib/mongo/config";
+import { ARTIFACT_COLLECTION, connectToDatabase } from "@/lib/mongo/client";
 
 
 type ArtifactDocument = {
