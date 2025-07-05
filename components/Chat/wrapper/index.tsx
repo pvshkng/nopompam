@@ -106,6 +106,7 @@ function PureWrapper(props: any) {
     if (!data || data.length === 0) return;
 
     const reducedArtifacts = data.reduce(
+      // @ts-ignore
       (acc, item) => artifactStreamHandler(item, acc),
       []
     );
@@ -199,6 +200,7 @@ function PureWrapper(props: any) {
                             artifacts={artifacts}
                             setArtifacts={setArtifacts}
                             canvasOpened={canvasOpened}
+                            // @ts-ignore
                             isCanvasOpened={isCanvasOpened}
                           />
                         </>

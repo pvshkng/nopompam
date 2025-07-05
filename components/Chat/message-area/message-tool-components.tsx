@@ -8,12 +8,13 @@ import {
 
 import { DocumentsReference } from "@/components/tools/documents-reference";
 
-export const ToolComponents = (props) => {
+export const ToolComponents = (props: any) => {
   const { m } = props;
   return (
     <React.Fragment>
       {/* TOOL CALLING COMPONENT */}
-      <div /* className="bg-gradient-to-br from-stone-100 to-stone-200 rounded-lg" */>
+      <div /* className="bg-gradient-to-br from-stone-100 to-stone-200 rounded-lg" */
+      >
         {/* @ts-ignore */}
         {m.toolInvocations?.map((toolInvocation) => {
           const { toolName, toolCallId, state } = toolInvocation;

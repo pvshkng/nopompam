@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { ActionalPanelDialog } from "@/components/chat/message-area/ActionalPanelDialog";
 import Image from "next/image";
 import { ThumbsUp, ThumbsDown, CopyIcon, RefreshCcw } from "lucide-react";
-export default function ActionPanel(props: any) {
+export function ActionPanel(props: any) {
   const { messageId, message } = props;
   const strokeWidth = 1.5;
   return (

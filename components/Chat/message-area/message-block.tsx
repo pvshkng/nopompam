@@ -9,11 +9,11 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { components } from "@/components/markdown/markdown-component";
-import ActionPanel from "./ActionPanel";
+import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
 
 // Tool components
-import { ToolComponents } from "./message-tool-components";
-import { ToolAnnotation } from "./message-tool-annotation";
+import { ToolComponents } from "@/components/chat/message-area/message-tool-components";
+import { ToolAnnotation } from "@/components/chat/message-area/message-tool-annotation";
 import { DocumentsReference } from "@/components/tools/documents-reference";
 import { ArtifactPreview } from "@/components/artifact/artifact-preview";
 

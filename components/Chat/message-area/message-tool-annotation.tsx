@@ -31,7 +31,7 @@ export async function highlight(code: string, lang: BundledLanguage) {
 
 // TODO: map tool name with user friendly name
 
-export const ToolAnnotation = ({ tool }) => {
+export const ToolAnnotation = ({ tool }: { tool: any }) => {
   return (
     <React.Fragment>
       <Dialog>
