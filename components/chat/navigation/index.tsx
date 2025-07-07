@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils";
 import { memo } from "react";
 import { ThreadManager } from "@/components/chat/thread-manager";
 import { ModelSelector } from "@/components/chat/model-selector";
+import Link from "next/link";
+
 import {
   Sheet,
   SheetContent,
@@ -26,7 +28,12 @@ export const PureNavigation = (props: any) => {
         "transition-all duration-300 ease-in-out"
       )}
     >
-      <a className="flex items-center" href="/chat">
+      <Link
+        replace
+        href={{ pathname: "/chat" }}
+        prefetch={false}
+        className={cn("flex items-center")}
+      >
         <Plus
           width={16}
           height={16}
@@ -34,7 +41,7 @@ export const PureNavigation = (props: any) => {
           stroke={"#44403c"}
           //className="text-stone-200"
         />
-      </a>
+      </Link>
       <Separator orientation="horizontal" className="w-full" />
       <Sheet>
         <SheetTrigger

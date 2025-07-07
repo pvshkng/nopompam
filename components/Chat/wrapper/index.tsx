@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 
 import { useChat } from "@ai-sdk/react";
 import { createIdGenerator, generateId } from "ai";
-import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { Canvas } from "@/components/canvas";
 import { MobileCanvas } from "@/components/canvas/mobile";
@@ -160,14 +159,6 @@ function PureWrapper(props: any) {
           setThreads={setThreads}
         />
         <div className="flex flex-row size-full overflow-hidden">
-          {/* <LeftSidebar
-        email={email}
-        sidebarToggled={sidebarToggled}
-        setSidebarToggled={setSidebarToggled}
-        threads={threads}
-        setThreads={setThreads}
-      /> */}
-
           <div
             className={cn(
               "relative flex h-full w-full min-w-[400px]",

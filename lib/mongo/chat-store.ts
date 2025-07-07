@@ -29,7 +29,7 @@ export async function createThread(user: string, title: string = "New Chat") {
 export async function getThreads(email: string) {
     try {
         const { client, db } = await connectToDatabase();
-        const collection = client.db(DB).collection(THREAD_COLLECTION);
+        const collection = db.collection(THREAD_COLLECTION);
         const docs = await collection.find({ user: email }).toArray();
         const threads: Chat[] = docs.map((doc: any) => ({
             _id: doc._id.toString(),

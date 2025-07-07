@@ -16,6 +16,7 @@ import { ToolComponents } from "@/components/chat/message-area/message-tool-comp
 import { ToolAnnotation } from "@/components/chat/message-area/message-tool-annotation";
 import { DocumentsReference } from "@/components/tools/documents-reference";
 import { ArtifactPreview } from "@/components/artifact/artifact-preview";
+import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 
 type MessageBlockProps = {
   m: UIMessage;
@@ -96,6 +97,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                     isCanvasOpened={isCanvasOpened}
                   />
                 )}
+                {toolName === "chart" && <BarChartHorizontal />}
               </div>
             );
 

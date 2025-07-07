@@ -1,22 +1,19 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Trash } from "lucide-react";
-import { User } from "@/components/icons/user";
-import Link from "next/link";
 import { memo } from "react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { EllipsisVertical } from "lucide-react";
+import { User } from "@/components/icons/user";
+import { EllipsisMenu } from "@/components/chat/thread-manager/ellipsis";
 
 export function PureThreadManager(props: any) {
-  const { sidebarToggled, setSidebarToggled, threads, setThreads, Close } =
-    props;
-  const { email } = props;
+  const { threads, setThreads, Close, email } = props;
+
   return (
     /* make side bar open based on click */
 
     <div
-      onClick={() => {
-        !sidebarToggled && setSidebarToggled(true);
-      }}
       className={cn(
         "size-full",
         "relative",
@@ -95,7 +92,7 @@ export function PureThreadManager(props: any) {
                         className={cn(
                           "flex flex-row justify-between items-center",
                           "p-2 w-full",
-                          "bg-stone-100 hover:bg-stone-300",
+                          //"bg-stone-100 hover:bg-stone-300",
                           "text-xs",
                           "overflow-hidden"
                         )}
@@ -112,13 +109,10 @@ export function PureThreadManager(props: any) {
                           </div>
                         </Close>
                       </Link>
-                      <div
-                        className={cn(
-                          "relative overflow-hidden",
-                          "flex items-center bg-stone-200 hover:bg-stone-300 p-1"
-                        )}
-                      >
-                        <Trash className="text-stone-400" />
+                      <div className={cn("flex items-center p-1")}>
+                        <EllipsisMenu>
+                          <EllipsisVertical className="text-stone-400" />
+                        </EllipsisMenu>
                       </div>
                     </div>
                   )
