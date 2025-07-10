@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 import { useChat } from "@ai-sdk/react";
 import { createIdGenerator, generateId } from "ai";
 import { useSearchParams } from "next/navigation";
-import { Canvas } from "@/components/canvas";
-import { MobileCanvas } from "@/components/canvas/mobile";
+import { Dossier } from "@/components/dossier";
+import { MobileDossier } from "@/components/dossier/mobile";
 import { BottomScrollButton } from "@/components/chat/message-area/scroll-to-bottom";
 import { Navigation } from "@/components/chat/navigation";
 import { MessageArea } from "@/components/chat/message-area/message-area";
@@ -44,9 +44,8 @@ function PureWrapper(props: any) {
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
   const [isChatInitiated, setIsChatInitiated] = useState(false);
-  const [canvasSwapped, isCanvasSwapped] = useState(false);
-  const [canvasOpened, isCanvasOpened] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [DossierSwapped, isDossierSwapped] = useState(false);
+  const [dossierOpen, setDossierOpen] = useState(false);
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
   const [artifacts, setArtifacts] = useState(initialArtifacts);
@@ -190,9 +189,9 @@ function PureWrapper(props: any) {
                             isLoading={isLoading}
                             artifacts={artifacts}
                             setArtifacts={setArtifacts}
-                            canvasOpened={canvasOpened}
+                            dossierOpen={dossierOpen}
                             // @ts-ignore
-                            isCanvasOpened={isCanvasOpened}
+                            setDossierOpen={setDossierOpen}
                           />
                         </>
                       )}
@@ -212,54 +211,57 @@ function PureWrapper(props: any) {
                   setInput={setInput}
                   handleInputChange={handleInputChange}
                   handleSubmit={handleSubmit}
-                  canvasOpened={canvasOpened}
-                  isCanvasOpened={isCanvasOpened}
-                  isDrawerOpen={isDrawerOpen}
-                  setIsDrawerOpen={setIsDrawerOpen}
+                  dossierOpen={dossierOpen}
+                  setDossierOpen={setDossierOpen}
                   model={model}
                   setModel={setModel}
                 />
               </ResizablePanel>
 
-              <ResizableHandle
-                /* hidden */
-                className={cn(
-                  //!canvasOpened && "hidden",
-                  "relative overflow-visible",
-                  "max-md:hidden"
-                )}
-                withHandle={false}
-                onClick={() => {}}
-              />
-
-              <ResizablePanel
-                /* hidden */
-
-                className={cn(
-                  !canvasOpened && "hidden",
-                  "flex flex-col h-full w-full max-h-full overflow-y-hidden overflow-x-hidden min-w-[300px]",
-                  "bg-white",
-                  "items-start justify-start",
-                  "max-md:hidden"
-                )}
-              >
-                {isDesktop ? (
-                  <Canvas
-                    canvasOpened={canvasOpened}
-                    isCanvasOpened={isCanvasOpened}
-                    artifacts={artifacts}
-                    setArtifacts={setArtifacts}
-                    tabs={tabs}
-                    setTabs={setTabs}
-                  />
-                ) : (
-                  <MobileCanvas
-                    /* className="md:hidden" */
-                    isDrawerOpen={isDrawerOpen}
-                    setIsDrawerOpen={setIsDrawerOpen}
-                  />
-                )}
-              </ResizablePanel>
+              {isDesktop ? (
+                dossierOpen && (
+                  <>
+                    {" "}
+                    <ResizableHandle
+                      /* hidden */
+                      className={cn(
+                        //!dossierOpen && "hidden",
+                        "relative overflow-visible",
+                        "max-md:hidden"
+                      )}
+                      withHandle={false}
+                      onClick={() => {}}
+                    />
+                    <ResizablePanel
+                      className={cn(
+                        !dossierOpen && "hidden",
+                        "flex flex-col h-full w-full min-w-[300px]",
+                        "max-md:hidden",
+                        "bg-stone-50"
+                      )}
+                    >
+                      <Dossier
+                        dossierOpen={dossierOpen}
+                        setDossierOpen={setDossierOpen}
+                        artifacts={artifacts}
+                        setArtifacts={setArtifacts}
+                        tabs={tabs}
+                        setTabs={setTabs}
+                      />
+                    </ResizablePanel>
+                  </>
+                )
+              ) : (
+                <MobileDossier
+                  /* className="md:hidden" */
+                  dossierOpen={dossierOpen}
+                  setDossierOpen={setDossierOpen}
+                  artifacts={artifacts}
+                  setArtifacts={setArtifacts}
+                  tabs={tabs}
+                  setTabs={setTabs}
+                />
+              )}
             </ResizablePanelGroup>{" "}
           </div>
         </div>

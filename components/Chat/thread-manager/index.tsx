@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { EllipsisVertical } from "lucide-react";
@@ -9,6 +9,7 @@ import { EllipsisMenu } from "@/components/chat/thread-manager/ellipsis";
 
 export function PureThreadManager(props: any) {
   const { threads, setThreads, Close, email } = props;
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     /* make side bar open based on click */
@@ -17,7 +18,6 @@ export function PureThreadManager(props: any) {
       className={cn(
         "size-full",
         "relative",
-        "z-40",
         "transition-all duration-300 ease-in-out",
         "flex flex-col h-full text-black",
         "bg-neutral-100"
@@ -97,7 +97,7 @@ export function PureThreadManager(props: any) {
                           "overflow-hidden"
                         )}
                       >
-                        <Close className="flex flex-row justify-between items-center w-full">
+                        {/* <Close className="flex flex-row justify-between items-center w-full"> */}
                           <div className="whitespace-nowrap overflow-hidden text-ellipsis text-left">
                             <div className="truncate w-full">
                               {h.title || "undefined"}
@@ -107,10 +107,10 @@ export function PureThreadManager(props: any) {
                                 "undefined"}
                             </div>
                           </div>
-                        </Close>
+                        {/* </Close> */}
                       </Link>
                       <div className={cn("flex items-center p-1")}>
-                        <EllipsisMenu>
+                        <EllipsisMenu dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen}>
                           <EllipsisVertical className="text-stone-400" />
                         </EllipsisMenu>
                       </div>

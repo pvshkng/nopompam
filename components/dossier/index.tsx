@@ -3,12 +3,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { CloseIcon } from "@/components/icons/close";
-import { CodeEditor } from "./canvas-code-editor";
+import { CodeEditor } from "./dossier-code-editor";
 import { Tiptap } from "@/components/tiptap/editor";
+import { ForwardRefEditor } from "@/components/editor";
 
-export function Canvas(props: any) {
-  const { tabs, setTabs } = props;
-  const [content, setContent] = useState(null);
+export function Dossier(props: any) {
+  const {
+    dossierOpen,
+    setDossierOpen,
+    artifacts,
+    setArtifacts,
+    tabs,
+    setTabs,
+  } = props;
 
   const t = {
     artifactId: "edPrBYrAH3rLdJAk",
@@ -25,7 +32,11 @@ export function Canvas(props: any) {
   return (
     <>
       {/* <section className={cn("flex flex-col gap-4", "size-full")}> */}
-      <Tabs defaultValue="" className={cn("flex flex-col size-full")}>
+      <Tabs
+        hidden={!dossierOpen}
+        defaultValue={tabs[0].artifactId}
+        className={cn("flex flex-col size-full !max-h-[300px]")}
+      >
         <TabsList
           className={cn(
             "flex w-full items-end justify-start gap-1",
@@ -42,11 +53,11 @@ export function Canvas(props: any) {
               className={cn(
                 //"data-[state=active]:border-stone-400",
                 //"data-[state=active]:border",
-                "m-0",
+                "mx-1",
                 //"data-[state=active]:rounded-t-xl",
                 //"data-[state=active]:rounded-b-none",
                 "data-[state=active]:rounded-none",
-                "data-[state=active]:bg-white",
+                "data-[state=active]:bg-[#f0f0f2]",
                 "data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
               )}
             >
@@ -55,7 +66,6 @@ export function Canvas(props: any) {
               <div
                 className="ml-2 cursor-pointer hover:bg-gray-300"
                 onClick={() => {
-                  setContent(t.content);
                   setTabs((prev) =>
                     prev.filter((item) => item.artifactId !== t.artifactId)
                   );
@@ -71,10 +81,16 @@ export function Canvas(props: any) {
           <TabsContent
             key={i}
             value={`${t.artifactId}`}
-            className="flex flex-col m-0 p-0 bg-white data-[state=active]:h-fit data-[state=active]:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+            className="flex flex-col m-0 p-0 max-h-0 bg-stone-50 data-[state=active]:h-fit"
           >
             {/* {t.content} */}
-            <Tiptap />
+            {/* <Tiptap /> */}
+            <ForwardRefEditor
+              markdown={t.content}
+              autoFocus={true}
+              //className=""
+              contentEditableClassName="max-h-dvh overflow-scroll"
+            />
             {/* <CodeEditor /> */}
           </TabsContent>
         ))}

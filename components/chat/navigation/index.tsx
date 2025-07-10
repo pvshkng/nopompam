@@ -5,6 +5,17 @@ import { ModelSelector } from "@/components/chat/model-selector";
 import Link from "next/link";
 
 import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
+import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -43,8 +54,8 @@ export const PureNavigation = (props: any) => {
         />
       </Link>
       <Separator orientation="horizontal" className="w-full" />
-      <Sheet>
-        <SheetTrigger
+      <Drawer direction="left">
+        <DrawerTrigger
           className={cn(
             "[writing-mode:sideways-lr]",
             "flex flex-row items-center font-black text-xs gap-1",
@@ -61,16 +72,13 @@ export const PureNavigation = (props: any) => {
             stroke={"#44403c"}
             //className="text-stone-200"
           />
-        </SheetTrigger>
+        </DrawerTrigger>
 
-        <SheetContent side={"left"} className="p-0">
-          <SheetHeader>
-            <SheetTitle hidden>Are you absolutely sure?</SheetTitle>
-            <SheetDescription hidden>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </SheetDescription>
-          </SheetHeader>
+        <DrawerContent /* side={"left"} */ className="p-0">
+          <DrawerHeader hidden className="p-0 m-0">
+            <DrawerTitle hidden></DrawerTitle>
+            <DrawerDescription hidden></DrawerDescription>
+          </DrawerHeader>
           <ThreadManager
             sidebarToggled={sidebarToggled}
             setSidebarToggled={setSidebarToggled}
@@ -78,8 +86,8 @@ export const PureNavigation = (props: any) => {
             setThreads={setThreads}
             Close={SheetClose}
           />
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
       {/* <Separator orientation="vertical" className="h-5" /> */}
       {/* <ModelSelector /> */}
     </div>

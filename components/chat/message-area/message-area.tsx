@@ -16,8 +16,8 @@ type MessageAreaProps = {
   isLoading: boolean;
   artifacts: any[];
   setArtifacts: Dispatch<SetStateAction<any[]>>;
-  canvasOpened: boolean;
-  isCanvasOpened: boolean;
+  dossierOpen: boolean;
+  setDossierOpen: boolean;
 };
 
 // @ts-ignore
@@ -33,8 +33,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
     isLoading,
     artifacts,
     setArtifacts,
-    canvasOpened,
-    isCanvasOpened,
+    dossierOpen,
+    setDossierOpen,
   } = props;
 
   return (
@@ -72,8 +72,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
             artifacts={artifacts}
             setArtifacts={setArtifacts}
             isLast={isLast(messages, m)}
-            canvasOpened={canvasOpened}
-            isCanvasOpened={isCanvasOpened}
+            dossierOpen={dossierOpen}
+            setDossierOpen={setDossierOpen}
           />
         </div>
       ))}

@@ -17,10 +17,8 @@ function PureUserInput(props: any) {
     setInput,
     handleInputChange,
     handleSubmit,
-    canvasOpened,
-    isCanvasOpened,
-    isDrawerOpen,
-    setIsDrawerOpen,
+    dossierOpen,
+    setDossierOpen,
     model,
     setModel,
   } = props;
@@ -104,10 +102,8 @@ function PureUserInput(props: any) {
           </button>
         </div>
         <UserInputOptions
-          canvasOpened={canvasOpened}
-          isCanvasOpened={isCanvasOpened}
-          isDrawerOpen={isDrawerOpen}
-          setIsDrawerOpen={setIsDrawerOpen}
+          dossierOpen={dossierOpen}
+          setDossierOpen={setDossierOpen}
           model={model}
           setModel={setModel}
         />

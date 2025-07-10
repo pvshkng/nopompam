@@ -5,12 +5,12 @@ type ArtifactPreviewProps = {
   artifactId: string;
   artifacts: any[];
   setArtifacts: any;
-  canvasOpened: boolean;
-  isCanvasOpened: any;
+  dossierOpen: boolean;
+  setDossierOpen: any;
 };
 
 export function ArtifactPreview(props: ArtifactPreviewProps) {
-  const { artifactId, artifacts, setArtifacts, canvasOpened, isCanvasOpened } =
+  const { artifactId, artifacts, setArtifacts, dossierOpen, setDossierOpen } =
     props;
   const artifact =
     artifacts.find((a) => a.artifactId === artifactId) || undefined;
@@ -21,7 +21,7 @@ export function ArtifactPreview(props: ArtifactPreviewProps) {
         "stream-section border rounded p-2 bg-neutral-50 m-2",
         "cursor-pointer"
       )}
-      onClick={() => {isCanvasOpened(true)}}
+      onClick={() => {setDossierOpen(true)}}
     >
       {artifact ? (
         <>

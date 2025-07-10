@@ -10,10 +10,8 @@ import { Attachment } from "./attachment";
 
 export const UserInputOptions = (props: any) => {
   const {
-    canvasOpened,
-    isCanvasOpened,
-    isDrawerOpen,
-    setIsDrawerOpen,
+    dossierOpen,
+    setDossierOpen,
     model,
     setModel,
   } = props;
@@ -46,7 +44,7 @@ export const UserInputOptions = (props: any) => {
           <div className="h-full">
             <button
               onClick={() => {
-                setIsDrawerOpen(!isDrawerOpen);
+                setDossierOpen(!dossierOpen);
               }}
               className="flex bg-stone-700 flex-row size-[16px] items-center justify-center text-sm text-gray-500 hover:text-gray-700 h-full w-8"
             >

@@ -25,8 +25,8 @@ type MessageBlockProps = {
   artifacts: any[];
   setArtifacts: any;
   isLast: boolean;
-  canvasOpened: boolean;
-  isCanvasOpened: boolean;
+  dossierOpen: boolean;
+  setDossierOpen: boolean;
 };
 export const PureMessageBlock = (props: MessageBlockProps) => {
   const {
@@ -35,8 +35,8 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
     artifacts,
     setArtifacts,
     isLast,
-    canvasOpened,
-    isCanvasOpened,
+    dossierOpen,
+    setDossierOpen,
   } = props;
 
   return (
@@ -94,8 +94,8 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                     artifactId={toolCallId}
                     artifacts={artifacts}
                     setArtifacts={setArtifacts}
-                    canvasOpened={canvasOpened}
-                    isCanvasOpened={isCanvasOpened}
+                    dossierOpen={dossierOpen}
+                    setDossierOpen={setDossierOpen}
                   />
                 )}
                 {toolName === "chart" && <CandlestickChart />}

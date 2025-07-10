@@ -1,8 +1,8 @@
-export type CanvasType = "text" | "code" | "file" | "url" | "pdf" | "image" | "video" | "audio" | "html" | "markdown";
+export type DossierType = "text" | "code" | "file" | "url" | "pdf" | "image" | "video" | "audio" | "html" | "markdown";
 
-export type CanvasWindow = {
+export type DossierWindow = {
     id: string;
-    type: CanvasType;
+    type: DossierType;
     name: string;
     description: string;
     content: {
