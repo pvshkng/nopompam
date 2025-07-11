@@ -66,7 +66,7 @@ export async function getThread(user: string, _id: string) {
             return [];
         }
     } catch (_) {
-        console.error("Erro: ", _);
+        console.error("Error: ", _);
         return [];
     }
 }
@@ -95,9 +95,12 @@ export async function deleteThread(_id: string, user?: string) {
     try {
         const { client, db } = await connectToDatabase();
         const collection = db.collection(THREAD_COLLECTION);
-        const filter = user ? { _id: new ObjectId(_id), user } : { _id: new ObjectId(_id) };
+        const filter = user ? { _id: _id, user } : { _id: _id };
+        // @ts-ignore
         await collection.deleteOne(filter);
+        return { success: true };
     } catch (_) {
         console.error("Error: ", _);
+        return { success: false, error: _ };
     }
 }

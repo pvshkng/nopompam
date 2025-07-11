@@ -12,11 +12,11 @@ export async function POST(req: NextRequest) {
 
     try {
 
-        const mcpClient = await experimental_createMCPClient({
+        /* const mcpClient = await experimental_createMCPClient({
             transport: { type: "sse", url: "https://vector-search-mcp-server.onrender.com/sse", }, onUncaughtError: () => { }
         })
 
-        const mcpTools = await mcpClient.tools()
+        const mcpTools = await mcpClient.tools() */
 
         const { messages, id, user, model } = await req.json();
         const client = createGoogleGenerativeAI({

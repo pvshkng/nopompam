@@ -22,16 +22,12 @@ import { Check, X } from "lucide-react";
 import { DeleteConfirmationDialog } from "@/components/chat/thread-manager/confirmation-dialog";
 import { useState } from "react";
 export function EllipsisMenu(props: any) {
-  const { children, dropdownOpen, setDropdownOpen } = props;
+  const { children, _id, targetId, setThreads } = props;
   //const [clicked, setClicked] = useState(false);
 
   return (
     <>
-      <DropdownMenu
-        modal={false}
-        // open={dropdownOpen}
-        // onOpenChange={setDropdownOpen}
-      >
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
         <DropdownMenuContent
           className={cn("rounded-none bg-stone-700 text-stone-200 border-none")}
@@ -49,7 +45,9 @@ export function EllipsisMenu(props: any) {
               e.stopPropagation();
             }}
           >
-            <DeleteConfirmationDialog>Delete</DeleteConfirmationDialog>
+            <DeleteConfirmationDialog _id={_id} targetId={targetId} setThreads={setThreads}>
+              Delete
+            </DeleteConfirmationDialog>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

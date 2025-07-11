@@ -8,8 +8,7 @@ import { User } from "@/components/icons/user";
 import { EllipsisMenu } from "@/components/chat/thread-manager/ellipsis";
 
 export function PureThreadManager(props: any) {
-  const { threads, setThreads, Close, email } = props;
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { _id, threads, setThreads, Close, email } = props;
 
   return (
     /* make side bar open based on click */
@@ -73,20 +72,25 @@ export function PureThreadManager(props: any) {
             )}
           >
             {threads
-              .sort(
-                (a: any, b: any) => Number(b.timestamp) - Number(a.timestamp)
-              )
+              .sort((a: any, b: any) => {
+                if (_id === a._id) return -1;
+                if (_id === b._id) return 1;
+                return Number(b.timestamp) - Number(a.timestamp);
+              })
               .map(
                 (h: any, i: any) =>
                   h && (
-                    <div key={i} className="flex flex-row w-full">
+                    <div
+                      key={i}
+                      className={cn(
+                        "flex flex-row w-full",
+                        _id === h._id && "bg-stone-200 hover:bg-stone-300"
+                      )}
+                    >
                       <Link
                         replace
                         href={{
-                          pathname: "/chat",
-                          query: {
-                            _id: h?._id!,
-                          },
+                          pathname: "/chat/" + h._id!,
                         }}
                         prefetch={false}
                         className={cn(
@@ -97,7 +101,7 @@ export function PureThreadManager(props: any) {
                           "overflow-hidden"
                         )}
                       >
-                        {/* <Close className="flex flex-row justify-between items-center w-full"> */}
+                        <Close className="flex flex-row justify-between items-center w-full">
                           <div className="whitespace-nowrap overflow-hidden text-ellipsis text-left">
                             <div className="truncate w-full">
                               {h.title || "undefined"}
@@ -107,10 +111,14 @@ export function PureThreadManager(props: any) {
                                 "undefined"}
                             </div>
                           </div>
-                        {/* </Close> */}
+                        </Close>
                       </Link>
                       <div className={cn("flex items-center p-1")}>
-                        <EllipsisMenu dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen}>
+                        <EllipsisMenu
+                          _id={_id}
+                          targetId={h._id}
+                          setThreads={setThreads}
+                        >
                           <EllipsisVertical className="text-stone-400" />
                         </EllipsisMenu>
                       </div>

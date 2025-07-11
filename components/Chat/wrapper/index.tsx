@@ -151,6 +151,7 @@ function PureWrapper(props: any) {
     <>
       <div className="flex flex-col h-full w-full bg-neutral-100">
         <Navigation
+          _id={_id}
           email={email}
           sidebarToggled={sidebarToggled}
           setSidebarToggled={setSidebarToggled}
@@ -221,7 +222,6 @@ function PureWrapper(props: any) {
               {isDesktop ? (
                 dossierOpen && (
                   <>
-                    {" "}
                     <ResizableHandle
                       /* hidden */
                       className={cn(
@@ -262,7 +262,7 @@ function PureWrapper(props: any) {
                   setTabs={setTabs}
                 />
               )}
-            </ResizablePanelGroup>{" "}
+            </ResizablePanelGroup>
           </div>
         </div>
       </div>

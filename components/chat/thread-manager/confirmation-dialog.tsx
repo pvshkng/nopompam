@@ -9,9 +9,29 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { deleteThread } from "@/lib/mongo/chat-store";
+import { useState, useRef } from "react";
 
 export function DeleteConfirmationDialog(props: any) {
-  const { children } = props;
+  const { children, _id, targetId, setThreads } = props;
+  const [loading, setLoading] = useState(false);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  const handleConfirm = async () => {
+    setLoading(true);
+    const res = await deleteThread(targetId);
+    if (res.success) {
+      setThreads((prev: any) => prev.filter((h: any) => h._id !== targetId));
+      closeRef.current?.click();
+      setLoading(false);
+
+      if (_id === targetId) {
+        window.location.href = "/chat";
+      }
+    } else {
+      console.error("Failed to delete thread:", res.error);
+    }
+  };
 
   return (
     <Dialog>
@@ -26,9 +46,17 @@ export function DeleteConfirmationDialog(props: any) {
         <DialogHeader>
           <DialogTitle>Delete this thread?</DialogTitle>
           <DialogDescription>This action cannot be undone.</DialogDescription>
-          <Button className="rounded-none bg-stone-700 hover:bg-stone-800">
-            Confirm
+          <Button
+            className="rounded-none bg-stone-700 hover:bg-stone-800"
+            onClick={handleConfirm}
+          >
+            {loading ? (
+              <div className="w-[30px] h-[30px] border-4 border-stone-300 border-t-stone-800 rounded-full animate-spin" />
+            ) : (
+              "Delete"
+            )}
           </Button>
+          <DialogClose hidden ref={closeRef} />
           {/*  <DialogClose>Cancel</DialogClose> */}
         </DialogHeader>
       </DialogContent>

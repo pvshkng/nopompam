@@ -46,7 +46,7 @@ export function Dossier(props: any) {
             "bg-stone-300"
           )}
         >
-          {tabs.map((t) => (
+          {tabs.map((t: any) => (
             <TabsTrigger
               key={t.artifactId}
               value={`${t.artifactId}`}
@@ -66,8 +66,8 @@ export function Dossier(props: any) {
               <div
                 className="ml-2 cursor-pointer hover:bg-gray-300"
                 onClick={() => {
-                  setTabs((prev) =>
-                    prev.filter((item) => item.artifactId !== t.artifactId)
+                  setTabs((prev: any) =>
+                    prev.filter((item: any) => item.artifactId !== t.artifactId)
                   );
                 }}
               >
@@ -77,7 +77,7 @@ export function Dossier(props: any) {
           ))}
         </TabsList>
 
-        {tabs.map((t, i) => (
+        {tabs.map((t: any, i: any) => (
           <TabsContent
             key={i}
             value={`${t.artifactId}`}

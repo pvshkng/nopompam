@@ -10,14 +10,11 @@ import { getArtifacts } from "@/lib/mongo/artifact-store";
 import { cn } from "@/lib/utils";
 import { GridBackground } from "@/components/background-grid";
 import { generateId } from "ai";
-// import { querySuggestions, queryTemplates } from "@/lib/prompts/_index";
 
 export default async function Chat({
   params,
-  searchParams,
 }: {
-  params: Promise<{ _id: string }>;
-  searchParams: { _id?: string };
+  params: Promise<{ slug?: string[] }>;
 }) {
   const session = await auth();
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
@@ -29,9 +26,10 @@ export default async function Chat({
   }
   let messages: any[] = [];
   let artifacts: any[] = [];
-  let _id = (await searchParams)._id!;
+  const { slug } = await params;
+  let _id = slug?.[0] || undefined;
+
   if (_id) {
-    //messages = await getChat(email!, _id!);
     messages = await getThread(email!, _id!);
     messages.length === 0 && redirect("/");
     artifacts = await getArtifacts(_id!, email!);
