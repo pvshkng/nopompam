@@ -8,9 +8,24 @@ import { codeToHtml } from "shiki";
 // import { CodeBlock } from "./code-container";
 import { cn } from "@/lib/utils";
 import { Copy } from "lucide-react";
+import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
+import { CandlestickChart } from "../charts/candle-stick-chart";
 
 export const components: Partial<any> = {
-  pre: ({ children, className, ...props }: { children: any; className?: string }) => {
+  chart: () => {
+    return <BarChartHorizontal />;
+  },
+  /* BarChartHorizontal: () => {
+    return <BarChartHorizontal />;
+  }, */
+  pre: ({
+    children,
+    className,
+    ...props
+  }: {
+    children: any;
+    className?: string;
+  }) => {
     let code = "";
     let language: BundledLanguage = "md";
     if (children && children.props) {

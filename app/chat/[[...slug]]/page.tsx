@@ -17,8 +17,13 @@ export default async function Chat({
   params: Promise<{ slug?: string[] }>;
 }) {
   const session = await auth();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+  console.log("session: ", session);
+
   const { name, email, image } = session?.user!;
+
+  if (!session) {
+    redirect("/");
+  }
 
   let initialThreads: any = [];
   if (email) {
