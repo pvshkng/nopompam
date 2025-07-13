@@ -14,43 +14,41 @@ const data = [
   { date: "2/10 06:00 PM", open: 132.9, high: 133.4, low: 132.6, close: 133.1 },
 ];
 
-export function CandlestickChart(props) {
+export function CandlestickChart(props: any) {
   const { d } = props;
-  
+
   // Scales
   const xScale = scaleBand()
     .domain(data.map((d) => d.date))
     .range([0, 100])
     .padding(0.2);
 
-  const allPrices = data.flatMap(d => [d.open, d.high, d.low, d.close]);
+  const allPrices = data.flatMap((d) => [d.open, d.high, d.low, d.close]);
   const yScale = scaleLinear()
     .domain([min(allPrices) ?? 0, max(allPrices) ?? 0])
     .range([100, 0]); // Inverted for price chart
 
   return (
     <div
-      className="relative w-full h-96 bg-transparent"
-      style={
+      className="relative w-full h-96 rounded-sm bg-white border border-stone-200 !p-5"
+      /* style={
         {
           "--marginTop": "20px",
           "--marginRight": "60px",
           "--marginBottom": "60px",
           "--marginLeft": "60px",
         } as CSSProperties
-      }
+      } */
     >
-      
-
       {/* Chart Area */}
       <div
-        className="absolute inset-0 z-10"
-        style={{
+        className="absolute inset-0 z-10 !p-5"
+        /* style={{
           top: "var(--marginTop)",
           right: "var(--marginRight)",
           bottom: "var(--marginBottom)",
           left: "var(--marginLeft)",
-        }}
+        }} */
       >
         {/* Grid lines */}
         <svg
@@ -58,11 +56,22 @@ export function CandlestickChart(props) {
           preserveAspectRatio="none"
         >
           <defs>
-            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-gray-300/40 dark:text-gray-600/40"/>
+            <pattern
+              id="grid"
+              width="10"
+              height="10"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 10 0 L 0 0 0 10"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="0.5"
+                className="text-gray-300/40 dark:text-gray-600/40"
+              />
             </pattern>
           </defs>
-          
+
           {/* Horizontal grid lines */}
           {yScale.ticks(6).map((value, i) => (
             <line
@@ -77,7 +86,7 @@ export function CandlestickChart(props) {
               className="text-gray-300/60 dark:text-gray-600/60"
             />
           ))}
-          
+
           {/* Vertical grid lines */}
           {data.map((d, i) => (
             <line
@@ -100,12 +109,12 @@ export function CandlestickChart(props) {
             const xPos = xScale(d.date)!;
             const candleWidth = xScale.bandwidth() * 0.6;
             const isGreen = d.close > d.open;
-            
+
             const openY = yScale(d.open);
             const closeY = yScale(d.close);
             const highY = yScale(d.high);
             const lowY = yScale(d.low);
-            
+
             const bodyTop = Math.min(openY, closeY);
             const bodyHeight = Math.abs(closeY - openY);
             const wickX = xPos + xScale.bandwidth() / 2;
@@ -114,9 +123,7 @@ export function CandlestickChart(props) {
               <div key={index} className="absolute inset-0">
                 {/* High-Low Wick */}
                 <div
-                  className={`absolute ${
-                    isGreen ? "bg-black" : "bg-black"
-                  }`}
+                  className={`absolute ${isGreen ? "bg-black" : "bg-black"}`}
                   style={{
                     left: `${wickX}%`,
                     top: `${highY}%`,
@@ -125,13 +132,11 @@ export function CandlestickChart(props) {
                     transform: "translateX(-50%)",
                   }}
                 />
-                
+
                 {/* Body */}
                 <div
                   className={`absolute border ${
-                    isGreen 
-                      ? "bg-white border-black" 
-                      : "bg-black border-black"
+                    isGreen ? "bg-white border-black" : "bg-black border-black"
                   }`}
                   style={{
                     left: `${xPos + (xScale.bandwidth() - candleWidth) / 2}%`,
@@ -159,7 +164,7 @@ export function CandlestickChart(props) {
       </div>
 
       {/* Y Axis Labels (Right) */}
-     {/*  <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-between py-5">
+      {/*  <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-between py-5">
         {yScale.ticks(6).map((value, i) => (
           <div
             key={i}
@@ -171,7 +176,7 @@ export function CandlestickChart(props) {
       </div> */}
 
       {/* X Axis Labels (Bottom) */}
-      <div 
+      <div
         className="absolute bottom-0 left-0 right-0 flex justify-between px-12"
         style={{
           marginLeft: "var(--marginLeft)",
@@ -192,7 +197,9 @@ export function CandlestickChart(props) {
       <div
         className="absolute right-0 bg-stone-500 text-white px-2 py-1 text-xs font-medium"
         style={{
-          top: `calc(${yScale(data[data.length - 1].close)}% + var(--marginTop))`,
+          top: `calc(${yScale(
+            data[data.length - 1].close
+          )}% + var(--marginTop))`,
           transform: "translateY(-50%)",
         }}
       >

@@ -17,8 +17,6 @@ export default async function Chat({
   params: Promise<{ slug?: string[] }>;
 }) {
   const session = await auth();
-  console.log("session: ", session);
-
   const { name, email, image } = session?.user!;
 
   if (!session) {

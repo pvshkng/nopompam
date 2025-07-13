@@ -9,7 +9,6 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
-
 import { components } from "@/components/markdown/markdown-component";
 import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
 
@@ -30,6 +29,7 @@ type MessageBlockProps = {
   dossierOpen: boolean;
   setDossierOpen: boolean;
 };
+
 export const PureMessageBlock = (props: MessageBlockProps) => {
   const {
     m,
@@ -77,8 +77,9 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                     //   "typewriting",
                   )}
                   remarkPlugins={[remarkGfm, remarkMath]}
-                  rehypePlugins={[rehypeKatex, rehypeRaw]}
+                  rehypePlugins={[rehypeRaw, rehypeKatex]}
                   components={components}
+                  remarkRehypeOptions={{}}
                 >
                   {p.text}
                 </ReactMarkdown>
@@ -88,10 +89,10 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           case "tool-invocation":
             const { toolInvocation } = p;
             const { toolName, toolCallId, state } = toolInvocation;
-            return (
-              <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
-                <ToolAnnotation tool={toolInvocation} />
-                {toolName === "createArtifact" && (
+
+            switch (toolName) {
+              case "createArtifact":
+                return (
                   <ArtifactPreview
                     artifactId={toolCallId}
                     artifacts={artifacts}
@@ -99,10 +100,19 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                     dossierOpen={dossierOpen}
                     setDossierOpen={setDossierOpen}
                   />
-                )}
-                {toolName === "chart" && <CandlestickChart />}
-              </div>
-            );
+                );
+              case "chart":
+                return <CandlestickChart />;
+              default:
+                return (
+                  <div
+                    key={`tool-${m.id}-${j}`}
+                    className="flex flex-col w-full"
+                  >
+                    <ToolAnnotation tool={toolInvocation} />
+                  </div>
+                );
+            }
 
           /* if (state === "result") {
               const { result } = toolInvocation;

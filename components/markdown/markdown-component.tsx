@@ -12,11 +12,18 @@ import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { CandlestickChart } from "../charts/candle-stick-chart";
 
 export const components: Partial<any> = {
+  /* Actions: ({ children }: { children: React.ReactNode }) => (
+    <div className="mt-6 space-y-2 rounded-lg border p-4">
+      <h3 className="font-semibold text-sm text-gray-700 mb-3">
+        Suggested Actions
+      </h3>
+    </div>
+  ), */
   chart: () => {
     return <BarChartHorizontal />;
   },
-  /* BarChartHorizontal: () => {
-    return <BarChartHorizontal />;
+/*   BarChartHorizontal: () => {
+    return <p>ungabunga</p>;
   }, */
   pre: ({
     children,

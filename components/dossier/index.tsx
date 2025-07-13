@@ -34,7 +34,7 @@ export function Dossier(props: any) {
       {/* <section className={cn("flex flex-col gap-4", "size-full")}> */}
       <Tabs
         hidden={!dossierOpen}
-        defaultValue={tabs[0].artifactId}
+        defaultValue={tabs[0].artifactId || undefined}
         className={cn("flex flex-col size-full !max-h-[300px]")}
       >
         <TabsList

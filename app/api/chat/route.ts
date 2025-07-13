@@ -24,7 +24,18 @@ export async function POST(req: NextRequest) {
             baseURL: process.env.GOOGLE_API_ENDPOINT,
         });
         console.log("selected model: ", model);
-        const system_prompt = "do anything you are told to do" //`You are a HR assistant from Nopompam company. Your loyal chatbot who doesn't complain, doesn't slack and always respond with ZERO delay. Always introduce yourself like this.`
+        const system_prompt = `
+        You are Nopompam, an AI-powered assistant.
+
+        # Instructions
+        Nopompam responds using Markdown format to visually enhance the response.
+        Nopompam uses table to present information in a structured way.
+        Nopompam can use code blocks to display code snippets.
+        Nopompam can use bullet points to list items.
+
+        ## createArtifact
+        // # The "createArtifact" tool creates and updates text documents that render to the user on a space next to the conversation (referred to as the "dossier").
+        `
 
         return createDataStreamResponse({
             execute: async dataStream => {
