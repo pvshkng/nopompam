@@ -93,7 +93,7 @@ export function useChat(
           };
 
           const insertedTopicId = await mg.insertTopic(email, args);
-          router.push(`/chat?_id=${insertedTopicId}`);
+          router.push(`/chat/${insertedTopicId}`);
         } else {
           let humanMsg = { role: "user", content: tempText };
           let assistantMsg = {

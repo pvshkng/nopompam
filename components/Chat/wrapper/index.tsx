@@ -49,7 +49,7 @@ function PureWrapper(props: any) {
   const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
   const [artifacts, setArtifacts] = useState(initialArtifacts);
-  const [tabs, setTabs] = useState(initialArtifacts);
+  const [activeTab, setActiveTab] = useState(null);
   const [model, setModel] = useState("gemini-2.5-pro");
   // to do centralize this type
   type Thread = {
@@ -100,18 +100,31 @@ function PureWrapper(props: any) {
 
   const lastDataIndex = useRef(0);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (!data || data.length === 0) return;
 
     const reducedArtifacts = data.reduce(
       // @ts-ignore
       (acc, item) => artifactStreamHandler(item, acc),
-      []
+      artifacts
     );
     setArtifacts(reducedArtifacts);
 
     setData([]);
-  }, [data]);
+  }, [data, artifacts, setArtifacts]); */
+
+  useEffect(() => {
+    if (!data || data.length === 0) return;
+
+    // Process each streaming item sequentially
+    let updatedArtifacts = artifacts;
+    for (const item of data) {
+      updatedArtifacts = artifactStreamHandler(item, updatedArtifacts);
+    }
+    setArtifacts(updatedArtifacts);
+
+    setData([]);
+  }, [data, artifacts, setArtifacts]);
 
   useEffect(() => {
     if (isScrolledToBottom) {
@@ -129,8 +142,8 @@ function PureWrapper(props: any) {
   }, [messages.length]); */
 
   useEffect(() => {
-    console.log("model: ", model);
-  }, [model, setModel]);
+    console.log("artifact: ", artifacts);
+  }, [artifacts, setArtifacts]);
 
   const scrollToBottom = () => {
     if (containerRef.current) {
@@ -193,6 +206,8 @@ function PureWrapper(props: any) {
                             dossierOpen={dossierOpen}
                             // @ts-ignore
                             setDossierOpen={setDossierOpen}
+                            activeTab={activeTab}
+                            setActiveTab={setActiveTab}
                           />
                         </>
                       )}
@@ -245,8 +260,8 @@ function PureWrapper(props: any) {
                         setDossierOpen={setDossierOpen}
                         artifacts={artifacts}
                         setArtifacts={setArtifacts}
-                        tabs={tabs}
-                        setTabs={setTabs}
+                        activeTab={activeTab}
+                        setActiveTab={setActiveTab}
                       />
                     </ResizablePanel>
                   </>
@@ -258,8 +273,8 @@ function PureWrapper(props: any) {
                   setDossierOpen={setDossierOpen}
                   artifacts={artifacts}
                   setArtifacts={setArtifacts}
-                  tabs={tabs}
-                  setTabs={setTabs}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
                 />
               )}
             </ResizablePanelGroup>

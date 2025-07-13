@@ -35,6 +35,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
     setArtifacts,
     dossierOpen,
     setDossierOpen,
+    activeTab,
+    setActiveTab,
   } = props;
 
   return (
@@ -74,6 +76,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
             isLast={isLast(messages, m)}
             dossierOpen={dossierOpen}
             setDossierOpen={setDossierOpen}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
           />
         </div>
       ))}

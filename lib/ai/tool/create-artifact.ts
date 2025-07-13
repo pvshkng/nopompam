@@ -18,35 +18,29 @@ export const createArtifact = ({ threadId, user, dataStream }: CreateArtifactPro
   tool({
     description: "Create a text artifact and stream its content.",
     parameters: z.object({
-      title: z.string(),
+      title: z.string().describe("The title of the artifact. If the title is not provided, it will be inferred from the prompt."),
       kind: z.enum(["text"]),
     }),
     execute: async ({ title, kind }, { toolCallId }) => {
       const id = toolCallId //generateId(8); 
 
-      dataStream.writeData({ type: "kind", content: kind });
-      dataStream.writeData({ type: "id", content: toolCallId });
-      dataStream.writeData({ type: "title", content: title });
-      dataStream.writeData({ type: "clear", content: "" });
+      dataStream.writeData({ id: id, type: "kind", content: kind });
+      dataStream.writeData({ id: id, type: "id", content: toolCallId });
+      dataStream.writeData({ id: id, type: "title", content: title });
+      dataStream.writeData({ id: id, type: "clear", content: "" });
 
-      /* // Stream content as text-delta
-      const contentChunks = [
-        //`# ${title}\n\n`,
-        "This is the first paragraph.\n\n",
-        "This is the second paragraph.\n\n",
-        "This is the third paragraph.\n\n",
-      ];
-      for (const chunk of contentChunks) {
-        dataStream.writeData({ type: "text-delta", content: chunk, id });
-        await new Promise((r) => setTimeout(r, 300));
-      }
-
-      dataStream.writeData({ type: "finish", content: "" }); */
       let draftContent = '';
       const { fullStream } = streamText({
         model: client("gemini-2.0-flash"),
-        system:
-          'Write about the given topic. Markdown is supported. Use headings wherever appropriate.',
+        system: `
+        Write about the given topic. 
+        Use markdown to format the content. 
+        For example:
+        - use headings to define sections
+        - use horizontal rules to split sections
+        - use tables for comparison
+        - use bullet points for entries, etc.
+        `,
         experimental_transform: smoothStream({ chunking: 'word' }),
         prompt: title,
         onFinish: async ({ response },) => {

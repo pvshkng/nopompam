@@ -39,6 +39,8 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
     isLast,
     dossierOpen,
     setDossierOpen,
+    activeTab,
+    setActiveTab,
   } = props;
 
   return (
@@ -94,15 +96,18 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
               case "createArtifact":
                 return (
                   <ArtifactPreview
+                    key={j}
                     artifactId={toolCallId}
                     artifacts={artifacts}
                     setArtifacts={setArtifacts}
                     dossierOpen={dossierOpen}
                     setDossierOpen={setDossierOpen}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
                   />
                 );
               case "chart":
-                return <CandlestickChart />;
+                return <CandlestickChart key={j} />;
               default:
                 return (
                   <div

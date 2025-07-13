@@ -34,8 +34,9 @@ export default async function Chat({
 
   if (_id) {
     messages = await getThread(email!, _id!);
-    messages.length === 0 && redirect("/");
     artifacts = await getArtifacts(_id!, email!);
+    messages.length === 0 && redirect("/");
+    console.log("messages", messages);
     console.log("artifacts", artifacts);
   } else {
     _id = generateId(24);

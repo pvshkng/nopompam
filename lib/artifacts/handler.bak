@@ -21,7 +21,6 @@ export function artifactStreamHandler(
     prevArtifacts: Artifact[]
 ): Artifact[] {
     // For "id", always use streamItem.content as the new id
-    console.log("streamItem: ", streamItem);
     if (streamItem.type === "id") {
         const exists = prevArtifacts.some(a => a.artifactId === streamItem.content);
         if (!exists) {
@@ -29,14 +28,9 @@ export function artifactStreamHandler(
                 ...prevArtifacts,
                 {
                     artifactId: streamItem.content,
-                    //threadId: prevArtifacts[0]?.threadId || '',
-                    //user: prevArtifacts[0]?.user || '',
-                    kind: 'text',
-                    title: '',
                     content: "",
                     status: "idle",
                     isVisible: true,
-                    //timestamp: Date.now().toString()
                 },
             ];
         }
@@ -45,12 +39,15 @@ export function artifactStreamHandler(
 
     // For all other types, find the correct id to update
     let id = streamItem.id;
-    if (!id) {
-        console.warn('No id provided for stream item:', streamItem);
-        return prevArtifacts;
+    if (!id && prevArtifacts.length > 0) {
+        // fallback to last artifact if id is missing
+        id = prevArtifacts[prevArtifacts.length - 1].artifactId;
     }
+    if (!id) return prevArtifacts;
 
     switch (streamItem.type) {
+        //case "clear":
+        //    return [];
         case "kind":
             return prevArtifacts.map(a =>
                 a.artifactId === id ? { ...a, kind: streamItem.content } : a
@@ -58,10 +55,6 @@ export function artifactStreamHandler(
         case "title":
             return prevArtifacts.map(a =>
                 a.artifactId === id ? { ...a, title: streamItem.content } : a
-            );
-        case "clear":
-            return prevArtifacts.map(a =>
-                a.artifactId === id ? { ...a, content: "" } : a
             );
         case "text-delta":
             return prevArtifacts.map(a =>

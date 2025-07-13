@@ -18,8 +18,8 @@ const PureMobileDossier = (props: any) => {
     setDossierOpen,
     artifacts,
     setArtifacts,
-    tabs,
-    setTabs,
+    activeTab,
+    setActiveTab,
     className,
   } = props;
   return (
@@ -51,8 +51,8 @@ const PureMobileDossier = (props: any) => {
           setDossierOpen={setDossierOpen}
           artifacts={artifacts}
           setArtifacts={setArtifacts}
-          tabs={tabs}
-          setTabs={setTabs}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
         />
         <DrawerFooter>
           <DrawerClose

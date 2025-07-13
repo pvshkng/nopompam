@@ -10,8 +10,15 @@ type ArtifactPreviewProps = {
 };
 
 export function ArtifactPreview(props: ArtifactPreviewProps) {
-  const { artifactId, artifacts, setArtifacts, dossierOpen, setDossierOpen } =
-    props;
+  const {
+    artifactId,
+    artifacts,
+    setArtifacts,
+    dossierOpen,
+    setDossierOpen,
+    activeTab,
+    setActiveTab,
+  } = props;
   const artifact =
     artifacts.find((a) => a.artifactId === artifactId) || undefined;
 
@@ -21,7 +28,10 @@ export function ArtifactPreview(props: ArtifactPreviewProps) {
         "stream-section border rounded p-2 bg-neutral-50 m-2",
         "cursor-pointer"
       )}
-      onClick={() => {setDossierOpen(true)}}
+      onClick={() => {
+        setActiveTab(artifactId);
+        setDossierOpen(true);
+      }}
     >
       {artifact ? (
         <>

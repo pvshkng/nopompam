@@ -13,8 +13,8 @@ export function Dossier(props: any) {
     setDossierOpen,
     artifacts,
     setArtifacts,
-    tabs,
-    setTabs,
+    activeTab,
+    setActiveTab,
   } = props;
 
   const t = {
@@ -33,8 +33,12 @@ export function Dossier(props: any) {
     <>
       {/* <section className={cn("flex flex-col gap-4", "size-full")}> */}
       <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
         hidden={!dossierOpen}
-        defaultValue={tabs[0].artifactId || undefined}
+        defaultValue={
+          (artifacts.length > 0 && artifacts[0].artifactId) || undefined
+        }
         className={cn("flex flex-col size-full !max-h-[300px]")}
       >
         <TabsList
@@ -46,7 +50,7 @@ export function Dossier(props: any) {
             "bg-stone-300"
           )}
         >
-          {tabs.map((t: any) => (
+          {artifacts.map((t: any) => (
             <TabsTrigger
               key={t.artifactId}
               value={`${t.artifactId}`}
@@ -63,21 +67,21 @@ export function Dossier(props: any) {
             >
               <div>{t.title}</div>
 
-              <div
+              {/* <div
                 className="ml-2 cursor-pointer hover:bg-gray-300"
                 onClick={() => {
-                  setTabs((prev: any) =>
+                  setActiveTab((prev: any) =>
                     prev.filter((item: any) => item.artifactId !== t.artifactId)
                   );
                 }}
               >
                 <CloseIcon />
-              </div>
+              </div> */}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        {tabs.map((t: any, i: any) => (
+        {artifacts.map((t: any, i: any) => (
           <TabsContent
             key={i}
             value={`${t.artifactId}`}

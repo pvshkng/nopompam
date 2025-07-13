@@ -18,5 +18,5 @@ export function handleNewThread({
         timestamp: "Just now",
     };
     setThreads((prevThreads) => [newThread, ...prevThreads]);
-    window.history.replaceState(null, "", `/chat?_id=${_id}`);
+    window.history.replaceState(null, "", `/chat/${_id}`);
 }
