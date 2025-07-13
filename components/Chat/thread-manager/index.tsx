@@ -108,7 +108,7 @@ export function PureThreadManager(props: any) {
                             </div>
                             <div className="text-stone-600 text-[9px]">
                               {new Date(Number(h.timestamp)).toLocaleString() ||
-                                "undefined"}
+                                h.timestamp}
                             </div>
                           </div>
                         </Close>

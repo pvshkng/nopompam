@@ -23,11 +23,11 @@ import { DeleteConfirmationDialog } from "@/components/chat/thread-manager/confi
 import { useState } from "react";
 export function EllipsisMenu(props: any) {
   const { children, _id, targetId, setThreads } = props;
-  //const [clicked, setClicked] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <>
-      <DropdownMenu modal={false}>
+      <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
         <DropdownMenuContent
           className={cn("rounded-none bg-stone-700 text-stone-200 border-none")}
@@ -42,10 +42,15 @@ export function EllipsisMenu(props: any) {
             className={cn("rounded-none hover:bg-stone-900")}
             onClick={(e) => {
               e.preventDefault();
-              e.stopPropagation();
+              
             }}
           >
-            <DeleteConfirmationDialog _id={_id} targetId={targetId} setThreads={setThreads}>
+            <DeleteConfirmationDialog
+              _id={_id}
+              targetId={targetId}
+              setThreads={setThreads}
+              setOpen={setOpen}
+            >
               Delete
             </DeleteConfirmationDialog>
           </DropdownMenuItem>

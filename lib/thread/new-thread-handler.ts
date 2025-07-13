@@ -15,7 +15,7 @@ export function handleNewThread({
         _id: _id,
         user: email,
         title: title,
-        timestamp: "Just now",
+        timestamp: Date.now().toString(),
     };
     setThreads((prevThreads) => [newThread, ...prevThreads]);
     window.history.replaceState(null, "", `/chat/${_id}`);

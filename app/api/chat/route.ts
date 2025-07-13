@@ -23,7 +23,6 @@ export async function POST(req: NextRequest) {
             apiKey: process.env.GOOGLE_API_KEY,
             baseURL: process.env.GOOGLE_API_ENDPOINT,
         });
-        console.log("selected model: ", model);
         const system_prompt = `
         You are Nopompam, an AI-powered assistant.
 

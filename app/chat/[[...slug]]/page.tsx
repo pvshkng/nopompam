@@ -36,10 +36,8 @@ export default async function Chat({
     messages = await getThread(email!, _id!);
     artifacts = await getArtifacts(_id!, email!);
     messages.length === 0 && redirect("/");
-    console.log("messages", messages);
-    console.log("artifacts", artifacts);
-  } else {
-    _id = generateId(24);
+    //console.log("messages", messages);
+    //console.log("artifacts", artifacts);
   }
 
   if (session) {
@@ -55,7 +53,7 @@ export default async function Chat({
             initialMessages={messages}
             initialThreads={initialThreads}
             initialArtifacts={artifacts}
-            _id={_id}
+            _id={_id || generateId(24)}
             email={email}
             name={name}
             image={image}

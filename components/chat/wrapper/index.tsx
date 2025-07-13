@@ -5,6 +5,7 @@ import { useChatContext } from "@/components/chat/ChatContext/ChatContext";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useParams } from "next/navigation";
 
 import { useChat } from "@ai-sdk/react";
 import { createIdGenerator, generateId } from "ai";
@@ -28,8 +29,17 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 // TODO: to rename to ChatRoot
-function PureWrapper(props: any) {
-  const searchParams = useSearchParams();
+type PureWrapperProps = {
+  initialMessages: any[];
+  initialThreads: any[];
+  initialArtifacts: any[];
+  _id: string | undefined;
+  email: string | null | undefined;
+  name: string | null | undefined;
+  image: string | null | undefined;
+};
+
+function PureWrapper(props: PureWrapperProps) {
   let {
     initialMessages,
     initialThreads,
@@ -39,6 +49,7 @@ function PureWrapper(props: any) {
     name,
     image,
   } = props;
+  const params = useParams();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
@@ -60,7 +71,6 @@ function PureWrapper(props: any) {
   };
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
   const isDesktop = useMediaQuery("(min-width: 768px)");
-
   const {
     messages,
     isLoading,
@@ -85,7 +95,8 @@ function PureWrapper(props: any) {
     },
 
     onFinish: (messages) => {
-      if (!searchParams.get("_id")) {
+      if (!params?.slug!) {
+        console.log("Creating new thread with messages: ", messages);
         handleNewThread({
           messages,
           _id,
@@ -141,9 +152,9 @@ function PureWrapper(props: any) {
     }
   }, [messages.length]); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("artifact: ", artifacts);
-  }, [artifacts, setArtifacts]);
+  }, [artifacts, setArtifacts]); */
 
   const scrollToBottom = () => {
     if (containerRef.current) {
@@ -197,8 +208,8 @@ function PureWrapper(props: any) {
                       ) : (
                         <>
                           <MessageArea
-                            name={name}
-                            image={image}
+                            name={name!}
+                            image={image!}
                             messages={messages}
                             isLoading={isLoading}
                             artifacts={artifacts}
