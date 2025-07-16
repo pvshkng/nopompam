@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { ChatProvider } from "@/components/chat/ChatContext/ChatContext";
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Wrapper } from "@/components/chat/wrapper";
 import { createChat, getChat } from "@/lib/ai/chat-store";
@@ -10,34 +10,38 @@ import { getArtifacts } from "@/lib/mongo/artifact-store";
 import { cn } from "@/lib/utils";
 import { GridBackground } from "@/components/background-grid";
 import { generateId } from "ai";
-
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 export default async function Chat({
   params,
 }: {
   params: Promise<{ slug?: string[] }>;
 }) {
-  const session = await auth();
-  const { name, email, image } = session?.user!;
-
-  if (!session) {
-    redirect("/");
-  }
-
-  let initialThreads: any = [];
-  if (email) {
-    initialThreads = await getThreads(email!);
-  }
-  let messages: any[] = [];
-  let artifacts: any[] = [];
   const { slug } = await params;
   let _id = slug?.[0] || undefined;
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  console.log("session", session);
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const { name, email, image } = session.user!;
+  let initialThreads: any = [];
+  let messages: any[] = [];
+  let artifacts: any[] = [];
+
+  if (email) {
+    initialThreads = await getThreads(email);
+  }
+
   if (_id) {
-    messages = await getThread(email!, _id!);
-    artifacts = await getArtifacts(_id!, email!);
-    messages.length === 0 && redirect("/");
-    //console.log("messages", messages);
-    //console.log("artifacts", artifacts);
+    messages = await getThread(email, _id);
+    artifacts = await getArtifacts(_id, email);
+    if (messages.length === 0) redirect("/");
   }
 
   if (session) {

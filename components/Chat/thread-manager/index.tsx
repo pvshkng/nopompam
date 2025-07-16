@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { EllipsisVertical } from "lucide-react";
 import { User } from "@/components/icons/user";
 import { EllipsisMenu } from "@/components/chat/thread-manager/ellipsis";
+import { authClient } from "@/lib/auth-client";
 
 export function PureThreadManager(props: any) {
   const { _id, threads, setThreads, Close, email } = props;
@@ -144,6 +145,15 @@ export function PureThreadManager(props: any) {
               "bg-stone-700 hover:bg-stone-900",
               "text-center text-xs text-stone-300"
             )}
+            onClick={async () => {
+              await authClient.signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    window.location.href = "/";
+                  },
+                },
+              });
+            }}
           >
             Logout
           </button>
