@@ -8,6 +8,8 @@ import { generateTitle } from "@/lib/actions/ai/generate-title";
 import { experimental_createMCPClient } from "ai"
 import { createArtifact } from "@/lib/ai/tool/create-artifact"
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
 
     try {
