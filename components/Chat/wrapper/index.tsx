@@ -91,7 +91,7 @@ function PureWrapper(props: PureWrapperProps) {
     }),
     body: {
       user: email,
-      model: "gemini-2.5-pro",
+      model: model,
     },
 
     onFinish: (messages) => {

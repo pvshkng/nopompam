@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 const models = {
   google: [
+    "typhoon-v2.1-12b-instruct",
     "gemini-2.5-pro",
     "gemini-2.5-pro-preview-05-06",
     "gemini-2.5-flash",
@@ -26,7 +27,7 @@ export const ModelSelector = (props: any) => {
         //"border border-dashed border-sky-300/60 bg-sky-400/10 group-hover:bg-sky-400/15 dark:border-sky-300/30"
       )}
     >
-      <Select onValueChange={setModel}>
+      <Select value={model} onValueChange={setModel}>
         <SelectTrigger className="flex !min-w-0 !p-0 !m-0 rounded-none border-none text-[10px] overflow-hidden">
           <SelectValue placeholder="Select model" className="" />
         </SelectTrigger>

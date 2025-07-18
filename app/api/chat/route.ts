@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { streamText, smoothStream, convertToCoreMessages, appendResponseMessages, createIdGenerator, createDataStreamResponse, createDataStream } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { openai, createOpenAI } from '@ai-sdk/openai';
 import { tools } from "@/lib/ai";
 import { documentSearch } from "@/lib/ai/tool/document-search";
 import { saveChat } from "@/lib/mongo/chat-store";
@@ -19,12 +20,31 @@ export async function POST(req: NextRequest) {
         })
 
         const mcpTools = await mcpClient.tools() */
-
         const { messages, id, user, model } = await req.json();
-        const client = createGoogleGenerativeAI({
-            apiKey: process.env.GOOGLE_API_KEY,
-            baseURL: process.env.GOOGLE_API_ENDPOINT,
-        });
+        let provider
+        switch (model) {
+            case "typhoon-v2.1-12b-instruct":
+                provider = createOpenAI({
+                    apiKey: process.env.TYPHOON_API_KEY,
+                    baseURL: process.env.TYPHOON_URL,
+                    headers: {
+                        "Authorization": `Bearer ${process.env.TYPHOON_API_KEY}`,
+                    }
+                });
+                break;
+
+            case "gemini-2.5-pro":
+            case "gemini-2.5-pro-preview-05-06":
+            case "gemini-2.5-flash":
+            case "gemini-2.5-flash-preview-04-17":
+            case "gemini-2.5-flash-lite-preview-06-17":
+            default:
+                provider = createGoogleGenerativeAI({
+                    apiKey: process.env.GOOGLE_API_KEY,
+                    baseURL: process.env.GOOGLE_API_ENDPOINT,
+                });
+                break;
+        }
         const system_prompt = `
         You are Nopompam, an AI-powered assistant.
 
@@ -41,7 +61,7 @@ export async function POST(req: NextRequest) {
         return createDataStreamResponse({
             execute: async dataStream => {
                 const result = streamText({
-                    model: client(model || "gemini-2.0-flash"), //gemini-2.0-flash
+                    model: provider(model),
                     messages: convertToCoreMessages([{ role: "system", content: system_prompt }, ...messages]),
 
                     experimental_telemetry: { isEnabled: true },
@@ -81,6 +101,10 @@ export async function POST(req: NextRequest) {
                             }),
                         });
                     },
+                    onError(error) {
+                        console.error("Error in chat route: ", error);
+                        //dataStream.writeMessageAnnotation({ error: error.message });
+                    }
 
                 });
 

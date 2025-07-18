@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^1.1.11",
-    "@ai-sdk/openai": "^1.1.9",
+    "@ai-sdk/openai": "^1.3.23",
     "@floating-ui/react": "^0.27.13",
     "@hookform/resolvers": "^4.1.0",
     "@langchain/core": "^0.3.55",
