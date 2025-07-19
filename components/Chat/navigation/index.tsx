@@ -28,7 +28,14 @@ import { Separator } from "@/components/ui/_index";
 import { ArrowDownWideNarrow } from "lucide-react";
 import { ChevronLeft, Plus } from "lucide-react";
 export const PureNavigation = (props: any) => {
-  const { _id, sidebarToggled, setSidebarToggled, threads, setThreads } = props;
+  const {
+    _id,
+    session,
+    sidebarToggled,
+    setSidebarToggled,
+    threads,
+    setThreads,
+  } = props;
 
   return (
     <div
@@ -81,6 +88,7 @@ export const PureNavigation = (props: any) => {
           </DrawerHeader>
           <ThreadManager
             _id={_id}
+            session={session}
             sidebarToggled={sidebarToggled}
             setSidebarToggled={setSidebarToggled}
             threads={threads}

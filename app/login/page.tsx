@@ -1,4 +1,5 @@
-import LoginComponent from "@/components/Login/LoginComponent";
+import { LoginComponent } from "@/components/login/login-component";
+import { LoginDialog } from "@/components/login/login-dialog";
 import { cn } from "@/lib/utils";
 import GradientBackground from "@/components/_common/GradientBackground/GradientBackground";
 import { auth } from "@/auth";
@@ -32,11 +33,12 @@ export default async function Login() {
 
             {/* Caution */}
             <div className="max-w-[300px]">
-              <p className="text-center text-xs text-gray-200 ">
+              <p className="text-center text-xs text-stone-700 ">
                 This AI product may occasionally provide{" "}
                 <u>inaccurate or inappropriate information</u>. Use your own
                 judgement and verify the information provided.
               </p>
+              <LoginDialog />
             </div>
           </div>
         </div>

@@ -1,15 +1,12 @@
 "use client";
 
 import { memo } from "react";
-import { useChatContext } from "@/components/chat/ChatContext/ChatContext";
 import { useRef, useState, useEffect } from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 
 import { useChat } from "@ai-sdk/react";
 import { createIdGenerator, generateId } from "ai";
-import { useSearchParams } from "next/navigation";
 import { Dossier } from "@/components/dossier";
 import { MobileDossier } from "@/components/dossier/mobile";
 import { BottomScrollButton } from "@/components/chat/message-area/scroll-to-bottom";
@@ -19,6 +16,8 @@ import { UserInput } from "@/components/chat/user-input/UserInput";
 
 import { artifactStreamHandler } from "@/lib/artifacts/handler";
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
+import { authClient } from "@/lib/auth-client";
+import { createAuthClient } from "better-auth/react";
 
 import {
   ResizableHandle,
@@ -34,10 +33,13 @@ type PureWrapperProps = {
   initialThreads: any[];
   initialArtifacts: any[];
   _id: string | undefined;
+  session: any;
   email: string | null | undefined;
   name: string | null | undefined;
   image: string | null | undefined;
 };
+
+const { useSession } = createAuthClient();
 
 function PureWrapper(props: PureWrapperProps) {
   let {
@@ -45,6 +47,7 @@ function PureWrapper(props: PureWrapperProps) {
     initialThreads,
     initialArtifacts,
     _id,
+    session,
     email,
     name,
     image,
@@ -109,20 +112,8 @@ function PureWrapper(props: PureWrapperProps) {
     streamProtocol: "data",
   });
 
-  const lastDataIndex = useRef(0);
-
-  /*   useEffect(() => {
-    if (!data || data.length === 0) return;
-
-    const reducedArtifacts = data.reduce(
-      // @ts-ignore
-      (acc, item) => artifactStreamHandler(item, acc),
-      artifacts
-    );
-    setArtifacts(reducedArtifacts);
-
-    setData([]);
-  }, [data, artifacts, setArtifacts]); */
+  const sess = authClient.useSession();
+  console.log("Session in Wrapper: ", sess);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
@@ -173,9 +164,10 @@ function PureWrapper(props: PureWrapperProps) {
 
   return (
     <>
-      <div className="flex flex-col h-full w-full bg-neutral-100">
+      <div className="flex flex-col h-full w-full bg-transparent">
         <Navigation
           _id={_id}
+          session={session}
           email={email}
           sidebarToggled={sidebarToggled}
           setSidebarToggled={setSidebarToggled}

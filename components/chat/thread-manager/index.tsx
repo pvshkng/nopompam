@@ -2,6 +2,7 @@
 
 import { memo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { EllipsisVertical } from "lucide-react";
 import { User } from "@/components/icons/user";
@@ -9,7 +10,7 @@ import { EllipsisMenu } from "@/components/chat/thread-manager/ellipsis";
 import { authClient } from "@/lib/auth-client";
 
 export function PureThreadManager(props: any) {
-  const { _id, threads, setThreads, Close, email } = props;
+  const { _id, session, threads, setThreads, Close, email } = props;
 
   return (
     /* make side bar open based on click */
@@ -29,7 +30,7 @@ export function PureThreadManager(props: any) {
     >
       <div
         className={cn(
-          "m-1 p-1 py-5",
+          "py-5",
           "size-full flex flex-col items-center justify-start"
         )}
       >
@@ -43,14 +44,25 @@ export function PureThreadManager(props: any) {
           <div
             className={cn(
               "flex flex-row items-center justify-center",
-              "text-xs font-semibold bg-stone-300 p-2",
-              "h-12 w-12"
+              "text-xs font-semibold bg-stone-300 p-0",
+              "min-h-12 min-w-12"
             )}
           >
-            <User />
+            {session?.user?.image ? (
+              <Image
+                src={session.user.image}
+                alt={"avatar"}
+                width={48}
+                height={48}
+              />
+            ) : (
+              <User />
+            )}
           </div>
-          <div className={cn("flex flex-col max-size-full")}>
-            <div>Hello, Puvish!</div>
+          <div className={cn("flex flex-col max-size-full overflow-hidden")}>
+            <div className="font-semibold truncate">
+              Hello, {session?.user?.name || "Guest"}
+            </div>
             <div className="text-xs text-stone-600">How can I help you?</div>
           </div>
         </div>
@@ -61,7 +73,7 @@ export function PureThreadManager(props: any) {
         {/* History */}
         <div
           className={cn(
-            "flex flex-col items-start justify-start w-full overflow-y-auto",
+            "flex flex-col items-start justify-start w-full h-full overflow-y-auto",
             "px-6 gap-3"
           )}
         >
@@ -126,9 +138,6 @@ export function PureThreadManager(props: any) {
                     </div>
                   )
               )}
-          </div>
-          <div className={cn("text-stone-500 text-xs w-full text-center")}>
-            All sessions
           </div>
         </div>
 

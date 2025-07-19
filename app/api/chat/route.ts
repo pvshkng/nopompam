@@ -9,10 +9,22 @@ import { saveChat } from "@/lib/mongo/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
 import { experimental_createMCPClient } from "ai"
 import { createArtifact } from "@/lib/ai/tool/create-artifact"
+import { mock } from "@/app/api/chat/mock";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
+
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    if (!session) {
+        const result = await mock();
+        return result.toDataStreamResponse({})
+    }
 
     try {
 

@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("size-full")}>
       {/* <AuthProvider> */}
-      <body className={cn(noto_serif.className, "size-full")}>{children}</body>
+      <body className={cn(noto_serif.className, "size-full bg-neutral-100")}>{children}</body>
       {/*  <Toaster richColors theme="light" closeButton/> */}
       {/* </AuthProvider> */}
     </html>

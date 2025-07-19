@@ -8,7 +8,7 @@ import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { login } from "@/lib/actions/auth/login";
 import { authClient } from "@/lib/auth-client";
 
-export default function LoginComponent() {
+export function LoginComponent() {
   const [loading, setLoading] = useState(false);
   return (
     <>

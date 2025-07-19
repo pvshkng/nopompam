@@ -3,7 +3,7 @@ import { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import "./UserInputFading.css";
 import { UserInputOptions } from "./user-input-options";
@@ -25,6 +25,7 @@ function PureUserInput(props: any) {
 
   const { suggestions } = props;
   const [isEditorActive, setEditorStatus] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   /* useEffect(() => {
     let input = document.getElementById("userInput");
@@ -63,6 +64,7 @@ function PureUserInput(props: any) {
         >
           <div className="flex flex-row w-full bg-stone-50">
             <textarea
+              ref={inputRef}
               autoFocus
               autoComplete="off"
               rows={1}
@@ -80,17 +82,22 @@ function PureUserInput(props: any) {
                 )}px`;
                 setInput(e.target.value);
               }}
+              onChange={handleInputChange}
               onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   handleSubmit();
+                  inputRef.current!.style.height = "auto";
                 }
               }}
             />
             {/* input options */}
           </div>
           <button
-            onClick={() => handleSubmit()}
+            onClick={(e) => {
+              handleSubmit();
+              inputRef.current!.style.height = "auto";
+            }}
             disabled={isLoading}
             className={cn(
               "flex items-center justify-center bg-stone-700 p-1 px-2"
