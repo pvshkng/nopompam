@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
 import { streamText, smoothStream, convertToCoreMessages, appendResponseMessages, createIdGenerator, createDataStreamResponse, createDataStream } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { openai, createOpenAI } from '@ai-sdk/openai';
+import { createOpenAI } from '@ai-sdk/openai';
+import { createMistral } from '@ai-sdk/mistral';
 import { tools } from "@/lib/ai";
 import { documentSearch } from "@/lib/ai/tool/document-search";
 import { saveChat } from "@/lib/mongo/chat-store";
@@ -23,6 +24,20 @@ export async function POST(req: NextRequest) {
         const { messages, id, user, model } = await req.json();
         let provider
         switch (model) {
+            case "ministral-3b-latest":
+            case "ministral-8b-latest":
+            case "mistral-large-latest":
+            case "mistral-small-latest":
+            case "pixtral-large-latest":
+            case "pixtral-12b-2409":
+            case "open-mistral-7b":
+            case "open-mixtral-8x7b":
+            case "open-mixtral-8x22b":
+                provider = createMistral({
+                    apiKey: process.env.MISTRAL_API_KEY,
+                })
+                break;
+
             case "typhoon-v2.1-12b-instruct":
                 provider = createOpenAI({
                     apiKey: process.env.TYPHOON_API_KEY,

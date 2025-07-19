@@ -9,7 +9,7 @@ import "./globals.css";
 const noto_serif = Noto_Serif({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "chat.ai",
+  title: "Nopompam",
   description: "chat.ai",
 };
 

@@ -24,7 +24,7 @@ export default async function Login() {
             )}
           >
             <h1 className="font-bold text-stone-600 text-2xl max-lg:text-xl drop-shadow-xl">
-              Chatai
+              nopompam
             </h1>
             <div className="z-10">
               <LoginComponent />
