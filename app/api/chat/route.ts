@@ -3,12 +3,16 @@ import { streamText, smoothStream, convertToCoreMessages, appendResponseMessages
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from '@ai-sdk/openai';
 import { createMistral } from '@ai-sdk/mistral';
+
 import { tools } from "@/lib/ai";
 import { documentSearch } from "@/lib/ai/tool/document-search";
+import { createArtifact } from "@/lib/ai/tool/create-artifact"
+import { web } from "@/lib/ai/tool/web";
+
 import { saveChat } from "@/lib/mongo/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
 import { experimental_createMCPClient } from "ai"
-import { createArtifact } from "@/lib/ai/tool/create-artifact"
+
 import { mock } from "@/app/api/chat/mock";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -81,8 +85,22 @@ export async function POST(req: NextRequest) {
         Nopompam can use code blocks to display code snippets.
         Nopompam can use bullet points to list items.
 
+        ## web
+        # The **web** tool allows you to search and retrieve information from the web.
+        # Automatically invoke the **web** tool when additional information is required to answer a question accurately, especially in unclear or complex queries.
+        # Nopompam do not need to ask for permission to use the "web" tool.
+        # Nopompam can infer **query** from the context of the conversation by yourself.
+        # Never ask user to rephrase the question if unclear. Infer the parameter **query** from the context of the conversation.
+        # Do not attempt to answer questions without using the "web" tool.
+        # Nopompam should provide evidence from credible sources to support its answer by including a reference link in the following format: [link text](https://example.com).
+          - Examples:
+              - As mentioned in the [documentation](https://docs.news.com/)
+        # Urls must only come from **web** tool. DO NOT MAKE THEM UP.
+        
+
         ## createArtifact
-        // # The "createArtifact" tool creates and updates text documents that render to the user on a space next to the conversation (referred to as the "dossier").
+        # The "createArtifact" tool creates and updates text documents that render to the user on a space next to the conversation (referred to as the "dossier").
+        # Use this tool when asked to work on writing that's long enough like article / essay.
         `
 
         return createDataStreamResponse({
@@ -90,7 +108,6 @@ export async function POST(req: NextRequest) {
                 const result = streamText({
                     model: provider(model),
                     messages: convertToCoreMessages([{ role: "system", content: system_prompt }, ...messages]),
-
                     experimental_telemetry: { isEnabled: true },
                     experimental_transform: smoothStream({
                         delayInMs: 20, // optional: defaults to 10ms
@@ -98,7 +115,10 @@ export async function POST(req: NextRequest) {
                     }),
                     // ...tools, 
                     // documentSearch
-                    tools: { createArtifact: createArtifact({ threadId: id, user: user, dataStream: dataStream }) },
+                    tools: {
+                        //createArtifact: createArtifact({ threadId: id, user: user, dataStream: dataStream }),
+                        web: web({})
+                    },
                     maxSteps: 3,
                     toolCallStreaming: true,
                     toolChoice: "auto",
@@ -113,20 +133,24 @@ export async function POST(req: NextRequest) {
 
                     //save chat
                     async onFinish({ response }) {
-                        let title = undefined;
-                        if (messages.length === 1) {
-                            title = await generateTitle(messages[0].content);
-                            dataStream.writeMessageAnnotation({ title: title });
+                        try {
+                            let title = undefined;
+                            if (messages.length === 1) {
+                                title = await generateTitle(messages[0].content);
+                                dataStream.writeMessageAnnotation({ title: title });
+                            }
+                            saveChat({
+                                _id: id,
+                                title: title,
+                                user: user,
+                                messages: appendResponseMessages({
+                                    messages,
+                                    responseMessages: response.messages,
+                                }),
+                            });
+                        } catch (error) {
+                            console.error("Error creating chat: ", error);
                         }
-                        saveChat({
-                            _id: id,
-                            title: title,
-                            user: user,
-                            messages: appendResponseMessages({
-                                messages,
-                                responseMessages: response.messages,
-                            }),
-                        });
                     },
                     onError(error) {
                         console.error("Error in chat route: ", error);

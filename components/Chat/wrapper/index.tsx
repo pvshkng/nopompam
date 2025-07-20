@@ -53,7 +53,6 @@ function PureWrapper(props: PureWrapperProps) {
     image,
   } = props;
   const params = useParams();
-
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
@@ -85,6 +84,7 @@ function PureWrapper(props: PureWrapperProps) {
     data,
     setData,
   } = useChat({
+    maxSteps: 3,
     id: _id,
     initialMessages: initialMessages,
     sendExtraMessageFields: true,
@@ -93,7 +93,7 @@ function PureWrapper(props: PureWrapperProps) {
       size: 16,
     }),
     body: {
-      user: email,
+      user: session.user?.email,
       model: model,
     },
 
@@ -113,7 +113,7 @@ function PureWrapper(props: PureWrapperProps) {
   });
 
   const sess = authClient.useSession();
-  console.log("Session in Wrapper: ", sess);
+  //console.log("Session in Wrapper: ", sess);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
