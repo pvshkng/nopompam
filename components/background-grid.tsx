@@ -6,6 +6,7 @@ export function GridBackground() {
     <>
       <div
         className={cn(
+          "bg-neutral-100",
           "absolute inset-0 -z-10",
           "[background-size:20px_20px]",
           "[background-image:linear-gradient(to_right,#e4e4e7_1px,transparent_1px),linear-gradient(to_bottom,#e4e4e7_1px,transparent_1px)]",
@@ -13,7 +14,7 @@ export function GridBackground() {
         )}
       />
       {/* Radial gradient for the container to give a faded look */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black"></div>
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-neutral-100 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black"></div>
     </>
   );
 }

@@ -39,8 +39,8 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
     isLast,
     dossierOpen,
     setDossierOpen,
-    activeTab,
-    setActiveTab,
+    //activeTab,
+    //setActiveTab,
   } = props;
 
   return (
@@ -102,8 +102,8 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                     setArtifacts={setArtifacts}
                     dossierOpen={dossierOpen}
                     setDossierOpen={setDossierOpen}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
+                    //activeTab={activeTab}
+                    //setActiveTab={setActiveTab}
                   />
                 );
               case "chart":

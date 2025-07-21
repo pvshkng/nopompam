@@ -93,7 +93,7 @@ function PureWrapper(props: PureWrapperProps) {
       size: 16,
     }),
     body: {
-      user: session.user?.email,
+      user: session?.user?.email || undefined,
       model: model,
     },
 

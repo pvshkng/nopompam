@@ -82,12 +82,12 @@ table {
   table-layout: fixed !important;
   border-collapse: collapse !important;
   table-layout: fixed;
-  margin-top: 0 !important;
+  margin-top: 1rem !important;
   margin-bottom: 1rem !important;
 }
 
 table thead {
-  background-color: lightgray;
+  background-color: #d6d3d1  ;
 }
 
 table tbody {
@@ -119,6 +119,7 @@ table tbody tr > td {
 ul,
 ol {
   margin-left: 20px;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 

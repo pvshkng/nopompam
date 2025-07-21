@@ -1,72 +1,106 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import {
+  ArrowRightIcon,
+  CircleCheckIcon,
+  TriangleAlertIcon,
+  RefreshCwIcon,
+  XIcon,
+} from "lucide-react";
 
-import type { JSX } from "react";
-import type { BundledLanguage } from "shiki/bundle/web";
-import { toJsxRuntime } from "hast-util-to-jsx-runtime";
-import { Fragment } from "react";
-import { jsx, jsxs } from "react/jsx-runtime";
-import { codeToHast } from "shiki/bundle/web";
+import {
+  AtSignIcon,
+  ChevronDownIcon,
+  CircleDashedIcon,
+  CommandIcon,
+  EclipseIcon,
+  GaugeIcon,
+  LucideIcon,
+  ZapIcon,
+  Globe,
+} from "lucide-react";
 
-export async function highlight(code: string, lang: BundledLanguage) {
-  const out = await codeToHast(code, {
-    lang,
-    theme: "github-dark",
-  });
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Suspense, useState } from "react";
 
-  return toJsxRuntime(out, {
-    Fragment,
-    jsx,
-    jsxs,
-  }) as JSX.Element;
-}
-
-// TODO: map tool name with user friendly name
-
-export const ToolAnnotation = ({ tool }: { tool: any }) => {
+export const ToolAnnotation = (props: any) => {
+  const { tool } = props;
   return (
-    <React.Fragment>
-      <Dialog>
-        <DialogTrigger>
-          {/* <span className="text-[10px] font-semibold !text-stone-200 bg-stone-50 rounded-2xl py-1">
-            {tool && tool.toolName}
-          </span> */}
-          <hr
-            className={cn(
-              "mt-2",
-              "relative border-0 text-center h-6 opacity-50",
-              "before:content-[''] before:absolute before:left-0 before:top-1/2",
-              "before:w-full before:h-px",
-              "before:bg-gradient-to-r before:from-transparent before:via-neutral-300 before:to-transparent",
-              "after:content-[attr(data-content)] after:relative after:inline-block",
-              "after:px-2 after:leading-6 after:text-neutral-300 after:bg-neutral-100 after:rounded-xl",
-              "text-[10px]"
+    <>
+      <Collapsible
+        className="py-3 my-2 px-4 border border-stone-300 rounded-md bg-neutral-100 opacity-50"
+      >
+        <CollapsibleTrigger className="justify-between w-full flex flex-row items-center gap-2 text-[15px] leading-6 font-semibold [&[data-state=open]>svg]:rotate-180">
+          <span className="flex items-center gap-3">
+            {tool?.state !== "result" ? (
+              <div
+                className="spinner w-[24px] h-[24px] border-4 border-stone-300 border-t-stone-800 rounded-full"
+                //style={{ animation: "spin 1s linear infinite" }}
+              />
+            ) : (
+              <Globe
+                size={16}
+                className="shrink-0 text-stone-500"
+                aria-hidden="true"
+              />
             )}
-            data-content={tool && tool.toolName}
+
+            <span className="text-stone-500 text-sm">
+              {tool?.toolName?.toUpperCase() || "TOOL"}
+            </span>
+          </span>
+          <ChevronDownIcon
+            size={16}
+            className="mt-1 shrink-0 opacity-60 transition-transform duration-200"
+            aria-hidden="true"
           />
-        </DialogTrigger>
-        <DialogContent className="w-full max-w-[500px] overflow-auto">
-          <DialogHeader className="w-full max-w-full overflow-hidden">
-            <DialogTitle>{tool && tool.toolName}</DialogTitle>
-            <DialogDescription className="">
-              {tool && (
-                /* to do: fix */
-                <div className="prose prose-sm prose-invert max-h-[700px] w-full overflow-auto text-left text-wrap whitespace-nowrap">
-                  {highlight(JSON.stringify(tool, null, 2), "json")}
-                </div>
-              )}
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </React.Fragment>
+        </CollapsibleTrigger>
+        <CollapsibleContent
+          className={cn(
+            "data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down",
+            "flex flex-col overflow-hidden transition-all"
+          )}
+        >
+          {tool?.toolName === "web" &&
+            tool.result?.results?.map((item: any, i: number) => {
+              const faviconUrl = item?.url
+                ? new URL("/favicon.ico", item.url).href
+                : null;
+              return (
+                <a key={i} className="text-xs mt-3" href={item?.url!}>
+                  <span className="flex flex-row gap-1 font-bold mb-1">
+                    {faviconUrl && (
+                      <Suspense
+                        fallback={
+                          <div className="w-3 h-3 border-4 border-stone-300 border-t-stone-800 rounded-full animate-spin" />
+                        }
+                      >
+                        <img
+                          src={faviconUrl}
+                          alt={`${item.title} favicon`}
+                          className="w-3 h-3"
+                          loading="lazy"
+                        />
+                      </Suspense>
+                    )}
+                    {item.title}
+                  </span>
+                  <span className="text-xs">{item.content}</span>
+                </a>
+              );
+            })}
+        </CollapsibleContent>
+      </Collapsible>
+    </>
   );
 };
