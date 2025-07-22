@@ -200,6 +200,7 @@ function PureWrapper(props: PureWrapperProps) {
                       ) : (
                         <>
                           <MessageArea
+                            status={status}
                             name={name!}
                             image={image!}
                             messages={messages}

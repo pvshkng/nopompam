@@ -11,20 +11,67 @@ import { Copy } from "lucide-react";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { CandlestickChart } from "../charts/candle-stick-chart";
 
+import { Link } from "lucide-react";
+
 export const components: Partial<any> = {
-  /* Actions: ({ children }: { children: React.ReactNode }) => (
-    <div className="mt-6 space-y-2 rounded-lg border p-4">
-      <h3 className="font-semibold text-sm text-gray-700 mb-3">
-        Suggested Actions
-      </h3>
-    </div>
-  ), */
+  // @ts-ignore
+
+  a: ({ children, className, href, ...props }) => (
+    <>
+      <style>{`
+      img:not([src]):not([srcset])::before,
+      img[alt]::after {
+        display: none;
+      }
+
+      img:not([src]):not([srcset]) + .favicon-fallback,
+      img[src=""]::after + .favicon-fallback {
+        opacity: 1;
+      }
+
+      /* Hide fallback when image loads successfully */
+      img:not([src=""]):not([alt=""]) + .favicon-fallback {
+        opacity: 0;
+      }
+      `}</style>
+      <a
+        href={href}
+        {...props}
+        className={cn(
+          "items-center underline text-semibold text-sm text-stone-500 gap-1"
+        )}
+      >
+        <img
+          onError={(e) => {
+            // @ts-ignore
+            e.target.style.display = "none";
+            // @ts-ignore
+            e.target.nextElementSibling.style.display = "inline";
+          }}
+          src={new URL("/favicon.ico", href).href}
+          className="inline max-h-3 max-w-3 mr-1"
+        />
+        <Link className="inline size-3 mr-1" style={{ display: "none" }} />
+        {children}
+      </a>
+    </>
+  ),
+
+  // @ts-ignore
+  img: ({ children, className, src, alt, ...props }) => (
+    <img
+      src={src}
+      alt={alt}
+      {...props}
+      className={cn("max-h-64 my-2 mr-auto rounded-md border border-stone-300")}
+      onError={(e) => {
+        (e.target as HTMLImageElement).src = "/image/placeholder-image.jpg";
+      }}
+    />
+  ),
   chart: () => {
     return <BarChartHorizontal />;
   },
-/*   BarChartHorizontal: () => {
-    return <p>ungabunga</p>;
-  }, */
   pre: ({
     children,
     className,
@@ -43,14 +90,6 @@ export const components: Partial<any> = {
           ? detectedLanguage
           : "md";
       }
-
-      // custom tag
-
-      // else if (match && match[1] === "chart") {
-      //   return {
-      //     /* <ToolChart data={children} />; */
-      //   };
-      // }
 
       code = children.props.children || "";
     }

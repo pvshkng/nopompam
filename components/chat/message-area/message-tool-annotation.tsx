@@ -11,6 +11,7 @@ import {
 import {
   AtSignIcon,
   ChevronDownIcon,
+  Link,
   CircleDashedIcon,
   CommandIcon,
   EclipseIcon,
@@ -32,21 +33,23 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Suspense, useState } from "react";
+import Image from "next/image";
 
 export const ToolAnnotation = (props: any) => {
   const { tool } = props;
   return (
     <>
       <Collapsible
-        className="py-3 my-2 px-4 border border-stone-300 rounded-md bg-neutral-100 opacity-50"
+        defaultOpen={tool?.state == "result"}
+        className="py-3 my-2 px-4 border border-stone-300 rounded-md bg-neutral-100"
       >
-        <CollapsibleTrigger className="justify-between w-full flex flex-row items-center gap-2 text-[15px] leading-6 font-semibold [&[data-state=open]>svg]:rotate-180">
+        <CollapsibleTrigger
+          disabled={tool?.state !== "result"}
+          className="justify-between w-full flex flex-row items-center gap-2 text-[15px] leading-6 font-semibold [&[data-state=open]>svg]:rotate-180"
+        >
           <span className="flex items-center gap-3">
             {tool?.state !== "result" ? (
-              <div
-                className="spinner w-[24px] h-[24px] border-4 border-stone-300 border-t-stone-800 rounded-full"
-                //style={{ animation: "spin 1s linear infinite" }}
-              />
+              <div className="animate-spin w-[24px] h-[24px] border-4 border-stone-300 border-t-stone-700 rounded-full" />
             ) : (
               <Globe
                 size={16}
@@ -68,34 +71,31 @@ export const ToolAnnotation = (props: any) => {
         <CollapsibleContent
           className={cn(
             "data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down",
-            "flex flex-col overflow-hidden transition-all"
+            "flex flex-col overflow-hidden transition-all w-full"
           )}
         >
           {tool?.toolName === "web" &&
             tool.result?.results?.map((item: any, i: number) => {
-              const faviconUrl = item?.url
-                ? new URL("/favicon.ico", item.url).href
-                : null;
               return (
                 <a key={i} className="text-xs mt-3" href={item?.url!}>
-                  <span className="flex flex-row gap-1 font-bold mb-1">
-                    {faviconUrl && (
-                      <Suspense
-                        fallback={
-                          <div className="w-3 h-3 border-4 border-stone-300 border-t-stone-800 rounded-full animate-spin" />
-                        }
-                      >
-                        <img
-                          src={faviconUrl}
-                          alt={`${item.title} favicon`}
-                          className="w-3 h-3"
-                          loading="lazy"
-                        />
-                      </Suspense>
+                  <span className="flex gap-1 mb-1 font-bold items-center overflow-hidden">
+                    {item.favicon ? (
+                      <img
+                        src={item.favicon}
+                        alt={""}
+                        width={12}
+                        height={12}
+                        loading="eager"
+                      />
+                    ) : (
+                      <Link className="text-stone-500 size-3" />
                     )}
-                    {item.title}
+
+                    <span className="truncate">{item.title}</span>
                   </span>
-                  <span className="text-xs">{item.content}</span>
+                  <span className="text-xs line-clamp-3 text-ellipsis">
+                    {item.content}
+                  </span>
                 </a>
               );
             })}

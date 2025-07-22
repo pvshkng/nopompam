@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Noto_Serif } from "next/font/google";
 import type { Viewport } from "next";
-//import AuthProvider from "@/components/AuthProvider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
-//import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 const noto_serif = Noto_Serif({ subsets: ["latin"] });
 
@@ -26,10 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("size-full")}>
-      {/* <AuthProvider> */}
-      <body className={cn(noto_serif.className, "size-full bg-neutral-100")}>{children}</body>
-      {/*  <Toaster richColors theme="light" closeButton/> */}
-      {/* </AuthProvider> */}
+      <body className={cn(noto_serif.className, "size-full bg-neutral-100")}>
+        {children}
+        <Toaster theme="dark" position="top-right" />
+      </body>
     </html>
   );
 }

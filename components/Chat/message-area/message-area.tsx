@@ -8,8 +8,10 @@ import "@/lib/LaTeX/katex.min.css";
 import { UIMessage } from "@ai-sdk/ui-utils";
 import { MessageBlock } from "./message-block";
 import { memo } from "react";
+import { MessageSkeleton } from "./message-loading-skeleton";
 
 type MessageAreaProps = {
+  status: string;
   name: string;
   image: string;
   messages: UIMessage[];
@@ -27,6 +29,7 @@ const isLast = (messages, m) => {
 
 export default function PureMessageArea(props: MessageAreaProps) {
   const {
+    status,
     name,
     image,
     messages,
@@ -67,8 +70,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
               ))}
             </div>
           )} */}
-
           <MessageBlock
+            status={status}
             m={m}
             isLoading={isLoading}
             artifacts={artifacts}
@@ -81,6 +84,7 @@ export default function PureMessageArea(props: MessageAreaProps) {
           />
         </div>
       ))}
+      {status === "submitted" && <MessageSkeleton />}
     </div>
   );
 }

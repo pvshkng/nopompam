@@ -21,6 +21,7 @@ import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { CandlestickChart } from "@/components/charts/candle-stick-chart";
 
 type MessageBlockProps = {
+  status: string;
   m: UIMessage;
   isLoading?: boolean;
   artifacts: any[];
@@ -32,6 +33,7 @@ type MessageBlockProps = {
 
 export const PureMessageBlock = (props: MessageBlockProps) => {
   const {
+    status,
     m,
     isLoading,
     artifacts,
@@ -46,7 +48,6 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
   return (
     <div
       className={cn(
-        "stream-section",
         "relative inline-block leading-6 transition-[float] my-1",
         "[&>*]:text-left",
         m.role == "user"
@@ -71,6 +72,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
               <div key={`${m.id}-${j}`}>
                 <ReactMarkdown
                   className={cn(
+                    "stream-section",
                     "m-2 prose text-sm",
                     m.role === "user" ? "text-stone-300" : "text-black"
                     // m.role !== "user" &&
@@ -159,13 +161,15 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           {/* {JSON.stringify(m, null, 2)} */}
 
           {/* Action Container */}
-          {m.role === "assistant" && (
-            <ActionPanel
-              //isLast={isLast(messages, m)}
-              messageId={m.id}
-              message={m.content}
-            />
-          )}
+          {m.role === "assistant" &&
+            (!isLast || (isLast && status === "ready")) && (
+              <ActionPanel
+                status={status}
+                isLast={isLast}
+                messageId={m.id}
+                message={m.content}
+              />
+            )}
         </>
       }
     </div>

@@ -12,7 +12,14 @@ export const web = ({ }) => tool({
     }),
     execute: async ({ query }) => {
         try {
-            const response = await tvly.search(query);
+            const response = await tvly.search(
+                query,
+                {
+                    includeImages: true,
+                    includeImageDescriptions: true,
+                    includeFavicon: true
+                }
+            );
             console.log("Tavily response: ", response);
             return response
         } catch (error) {
