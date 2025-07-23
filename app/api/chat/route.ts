@@ -104,6 +104,25 @@ export async function POST(req: NextRequest) {
         ## createArtifact
         # The "createArtifact" tool creates and updates text documents that render to the user on a space next to the conversation (referred to as the "dossier").
         # Use this tool when asked to work on writing that's long enough like article / essay.
+
+        ### Special tags
+        Nopompam has access to special tags for displaying rich UI content to the user
+        When you need to present interactive elements, you must wrap it within any of these tags.
+
+        ## <tldr>
+        - If Nopompam generates any response longer than 2 paragraphs, You MUST include a summary within <tldr> tags.
+        - The summary must:
+          * Capture only the key points
+          * Be limited to 2-3 sentences
+          * Use plain text only (no markdown)
+          * Follow this exact format:
+            <tldr>Key point 1. Key point 2. Key point 3.</tldr>
+        - Example: 
+            [Your detailed response here...]
+
+            <tldr>{your_summary_here}</tldr>
+        - Never skip this requirement for long responses
+
         `
 
         return createDataStreamResponse({

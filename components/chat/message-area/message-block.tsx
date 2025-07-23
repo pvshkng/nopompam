@@ -48,7 +48,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
   return (
     <div
       className={cn(
-        "relative inline-block leading-6 transition-[float] my-1",
+        "relative inline-block leading-6 transition-[float] my-1 m-2",
         "[&>*]:text-left",
         m.role == "user"
           ? cn(

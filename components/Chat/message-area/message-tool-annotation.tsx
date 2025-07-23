@@ -1,32 +1,8 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import {
-  ArrowRightIcon,
-  CircleCheckIcon,
-  TriangleAlertIcon,
-  RefreshCwIcon,
-  XIcon,
-} from "lucide-react";
 
-import {
-  AtSignIcon,
-  ChevronDownIcon,
-  Link,
-  CircleDashedIcon,
-  CommandIcon,
-  EclipseIcon,
-  GaugeIcon,
-  LucideIcon,
-  ZapIcon,
-  Globe,
-} from "lucide-react";
+import { ChevronDownIcon, Link, LoaderCircle, Globe } from "lucide-react";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
   Collapsible,
   CollapsibleContent,
@@ -41,15 +17,15 @@ export const ToolAnnotation = (props: any) => {
     <>
       <Collapsible
         defaultOpen={tool?.state == "result"}
-        className="py-3 my-2 px-4 border border-stone-300 rounded-md bg-neutral-100"
+        className="py-3 px-4 my-2 mx-2 border border-stone-300 rounded-md bg-neutral-100"
       >
         <CollapsibleTrigger
           disabled={tool?.state !== "result"}
           className="justify-between w-full flex flex-row items-center gap-2 text-[15px] leading-6 font-semibold [&[data-state=open]>svg]:rotate-180"
         >
-          <span className="flex items-center gap-3">
+          <span className="flex items-center gap-2">
             {tool?.state !== "result" ? (
-              <div className="animate-spin w-[24px] h-[24px] border-4 border-stone-300 border-t-stone-700 rounded-full" />
+              <LoaderCircle size={16} className="!animate-spin !opacity-100 text-stone-500" />
             ) : (
               <Globe
                 size={16}

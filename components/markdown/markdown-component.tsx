@@ -9,13 +9,25 @@ import { codeToHtml } from "shiki";
 import { cn } from "@/lib/utils";
 import { Copy } from "lucide-react";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
+import { TLDR } from "./tldr";
 import { CandlestickChart } from "../charts/candle-stick-chart";
 
 import { Link } from "lucide-react";
 
 export const components: Partial<any> = {
   // @ts-ignore
-
+  p: ({ children }) => {
+    // Check if children is a custom block-level component
+    if (
+      children &&
+      typeof children === "object" &&
+      children.type &&
+      ["tldr", "chart"].includes(children.type)
+    ) {
+      return children;
+    }
+    return <p>{children}</p>;
+  },
   a: ({ children, className, href, ...props }) => (
     <>
       <style>{`
@@ -69,9 +81,6 @@ export const components: Partial<any> = {
       }}
     />
   ),
-  chart: () => {
-    return <BarChartHorizontal />;
-  },
   pre: ({
     children,
     className,
@@ -106,6 +115,12 @@ export const components: Partial<any> = {
       {children}
     </code>
   ),
+  chart: () => {
+    return <BarChartHorizontal />;
+  },
+  tldr: ({ children }) => {
+    return <TLDR>{children}</TLDR>;
+  },
 };
 
 export async function highlight(code: string, lang: BundledLanguage) {
