@@ -7,6 +7,8 @@ type ArtifactPreviewProps = {
   setArtifacts: any;
   dossierOpen: boolean;
   setDossierOpen: any;
+  activeTab: any;
+  setActiveTab: any;
 };
 
 export function ArtifactPreview(props: ArtifactPreviewProps) {

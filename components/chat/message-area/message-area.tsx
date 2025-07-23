@@ -20,6 +20,8 @@ type MessageAreaProps = {
   setArtifacts: Dispatch<SetStateAction<any[]>>;
   dossierOpen: boolean;
   setDossierOpen: boolean;
+  activeTab: any;
+  setActiveTab: any;
 };
 
 // @ts-ignore
@@ -38,8 +40,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
     setArtifacts,
     dossierOpen,
     setDossierOpen,
-    //activeTab,
-    //setActiveTab,
+    activeTab,
+    setActiveTab,
   } = props;
 
   return (
@@ -48,8 +50,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
         <div
           key={m.id}
           className={cn(
-            "whitespace-normal break-words text-sm",
-            m.role == "user" ? "text-right clear-both" : "text-left clear-none"
+            "whitespace-normal break-words text-sm flex w-full",
+            m.role == "user" ? "justify-end" : "justify-center"
           )}
         >
           {/* Tool Annotation */}
@@ -79,8 +81,8 @@ export default function PureMessageArea(props: MessageAreaProps) {
             isLast={isLast(messages, m)}
             dossierOpen={dossierOpen}
             setDossierOpen={setDossierOpen}
-            //activeTab={activeTab}
-            //setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
           />
         </div>
       ))}

@@ -29,6 +29,8 @@ type MessageBlockProps = {
   isLast: boolean;
   dossierOpen: boolean;
   setDossierOpen: boolean;
+  activeTab: any;
+  setActiveTab: any;
 };
 
 export const PureMessageBlock = (props: MessageBlockProps) => {
@@ -41,8 +43,8 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
     isLast,
     dossierOpen,
     setDossierOpen,
-    //activeTab,
-    //setActiveTab,
+    activeTab,
+    setActiveTab,
   } = props;
 
   return (
@@ -69,25 +71,24 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
         switch (p.type) {
           case "text":
             return (
-              <div key={`${m.id}-${j}`}>
-                <ReactMarkdown
-                  className={cn(
-                    "stream-section",
-                    "m-2 prose text-sm",
-                    m.role === "user" ? "text-stone-300" : "text-black"
-                    // m.role !== "user" &&
-                    //   isLoading &&
-                    //   isLast(messages, m) &&
-                    //   "typewriting",
-                  )}
-                  remarkPlugins={[remarkGfm, remarkMath]}
-                  rehypePlugins={[rehypeRaw, rehypeKatex]}
-                  components={components}
-                  remarkRehypeOptions={{}}
-                >
-                  {p.text}
-                </ReactMarkdown>
-              </div>
+              <ReactMarkdown
+                key={`${m.id}-${j}`}
+                className={cn(
+                  "stream-section",
+                  "m-2 prose text-sm",
+                  m.role === "user" ? "text-stone-300" : "text-black"
+                  // m.role !== "user" &&
+                  //   isLoading &&
+                  //   isLast(messages, m) &&
+                  //   "typewriting",
+                )}
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[rehypeRaw, rehypeKatex]}
+                components={components}
+                remarkRehypeOptions={{}}
+              >
+                {p.text}
+              </ReactMarkdown>
             );
 
           case "tool-invocation":
@@ -104,8 +105,8 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                     setArtifacts={setArtifacts}
                     dossierOpen={dossierOpen}
                     setDossierOpen={setDossierOpen}
-                    //activeTab={activeTab}
-                    //setActiveTab={setActiveTab}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
                   />
                 );
               case "chart":
