@@ -1,8 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ActionalPanelDialog } from "@/components/chat/message-area/ActionalPanelDialog";
-import Image from "next/image";
 import { ThumbsUp, ThumbsDown, CopyIcon, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 

@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { memo } from "react";
 import { ThreadManager } from "@/components/chat/thread-manager";
-import { ModelSelector } from "@/components/chat/model-selector";
 import Link from "next/link";
 
 import {
@@ -15,17 +14,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetClose,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/_index";
-import { ArrowDownWideNarrow } from "lucide-react";
 import { ChevronLeft, Plus } from "lucide-react";
 export const PureNavigation = (props: any) => {
   const {
@@ -93,7 +82,7 @@ export const PureNavigation = (props: any) => {
             setSidebarToggled={setSidebarToggled}
             threads={threads}
             setThreads={setThreads}
-            Close={SheetClose}
+            Close={DrawerClose}
           />
         </DrawerContent>
       </Drawer>

@@ -134,19 +134,6 @@ function PureWrapper(props: PureWrapperProps) {
     }
   }, [messages, isScrolledToBottom]);
 
-  /*   useEffect(() => {
-    if (messages.length > 0) {
-      const timer = setTimeout(() => {
-        setIsChatInitiated(true);
-      }, 250);
-      return () => clearTimeout(timer);
-    }
-  }, [messages.length]); */
-
-  /* useEffect(() => {
-    console.log("artifact: ", artifacts);
-  }, [artifacts, setArtifacts]); */
-
   const scrollToBottom = () => {
     if (containerRef.current) {
       containerRef.current.scrollTop! = containerRef.current.scrollHeight!;
@@ -272,7 +259,6 @@ function PureWrapper(props: PureWrapperProps) {
                 )
               ) : (
                 <MobileDossier
-                  /* className="md:hidden" */
                   dossierOpen={dossierOpen}
                   setDossierOpen={setDossierOpen}
                   artifacts={artifacts}

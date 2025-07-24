@@ -9,6 +9,11 @@ import { cn } from "@/lib/utils";
 
 const models = {
   google: [
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "gemini-2.5-pro-preview-05-06",
+    "gemini-2.5-flash-preview-04-17",
+    "gemini-2.5-flash-lite-preview-06-17",
     "ministral-3b-latest",
     "ministral-8b-latest",
     "mistral-large-latest",
@@ -19,11 +24,6 @@ const models = {
     "open-mixtral-8x7b",
     "open-mixtral-8x22b",
     "typhoon-v2.1-12b-instruct",
-    "gemini-2.5-pro",
-    "gemini-2.5-pro-preview-05-06",
-    "gemini-2.5-flash",
-    "gemini-2.5-flash-preview-04-17",
-    "gemini-2.5-flash-lite-preview-06-17",
   ],
 };
 

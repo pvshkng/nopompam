@@ -26,7 +26,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "components/chat/user-input/Editor/config.ts.bak", "test/ai/generate-title.ts", "components/chat/Sidebar/TopicDeletionDialog.tsx_", "components/chat/Sidebar/SheetSidebar.tsx_", "components/chat/NavBar/NavBar.tsx_", "app/api/chat/route_lg.ts", "lib/artifacts/handler.bak"  ],
+    ".next/types/**/*.ts", "app/loading.tsx",
+  ],
   "exclude": ["node_modules"]
 }

@@ -54,8 +54,6 @@ export default async function Chat({
     <>
       {/* @ts-ignore */}
       <ChatProvider initialMessages={messages} _id={_id} email={email}>
-        {/* relative flex h-full w-full flex-1 flex-col overflow-hidden */}
-        {/* <c.NavBar name={name} image={image} _id={_id} email={email} /> */}
         {/* <c.GradientBackground /> */}
         <GridBackground />
         <Wrapper

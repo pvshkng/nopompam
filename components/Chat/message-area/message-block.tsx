@@ -59,10 +59,6 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
               "bg-stone-700",
               "after:w-0 after:h-0 after:absolute after:-bottom-2 after:right-0",
               "after:!border-transparent  after:!border-t-stone-700 after:!border-r-stone-700 after:border-[8px]"
-              //"bg-stone-50 rounded-3xl rounded-br-none",
-              //"shadow-sm"
-
-              //"bg-gradient-to-br from-stone-300 to-stone-400 rounded-br-[0]"
             )
           : "rounded-bl-[0] w-full"
       )}
