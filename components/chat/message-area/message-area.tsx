@@ -86,7 +86,7 @@ export default function PureMessageArea(props: MessageAreaProps) {
           />
         </div>
       ))}
-      {status === "submitted" && <MessageSkeleton />}
+      {status == "submitted" && <MessageSkeleton />}
     </div>
   );
 }
