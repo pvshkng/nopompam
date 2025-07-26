@@ -39,7 +39,12 @@ export const PureNavigation = (props: any) => {
         replace
         href={{ pathname: "/chat" }}
         prefetch={false}
-        className={cn("flex items-center")}
+        className={cn(
+          "[writing-mode:sideways-lr]",
+          "not-italic",
+          "flex flex-row items-center font-black text-xs gap-1",
+          "text-stone-500"
+        )}
       >
         <Plus
           width={16}
@@ -49,7 +54,7 @@ export const PureNavigation = (props: any) => {
           //className="text-stone-200"
         />
       </Link>
-      <Separator orientation="horizontal" className="w-full" />
+      <Separator orientation="horizontal" className="w-full bg-stone-300" />
       <Drawer direction="left">
         <DrawerTrigger
           className={cn(
@@ -60,7 +65,7 @@ export const PureNavigation = (props: any) => {
             //"shadow-md"
           )}
         >
-          History
+          Options
           <ChevronLeft
             width={16}
             height={16}

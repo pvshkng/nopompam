@@ -8,10 +8,19 @@ import { EllipsisVertical } from "lucide-react";
 import { User } from "@/components/icons/user";
 import { EllipsisMenu } from "@/components/chat/thread-manager/ellipsis";
 import { authClient } from "@/lib/auth-client";
+import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
+import { useShallow } from "zustand/react/shallow";
 
 export function PureThreadManager(props: any) {
   const { _id, session, threads, setThreads, Close, email } = props;
-
+  const { isOpen, setIsOpen, openAuthDialog, close } = useAuthDialogStore(
+    useShallow((state) => ({
+      isOpen: state.isOpen,
+      setIsOpen: state.setIsOpen,
+      openAuthDialog: state.open,
+      close: state.close,
+    }))
+  );
   return (
     /* make side bar open based on click */
 
@@ -77,96 +86,123 @@ export function PureThreadManager(props: any) {
             "px-6 gap-3"
           )}
         >
-          <div className="text-stone-500 text-xs">History</div>
-          <div
-            className={cn(
-              "flex flex-col w-full max-h-full overflow-y-scroll",
-              "gap-2 pr-1"
-            )}
-          >
-            {threads
-              .sort((a: any, b: any) => {
-                if (_id === a._id) return -1;
-                if (_id === b._id) return 1;
-                return Number(b.timestamp) - Number(a.timestamp);
-              })
-              .map(
-                (h: any, i: any) =>
-                  h && (
-                    <div
-                      key={i}
-                      className={cn(
-                        "flex flex-row w-full",
-                        _id === h._id && "bg-stone-200 hover:bg-stone-300"
-                      )}
-                    >
-                      <Link
-                        replace
-                        href={{
-                          pathname: "/chat/" + h._id!,
-                        }}
-                        prefetch={false}
-                        className={cn(
-                          "flex flex-row justify-between items-center",
-                          "p-2 w-full",
-                          //"bg-stone-100 hover:bg-stone-300",
-                          "text-xs",
-                          "overflow-hidden"
-                        )}
-                      >
-                        <Close className="flex flex-row justify-between items-center w-full">
-                          <div className="whitespace-nowrap overflow-hidden text-ellipsis text-left">
-                            <div className="truncate w-full">
-                              {h.title || "undefined"}
-                            </div>
-                            <div className="text-stone-600 text-[9px]">
-                              {new Date(Number(h.timestamp)).toLocaleString() ||
-                                h.timestamp}
-                            </div>
-                          </div>
-                        </Close>
-                      </Link>
-                      <div className={cn("flex items-center p-1")}>
-                        <EllipsisMenu
-                          _id={_id}
-                          targetId={h._id}
-                          setThreads={setThreads}
+          {session ? (
+            <>
+              <div className="text-stone-500 text-xs">History</div>
+              <div
+                className={cn(
+                  "flex flex-col w-full max-h-full overflow-y-scroll",
+                  "gap-2 pr-1"
+                )}
+              >
+                {threads
+                  .sort((a: any, b: any) => {
+                    if (_id === a._id) return -1;
+                    if (_id === b._id) return 1;
+                    return Number(b.timestamp) - Number(a.timestamp);
+                  })
+                  .map(
+                    (h: any, i: any) =>
+                      h && (
+                        <div
+                          key={i}
+                          className={cn(
+                            "flex flex-row w-full",
+                            _id === h._id && "bg-stone-200 hover:bg-stone-300"
+                          )}
                         >
-                          <EllipsisVertical className="text-stone-400" />
-                        </EllipsisMenu>
-                      </div>
-                    </div>
-                  )
-              )}
-          </div>
+                          <Link
+                            replace
+                            href={{
+                              pathname: "/chat/" + h._id!,
+                            }}
+                            prefetch={false}
+                            className={cn(
+                              "flex flex-row justify-between items-center",
+                              "p-2 w-full",
+                              //"bg-stone-100 hover:bg-stone-300",
+                              "text-xs",
+                              "overflow-hidden"
+                            )}
+                          >
+                            <Close className="flex flex-row justify-between items-center w-full">
+                              <div className="whitespace-nowrap overflow-hidden text-ellipsis text-left">
+                                <div className="truncate w-full">
+                                  {h.title || "undefined"}
+                                </div>
+                                <div className="text-stone-600 text-[9px]">
+                                  {new Date(
+                                    Number(h.timestamp)
+                                  ).toLocaleString() || h.timestamp}
+                                </div>
+                              </div>
+                            </Close>
+                          </Link>
+                          <div className={cn("flex items-center p-1")}>
+                            <EllipsisMenu
+                              _id={_id}
+                              targetId={h._id}
+                              setThreads={setThreads}
+                            >
+                              <EllipsisVertical className="text-stone-400" />
+                            </EllipsisMenu>
+                          </div>
+                        </div>
+                      )
+                  )}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex size-full items-center justify-center">
+                <p className="text-center text-xs text-stone-500">
+                  <span
+                    className="underline cursor-pointer"
+                    onClick={() => {
+                      openAuthDialog();
+                    }}
+                  >
+                    Login to store your conversations
+                  </span>
+                </p>
+              </div>
+            </>
+          )}
         </div>
-
-        {/* Separator */}
-        <hr className="flex items-center my-3 border-1 border-stone-200 w-[90%]" />
 
         {/* Log out */}
-        <div
-          className={cn("flex flex-row items-center justify-center", "w-full")}
-        >
-          <button
-            className={cn(
-              "flex w-full p-2 mx-5",
-              "bg-stone-700 hover:bg-stone-900",
-              "text-center text-xs text-stone-300"
-            )}
-            onClick={async () => {
-              await authClient.signOut({
-                fetchOptions: {
-                  onSuccess: () => {
-                    window.location.href = "/";
-                  },
-                },
-              });
-            }}
-          >
-            Logout
-          </button>
-        </div>
+        {session && (
+          <>
+            {" "}
+            {/* Separator */}
+            <hr className="flex items-center my-3 border-1 border-stone-200 w-[90%]" />
+            <div
+              className={cn(
+                "flex flex-row items-center justify-center",
+                "w-full"
+              )}
+            >
+              <button
+                className={cn(
+                  "flex w-full p-2 mx-5",
+                  "bg-stone-700 hover:bg-stone-900",
+                  "text-center text-xs text-stone-300"
+                )}
+                onClick={async () => {
+                  await authClient.signOut({
+                    fetchOptions: {
+                      onSuccess: () => {
+                        window.location.href = "/";
+                      },
+                    },
+                  });
+                }}
+              >
+                Logout
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

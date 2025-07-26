@@ -3,7 +3,7 @@
 import { ChatProvider } from "@/components/chat/ChatContext/ChatContext";
 // import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { Wrapper } from "@/components/chat/wrapper";
+import { Root } from "@/components/chat/root";
 import { createChat, getChat } from "@/lib/ai/chat-store";
 import { getThreads, getThread } from "@/lib/mongo/chat-store";
 import { getArtifacts } from "@/lib/mongo/artifact-store";
@@ -56,7 +56,7 @@ export default async function Chat({
       <ChatProvider initialMessages={messages} _id={_id} email={email}>
         {/* <c.GradientBackground /> */}
         <GridBackground />
-        <Wrapper
+        <Root
           initialMessages={messages}
           initialThreads={initialThreads}
           initialArtifacts={artifacts}

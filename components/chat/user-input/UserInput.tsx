@@ -9,8 +9,12 @@ import "./UserInputFading.css";
 import { UserInputOptions } from "./user-input-options";
 import { MessageTemplate } from "@/components/chat/message-area/message-template";
 
+import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
+import { useShallow } from "zustand/react/shallow";
+
 function PureUserInput(props: any) {
   const {
+    session,
     messages,
     status,
     isLoading,
@@ -27,6 +31,15 @@ function PureUserInput(props: any) {
   const { suggestions } = props;
   const [isEditorActive, setEditorStatus] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const { isOpen, setIsOpen, openAuthDialog, close } = useAuthDialogStore(
+    useShallow((state) => ({
+      isOpen: state.isOpen,
+      setIsOpen: state.setIsOpen,
+      openAuthDialog: state.open,
+      close: state.close,
+    }))
+  );
 
   /* useEffect(() => {
     let input = document.getElementById("userInput");
@@ -87,9 +100,14 @@ function PureUserInput(props: any) {
               onChange={handleInputChange}
               onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                 if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit();
-                  inputRef.current!.style.height = "auto";
+                  if (session) {
+                    e.preventDefault();
+                    handleSubmit();
+                    inputRef.current!.style.height = "auto";
+                  } else {
+                    e.preventDefault();
+                    openAuthDialog();
+                  }
                 }
               }}
             />
@@ -97,8 +115,12 @@ function PureUserInput(props: any) {
           </div>
           <button
             onClick={(e) => {
-              handleSubmit();
-              inputRef.current!.style.height = "auto";
+              if (session) {
+                handleSubmit();
+                inputRef.current!.style.height = "auto";
+              } else {
+                openAuthDialog();
+              }
             }}
             disabled={isLoading}
             className={cn(

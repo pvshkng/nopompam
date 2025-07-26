@@ -13,6 +13,7 @@ import { BottomScrollButton } from "@/components/chat/message-area/scroll-to-bot
 import { Navigation } from "@/components/chat/navigation";
 import { MessageArea } from "@/components/chat/message-area/message-area";
 import { UserInput } from "@/components/chat/user-input/UserInput";
+import { LoginDialog } from "@/components/login/login-dialog";
 
 import { artifactStreamHandler } from "@/lib/artifacts/handler";
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
@@ -28,7 +29,7 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 // TODO: to rename to ChatRoot
-type PureWrapperProps = {
+type PureRootProps = {
   initialMessages: any[];
   initialThreads: any[];
   initialArtifacts: any[];
@@ -41,7 +42,7 @@ type PureWrapperProps = {
 
 const { useSession } = createAuthClient();
 
-function PureWrapper(props: PureWrapperProps) {
+function PureRoot(props: PureRootProps) {
   let {
     initialMessages,
     initialThreads,
@@ -112,7 +113,7 @@ function PureWrapper(props: PureWrapperProps) {
   });
 
   const sess = authClient.useSession();
-  //console.log("Session in Wrapper: ", sess);
+  //console.log("Session in Root: ", sess);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
@@ -209,6 +210,7 @@ function PureWrapper(props: PureWrapperProps) {
                   />
                 </main>
                 <UserInput
+                  session={session}
                   messages={messages}
                   status={status}
                   isLoading={isLoading}
@@ -269,8 +271,9 @@ function PureWrapper(props: PureWrapperProps) {
           </div>
         </div>
       </div>
+      <LoginDialog />
     </>
   );
 }
 
-export const Wrapper = memo(PureWrapper);
+export const Root = memo(PureRoot);
