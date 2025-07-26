@@ -56,7 +56,6 @@ function PureWrapper(props: PureWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
-  const [isChatInitiated, setIsChatInitiated] = useState(false);
   const [DossierSwapped, isDossierSwapped] = useState(false);
   const [dossierOpen, setDossierOpen] = useState(false);
   const [streamData, setStreamData] = useState<any[]>([]);
@@ -182,7 +181,7 @@ function PureWrapper(props: PureWrapperProps) {
                       id="wrapper"
                       className="flex flex-col-reverse mx-auto px-6 bg-transparent h-full w-full max-w-[800px] text-black"
                     >
-                      {!isChatInitiated && messages.length === 0 ? (
+                      {messages.length === 0 ? (
                         <></>
                       ) : (
                         <>
@@ -209,7 +208,6 @@ function PureWrapper(props: PureWrapperProps) {
                     isCurrentBottom={isCurrentBottom}
                   />
                 </main>
-
                 <UserInput
                   messages={messages}
                   status={status}

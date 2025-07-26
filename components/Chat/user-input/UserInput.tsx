@@ -7,6 +7,7 @@ import { useState, useRef } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import "./UserInputFading.css";
 import { UserInputOptions } from "./user-input-options";
+import { MessageTemplate } from "@/components/chat/message-area/message-template";
 
 function PureUserInput(props: any) {
   const {
@@ -53,6 +54,7 @@ function PureUserInput(props: any) {
           "w-full px-auto px-3 mb-1 bg-transparent"
         )}
       >
+        {messages.length === 0 && <MessageTemplate setInput={setInput} />}
         <div
           className={cn(
             "relative",
