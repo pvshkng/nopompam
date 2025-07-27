@@ -137,10 +137,10 @@ export async function POST(req: NextRequest) {
                     model: provider(model),
                     messages: convertToCoreMessages([{ role: "system", content: system_prompt }, ...messages]),
                     experimental_telemetry: { isEnabled: true },
-                    // experimental_transform: smoothStream({
-                    //     delayInMs: 20, // optional: defaults to 10ms
-                    //     chunking: 'word', // optional: defaults to 'word'
-                    // }),
+                    experimental_transform: smoothStream({
+                        delayInMs: 20, // optional: defaults to 10ms
+                        chunking: 'word', // optional: defaults to 'word'
+                    }),
                     // ...tools, 
                     // documentSearch
                     tools: {
