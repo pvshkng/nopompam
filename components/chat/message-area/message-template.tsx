@@ -10,7 +10,7 @@ import {
 
 // prettier-ignore
 const templates = [
-  { icon: ChartCandlestick, prompt: "Research NVIDIA stock?", type: "research", },
+  { icon: ChartCandlestick, prompt: "Research NVIDIA stock.", type: "research", },
   { icon: Globe, prompt: "What's happening in Texas?", type: "web" },
   { icon: Gamepad2, prompt: "When will Silksong be released?", type: "web" },
   { icon: Clapperboard, prompt: "Is Pedro Pascal gay?", type: "web" },

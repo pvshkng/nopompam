@@ -1,8 +1,8 @@
-import { DataStreamWriter, tool, generateId, smoothStream, streamText } from "ai";
+import { DataStreamWriter, tool, generateId, smoothStream, streamText, convertToCoreMessages } from "ai";
 import { z } from "zod";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { storeArtifact } from "@/lib/mongo/artifact-store"
-
+import type UIMessage from "@ai-sdk/ui-utils";
 // TODO: move sw else
 const client = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY,
@@ -11,10 +11,11 @@ const client = createGoogleGenerativeAI({
 interface CreateArtifactProps {
   threadId: string;
   user: any;
+  messages: any[];
   dataStream: DataStreamWriter;
 }
 
-export const createArtifact = ({ threadId, user, dataStream }: CreateArtifactProps) =>
+export const createArtifact = ({ threadId, user, messages, dataStream }: CreateArtifactProps) =>
   tool({
     description: "Create a text artifact and stream its content.",
     parameters: z.object({
@@ -31,18 +32,26 @@ export const createArtifact = ({ threadId, user, dataStream }: CreateArtifactPro
 
       let draftContent = '';
       const { fullStream } = streamText({
-        model: client("gemini-2.0-flash"),
-        system: `
-        Write about the given topic. 
-        Use markdown to format the content. 
-        For example:
-        - use headings to define sections
-        - use horizontal rules to split sections
-        - use tables for comparison
-        - use bullet points for entries, etc.
-        `,
+        model: client("gemini-2.5-pro"),
         experimental_transform: smoothStream({ chunking: 'word' }),
-        prompt: title,
+        messages: convertToCoreMessages([{
+          role: "system",
+          content: `
+                  Write document about the given topic. 
+                  Do not include anything other than the content of the document.
+
+                  Use markdown to format the content. 
+                  For example:
+                  - use headings to define sections
+                  - use horizontal rules to split sections
+                  - use tables for comparison
+                  - use bullet points for entries, etc.
+                  ` },
+        ...messages,
+        {
+          role: "user",
+          content: `Generate a document with the title: ${title}`,
+        }]),
         onFinish: async ({ response },) => {
           // draftContent
           await storeArtifact({
@@ -53,7 +62,8 @@ export const createArtifact = ({ threadId, user, dataStream }: CreateArtifactPro
             title: title,
             content: draftContent,
           });
-        }
+        },
+        onError: (error) => console.error("Error during artifact creation: ", error),
       });
 
       for await (const delta of fullStream) {

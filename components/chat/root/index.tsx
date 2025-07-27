@@ -84,7 +84,7 @@ function PureRoot(props: PureRootProps) {
     data,
     setData,
   } = useChat({
-    maxSteps: 3,
+    //maxSteps: 3,
     id: _id,
     initialMessages: initialMessages,
     sendExtraMessageFields: true,
@@ -93,6 +93,7 @@ function PureRoot(props: PureRootProps) {
       size: 16,
     }),
     body: {
+      session: session,
       user: session?.user?.email || undefined,
       model: model,
     },
@@ -111,9 +112,6 @@ function PureRoot(props: PureRootProps) {
 
     streamProtocol: "data",
   });
-
-  const sess = authClient.useSession();
-  //console.log("Session in Root: ", sess);
 
   useEffect(() => {
     if (!data || data.length === 0) return;

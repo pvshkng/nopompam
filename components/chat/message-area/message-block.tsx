@@ -19,6 +19,7 @@ import { DocumentsReference } from "@/components/tools/documents-reference";
 import { ArtifactPreview } from "@/components/artifact/artifact-preview";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { CandlestickChart } from "@/components/charts/candle-stick-chart";
+import { Stock } from "@/components/tools/stock";
 
 type MessageBlockProps = {
   status: string;
@@ -96,6 +97,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 return (
                   <ArtifactPreview
                     key={j}
+                    toolInvocation={toolInvocation}
                     artifactId={toolCallId}
                     artifacts={artifacts}
                     setArtifacts={setArtifacts}
@@ -106,7 +108,23 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                   />
                 );
               case "chart":
-                return <CandlestickChart key={j} />;
+                return (
+                  <div
+                    key={`tool-${m.id}-${j}`}
+                    className="flex flex-col w-full"
+                  >
+                    <Stock toolInvocation={toolInvocation} />
+                  </div>
+                );
+              case "stock":
+                return (
+                  <div
+                    key={`tool-${m.id}-${j}`}
+                    className="flex flex-col w-full"
+                  >
+                    <Stock toolInvocation={toolInvocation} />
+                  </div>
+                );
               default:
                 return (
                   <div
