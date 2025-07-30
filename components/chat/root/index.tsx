@@ -55,11 +55,8 @@ function PureRoot(props: PureRootProps) {
   } = props;
   const params = useParams();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isCurrentBottom, setIsCurrentBottom] = useState(true);
-  const [DossierSwapped, isDossierSwapped] = useState(false);
   const [dossierOpen, setDossierOpen] = useState(false);
-  const [streamData, setStreamData] = useState<any[]>([]);
   const [sidebarToggled, setSidebarToggled] = useState(true);
   const [artifacts, setArtifacts] = useState(initialArtifacts);
   const [activeTab, setActiveTab] = useState(null);
@@ -84,7 +81,7 @@ function PureRoot(props: PureRootProps) {
     data,
     setData,
   } = useChat({
-    //maxSteps: 3,
+    //maxSteps: 5,
     id: _id,
     initialMessages: initialMessages,
     sendExtraMessageFields: true,
@@ -126,11 +123,11 @@ function PureRoot(props: PureRootProps) {
     setData([]);
   }, [data, artifacts, setArtifacts]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (isScrolledToBottom) {
       scrollToBottom();
     }
-  }, [messages, isScrolledToBottom]);
+  }, [messages, isScrolledToBottom]); */
 
   const scrollToBottom = () => {
     if (containerRef.current) {
@@ -138,14 +135,14 @@ function PureRoot(props: PureRootProps) {
     }
   };
 
-  const handleScroll = () => {
+  /*   const handleScroll = () => {
     if (containerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
       const isBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px threshold
-      setIsScrolledToBottom(isBottom);
+      // setIsScrolledToBottom(isBottom);
       setIsCurrentBottom(scrollTop >= 0);
     }
-  };
+  }; */
 
   return (
     <>
@@ -172,7 +169,7 @@ function PureRoot(props: PureRootProps) {
                 <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
                   <div
                     ref={containerRef}
-                    onScroll={handleScroll}
+                    //onScroll={handleScroll}
                     id="scrollArea"
                     className="relative flex flex-col-reverse items-center h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
                   >
@@ -228,6 +225,7 @@ function PureRoot(props: PureRootProps) {
                   <>
                     <ResizableHandle
                       /* hidden */
+
                       className={cn(
                         //!dossierOpen && "hidden",
                         "relative overflow-visible",
@@ -237,6 +235,7 @@ function PureRoot(props: PureRootProps) {
                       onClick={() => {}}
                     />
                     <ResizablePanel
+                      defaultSize={undefined}
                       className={cn(
                         !dossierOpen && "hidden",
                         "flex flex-col h-full w-full min-w-[300px]",

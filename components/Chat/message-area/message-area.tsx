@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 import "./message-area.css";
 import "./typewriter.css";
 import "./streaming-effect.css";
-import "@/lib/LaTeX/katex.min.css";
+// import "@/lib/LaTeX/katex.min.css";
 import { UIMessage } from "@ai-sdk/ui-utils";
 import { MessageBlock } from "./message-block";
 import { memo } from "react";
 import { MessageSkeleton } from "./message-loading-skeleton";
-
+import { LoaderCircle } from "lucide-react";
 type MessageAreaProps = {
   status: string;
   name: string;
@@ -86,7 +86,7 @@ export default function PureMessageArea(props: MessageAreaProps) {
           />
         </div>
       ))}
-      {status == "submitted" && <MessageSkeleton />}
+      {status === "submitted" && <MessageSkeleton />}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { useState, useRef } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
+import { SendHorizontal, LoaderCircle } from "lucide-react";
 import "./UserInputFading.css";
 import { UserInputOptions } from "./user-input-options";
 import { MessageTemplate } from "@/components/chat/message-area/message-template";
@@ -128,7 +129,15 @@ function PureUserInput(props: any) {
             )}
             //hidden={!isEditorActive}
           >
-            <PaperPlaneIcon width={24} height={24} color="white" />
+            {status === "ready" ? (
+              <SendHorizontal size={24} color="white" />
+            ) : (
+              <LoaderCircle
+                size={24}
+                color="white"
+                className="!animate-spin !opacity-100"
+              />
+            )}
             {/* <Image src="/icon/enter.svg" width={24} height={24} alt="send" /> */}
           </button>
         </div>

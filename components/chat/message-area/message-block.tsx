@@ -80,7 +80,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                   //   "typewriting",
                 )}
                 remarkPlugins={[remarkGfm, remarkMath]}
-                rehypePlugins={[rehypeRaw, rehypeKatex]}
+                rehypePlugins={[rehypeRaw]} //rehypeKatex
                 components={components}
                 remarkRehypeOptions={{}}
               >

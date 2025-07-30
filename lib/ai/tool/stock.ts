@@ -13,7 +13,6 @@ export const stock = ({ }) => tool({
         try {
             const response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=${symbol}&apikey=${ALPHA_VANTAGE_API_KEY}`)
             const data = await response.json();
-            console.log("Stock response: ", data);
             return data
         } catch (error) {
             console.error("Stock error: ", error);

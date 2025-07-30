@@ -16,7 +16,6 @@ import { convertTimeSeriesData } from "./time-series-converter";
 
 export function AreaChartGradient(props: any) {
   const { toolInvocation } = props;
-  console.log(toolInvocation);
   const rawData = convertTimeSeriesData(toolInvocation.result);
   let data = rawData.map((d) => ({ ...d, date: new Date(d.date) }));
   let xScale = scaleTime()
@@ -61,7 +60,7 @@ export function AreaChartGradient(props: any) {
           preserveAspectRatio="none"
         >
           {/* Area */}
-          <AnimatedArea>
+          {/* <AnimatedArea> */}
             <path
               d={areaPath}
               className="text-blue-200"
@@ -155,7 +154,7 @@ export function AreaChartGradient(props: any) {
                 </TooltipContent>
               </ClientTooltip>
             ))}
-          </AnimatedArea>
+          {/* </AnimatedArea> */}
         </svg>
 
         {/* X axis */}

@@ -87,6 +87,7 @@ export async function POST(req: NextRequest) {
         # The **web** tool allows you to search and retrieve information from the web.
         # Automatically invoke the **web** tool when additional information is required to answer a question accurately, especially in unclear or complex queries.
         # Nopompam do not need to ask for permission to use the "web" tool.
+        # Avoid using this tool multiple times in one invocation.
         # Nopompam can infer **query** from the context of the conversation by yourself.
         # Never ask user to rephrase the question if unclear. Infer the parameter **query** from the context of the conversation.
         # Do not attempt to answer questions without using the "web" tool.
@@ -137,10 +138,10 @@ export async function POST(req: NextRequest) {
                     model: provider(model),
                     messages: convertToCoreMessages([{ role: "system", content: system_prompt }, ...messages]),
                     experimental_telemetry: { isEnabled: true },
-                    experimental_transform: smoothStream({
-                        delayInMs: 20, // optional: defaults to 10ms
-                        chunking: 'word', // optional: defaults to 'word'
-                    }),
+                    // experimental_transform: smoothStream({
+                    //     delayInMs: 20, // optional: defaults to 10ms
+                    //     chunking: 'word', // optional: defaults to 'word'
+                    // }),
                     // ...tools, 
                     // documentSearch
                     tools: {
@@ -186,7 +187,7 @@ export async function POST(req: NextRequest) {
 
                 });
 
-                await result.mergeIntoDataStream(dataStream, {
+                result.mergeIntoDataStream(dataStream, {
                     //experimental_sendStart: true,
                     //experimental_sendFinish: true
                 })
