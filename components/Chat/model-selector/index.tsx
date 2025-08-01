@@ -9,21 +9,28 @@ import { cn } from "@/lib/utils";
 
 const models = {
   google: [
-    "gemini-2.5-pro",
-    "gemini-2.5-flash",
-    "gemini-2.5-pro-preview-05-06",
-    "gemini-2.5-flash-preview-04-17",
-    "gemini-2.5-flash-lite-preview-06-17",
-    "ministral-3b-latest",
-    "ministral-8b-latest",
     "mistral-large-latest",
     "mistral-small-latest",
     "pixtral-large-latest",
     "pixtral-12b-2409",
-    "open-mistral-7b",
-    "open-mixtral-8x7b",
-    "open-mixtral-8x22b",
-    "typhoon-v2.1-12b-instruct",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+
+    "deepseek/deepseek-chat-v3-0324:free", // good
+    "moonshotai/kimi-k2:free",
+    "qwen/qwen3-coder:free",
+    "qwen/qwen3-235b-a22b:free",
+    "qwen/qwen3-30b-a3b:free",
+    // "gemini-2.5-pro-preview-05-06",
+    // "gemini-2.5-flash-preview-04-17",
+    // "gemini-2.5-flash-lite-preview-06-17",
+    // "ministral-3b-latest",
+    // "ministral-8b-latest",
+
+    // "open-mistral-7b",
+    // "open-mixtral-8x7b",
+    // "open-mixtral-8x22b",
+    // "typhoon-v2.1-12b-instruct",
   ],
 };
 

@@ -60,7 +60,7 @@ function PureRoot(props: PureRootProps) {
   const [sidebarToggled, setSidebarToggled] = useState(true);
   const [artifacts, setArtifacts] = useState(initialArtifacts);
   const [activeTab, setActiveTab] = useState(null);
-  const [model, setModel] = useState("gemini-2.5-pro");
+  const [model, setModel] = useState("mistral-small-latest");
   // to do centralize this type
   type Thread = {
     _id: any;

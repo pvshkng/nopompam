@@ -3,6 +3,7 @@ import { streamText, smoothStream, convertToCoreMessages, appendResponseMessages
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from '@ai-sdk/openai';
 import { createMistral } from '@ai-sdk/mistral';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 
 import { tools } from "@/lib/ai";
 import { documentSearch } from "@/lib/ai/tool/document-search";
@@ -49,6 +50,20 @@ export async function POST(req: NextRequest) {
                 provider = createMistral({
                     apiKey: process.env.MISTRAL_API_KEY,
                 })
+                break;
+
+            case "moonshotai/kimi-k2:free":
+            case "qwen/qwen3-coder:free":
+            case "qwen/qwen3-235b-a22b:free":
+
+            case "qwen/qwen3-30b-a3b:free":
+            case "deepseek/deepseek-r1-0528:free":
+            case "deepseek/deepseek-r1:free":
+            case "deepseek/deepseek-chat-v3-0324:free":
+            case "deepseek/deepseek-r1-0528-qwen3-8b:free":
+            case "tngtech/deepseek-r1t2-chimera:free":
+            case "cognitivecomputations/dolphin-mistral-24b-venice-edition:free":
+                provider = createOpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
                 break;
 
             case "typhoon-v2.1-12b-instruct":
