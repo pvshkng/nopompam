@@ -27,7 +27,7 @@ export function useArtifact(data: any) {
     useEffect(() => {
         // Find all text-delta parts and concatenate
         const deltas = message.parts
-            .filter((p) => p.type === 'text-delta')
+            .filter((p) => p.type === 'text')
             .map((p) => p.content)
             .join('');
         if (deltas) setContent(deltas);
@@ -46,7 +46,7 @@ export function useArtifact(data: any) {
 
 export type DataStreamDelta = {
     type:
-    | 'text-delta'
+    | 'text'
     | 'code-delta'
     | 'sheet-delta'
     | 'image-delta'

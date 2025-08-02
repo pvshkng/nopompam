@@ -19,7 +19,10 @@ export const textDocumentHandler = {
         ];
 
         for (const chunk of contentChunks) {
-            dataStream.writeData({ type: 'text-delta', content: chunk });
+            dataStream.write({
+                'type': 'data',
+                'value': [{ type: 'text', content: chunk }]
+            });
             await new Promise((r) => setTimeout(r, 300));
         }
     },

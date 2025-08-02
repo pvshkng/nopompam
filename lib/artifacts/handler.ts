@@ -63,7 +63,7 @@ export function artifactStreamHandler(
             return prevArtifacts.map(a =>
                 a.artifactId === id ? { ...a, content: "" } : a
             );
-        case "text-delta":
+        case 'text':
             return prevArtifacts.map(a =>
                 a.artifactId === id
                     ? { ...a, content: (a.content || "") + streamItem.content }

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 
 import { useChat } from "@ai-sdk/react";
-import { createIdGenerator, generateId } from "ai";
+import { createIdGenerator, generateId, DefaultChatTransport } from "ai";
 import { Dossier } from "@/components/dossier";
 import { MobileDossier } from "@/components/dossier/mobile";
 import { BottomScrollButton } from "@/components/chat/message-area/scroll-to-bottom";
@@ -69,34 +69,26 @@ function PureRoot(props: PureRootProps) {
     timestamp: string;
   };
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
+  const [input, setInput] = useState("");
+
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const {
-    messages,
-    isLoading,
-    status,
-    input,
-    setInput,
-    handleInputChange,
-    handleSubmit,
-    data,
-    setData,
-  } = useChat({
+
+  const { messages, status, sendMessage } = useChat({
     //maxSteps: 5,
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      credentials: "include",
+      // headers: { "Custom-Header": "value" },
+    }),
     id: _id,
-    initialMessages: initialMessages,
-    sendExtraMessageFields: true,
+    messages: initialMessages,
     generateId: createIdGenerator({
       prefix: "msgc",
       size: 16,
     }),
-    body: {
-      session: session,
-      user: session?.user?.email || undefined,
-      model: model,
-    },
 
     onFinish: (messages) => {
-      if (!params?.slug!) {
+      /* if (!params?.slug!) {
         console.log("Creating new thread with messages: ", messages);
         handleNewThread({
           messages,
@@ -104,13 +96,43 @@ function PureRoot(props: PureRootProps) {
           email,
           setThreads,
         });
+      } */
+    },
+    onData: (data) => {
+      console.log("data in c: ", data);
+      if (data.type === "data-title") {
+        console.log("Creating new thread with title: ", data.data!.title);
+        handleNewThread({
+          data,
+          _id,
+          email,
+          setThreads,
+        });
       }
     },
-
-    streamProtocol: "data",
+    /* onError: (e) => {
+      console.log(e);
+    }, */
   });
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    sendMessage(
+      { text: input },
+      {
+        body: {
+          session: session,
+          user: session?.user?.email || undefined,
+          model: model,
+        },
+      }
+    );
+    setInput("");
+  };
   useEffect(() => {
+    console.log("messages: ", messages);
+  }, [messages]);
+  /* useEffect(() => {
     if (!data || data.length === 0) return;
 
     // Process each streaming item sequentially
@@ -121,7 +143,7 @@ function PureRoot(props: PureRootProps) {
     setArtifacts(updatedArtifacts);
 
     setData([]);
-  }, [data, artifacts, setArtifacts]);
+  }, [data, artifacts, setArtifacts]); */
 
   /* useEffect(() => {
     if (isScrolledToBottom) {
@@ -186,7 +208,6 @@ function PureRoot(props: PureRootProps) {
                             name={name!}
                             image={image!}
                             messages={messages}
-                            isLoading={isLoading}
                             artifacts={artifacts}
                             setArtifacts={setArtifacts}
                             dossierOpen={dossierOpen}
@@ -208,10 +229,8 @@ function PureRoot(props: PureRootProps) {
                   session={session}
                   messages={messages}
                   status={status}
-                  isLoading={isLoading}
                   input={input}
                   setInput={setInput}
-                  handleInputChange={handleInputChange}
                   handleSubmit={handleSubmit}
                   dossierOpen={dossierOpen}
                   setDossierOpen={setDossierOpen}

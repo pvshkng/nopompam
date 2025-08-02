@@ -22,7 +22,7 @@ try {
         model: provider("gemini-2.0-flash-001"),
         prompt: _prompt,
     }).then((response: any) => {
-        console.log(response.text);
+        console.log(response.text.text);
     });
 
 } catch (error) {

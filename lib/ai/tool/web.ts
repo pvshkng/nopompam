@@ -7,7 +7,7 @@ const tvly = tavily({ apiKey: process.env.TAVILY_API_KEY! });
 
 export const web = ({ }) => tool({
     description: "Search the web to find information to answer a question",
-    parameters: z.object({
+    inputSchema: z.object({
         query: z.string().describe('The query to search for which must also be rewritten for better context if necessary.'),
     }),
     execute: async ({ query }) => {

@@ -12,7 +12,7 @@ const randomString = (length: number) => {
 
 export const stock = ({ }) => tool({
     description: "Retrieve stock price of a company",
-    parameters: z.object({
+    inputSchema: z.object({
         symbol: z.string().describe('a valid stock symbol'),
     }),
     execute: async ({ symbol }) => {

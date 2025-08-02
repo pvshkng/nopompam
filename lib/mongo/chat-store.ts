@@ -1,6 +1,6 @@
 'use server'
 
-import { generateId, type Message } from "ai";
+import { generateId, type UIMessage } from "ai";
 import { DB, THREAD_COLLECTION, connectToDatabase } from "@/lib/mongo/client";
 import { ObjectId } from "mongodb";
 
@@ -8,7 +8,7 @@ type Chat = {
     _id: string;
     user: string;
     title?: string;
-    messages: Message[];
+    messages: UIMessage[];
     timestamp?: string;
 };
 
@@ -71,7 +71,7 @@ export async function getThread(user: string, _id: string) {
     }
 }
 
-export async function saveChat({ _id, title, user, messages }: { _id: string; title?: string; user: string; messages: Message[] }) {
+export async function saveChat({ _id, title, user, messages }: { _id: string; title?: string; user: string; messages: UIMessage[] }) {
     try {
         const { client, db } = await connectToDatabase();
         const collection = db.collection(THREAD_COLLECTION);

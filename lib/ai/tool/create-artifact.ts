@@ -1,8 +1,8 @@
-import { DataStreamWriter, tool, generateId, smoothStream, streamText, convertToCoreMessages } from "ai";
+import { DataStreamWriter, tool, generateId, smoothStream, streamText, convertToModelMessages } from "ai";
 import { z } from "zod";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { storeArtifact } from "@/lib/mongo/artifact-store"
-import type UIMessage from "@ai-sdk/ui-utils";
+import type UIMessage from 'ai';
 // TODO: move sw else
 const client = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY,
@@ -18,23 +18,35 @@ interface CreateArtifactProps {
 export const createArtifact = ({ threadId, user, messages, dataStream }: CreateArtifactProps) =>
   tool({
     description: "Create a text artifact and stream its content.",
-    parameters: z.object({
+    inputSchema: z.object({
       title: z.string().describe("The title of the artifact. If the title is not provided, it will be inferred from the prompt."),
       kind: z.enum(["text"]),
     }),
     execute: async ({ title, kind }, { toolCallId }) => {
       const id = toolCallId //generateId(8); 
 
-      dataStream.writeData({ id: id, type: "kind", content: kind });
-      dataStream.writeData({ id: id, type: "id", content: toolCallId });
-      dataStream.writeData({ id: id, type: "title", content: title });
-      dataStream.writeData({ id: id, type: "clear", content: "" });
+      dataStream.write({
+        'type': 'data',
+        'value': [{ id: id, type: "kind", content: kind }]
+      });
+      dataStream.write({
+        'type': 'data',
+        'value': [{ id: id, type: "id", content: toolCallId }]
+      });
+      dataStream.write({
+        'type': 'data',
+        'value': [{ id: id, type: "title", content: title }]
+      });
+      dataStream.write({
+        'type': 'data',
+        'value': [{ id: id, type: "clear", content: "" }]
+      });
 
       let draftContent = '';
       const { fullStream } = streamText({
         model: client("gemini-2.5-pro"),
         experimental_transform: smoothStream({ chunking: 'word' }),
-        messages: convertToCoreMessages([{
+        messages: convertToModelMessages([{
           role: "system",
           content: `
                   Write document about the given topic. 
@@ -69,15 +81,19 @@ export const createArtifact = ({ threadId, user, messages, dataStream }: CreateA
       for await (const delta of fullStream) {
         const { type } = delta;
 
-        if (type === 'text-delta') {
+        if (type === 'text') {
           const { textDelta } = delta;
 
           draftContent += textDelta;
 
-          dataStream.writeData({
-            id: id,
-            type: 'text-delta',
-            content: textDelta,
+          dataStream.write({
+            'type': 'data',
+
+            'value': [{
+              id: id,
+              type: 'text',
+              content: textDelta,
+            }]
           });
         }
       }

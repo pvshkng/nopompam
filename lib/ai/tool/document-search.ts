@@ -4,7 +4,7 @@ import type { Document } from '@/types/document';
 
 export const documentSearch = tool({
     description: 'Execute this function if you want to query company benefits',
-    parameters:
+    inputSchema:
         z.object({
             query: z.string().describe('The query to search for which must also be rewritten for better context if necessary as this will be used to search the document'),
             //keywords: z.array(z.string().describe('The a few keywords to search for in the document')),

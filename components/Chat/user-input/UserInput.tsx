@@ -18,10 +18,8 @@ function PureUserInput(props: any) {
     session,
     messages,
     status,
-    isLoading,
     input,
     setInput,
-    handleInputChange,
     handleSubmit,
     dossierOpen,
     setDossierOpen,
@@ -98,12 +96,12 @@ function PureUserInput(props: any) {
                 )}px`;
                 setInput(e.target.value);
               }}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   if (session) {
                     e.preventDefault();
-                    handleSubmit();
+                    handleSubmit(e);
                     inputRef.current!.style.height = "auto";
                   } else {
                     e.preventDefault();
@@ -117,13 +115,13 @@ function PureUserInput(props: any) {
           <button
             onClick={(e) => {
               if (session) {
-                handleSubmit();
+                handleSubmit(e);
                 inputRef.current!.style.height = "auto";
               } else {
                 openAuthDialog();
               }
             }}
-            disabled={isLoading}
+            disabled={status !== "ready"}
             className={cn(
               "flex items-center justify-center bg-stone-700 p-1 px-2"
             )}

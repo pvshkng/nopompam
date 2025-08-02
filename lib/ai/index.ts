@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const queryBenefits = createTool({
     description: 'Execute this function if you want to query company benefits',
-    parameters:
+    inputSchema:
         z.object({}),
     execute: async function ({ }) {
         return {};
@@ -12,7 +12,7 @@ export const queryBenefits = createTool({
 
 export const sendDocument = createTool({
     description: 'Execute this function to send a requested document to an employee such as payslip, Tawi 50 (ทวิ 50)',
-    parameters:
+    inputSchema:
         z.object({
             documentName: z.string().describe('The name of the document to send to the employee')
         }),
@@ -23,7 +23,7 @@ export const sendDocument = createTool({
 
 export const sendResignationForm = createTool({
     description: 'Execute this function of you want to send a resignation form to an employee',
-    parameters:
+    inputSchema:
         z.object({
             lastDay: z.string().describe('The last day of the employee in this format Wed Mar 12 2025 00:00:00 GMT+0700 (Indochina Time). You need to parse the date for the employeee no matter what format they provide. Time will always be 00:00:00 GMT+0700 (Indochina Time).'),
             reason: z.string().describe('The reason for the resignation, parsed from the employee\'s message and rephrase or make it up to sound more professional as detailed as you can. User will edit it later.'),
@@ -36,7 +36,7 @@ export const sendResignationForm = createTool({
 
 export const sendJobOpeningForm = createTool({
     description: 'Execute this function of you want to create a new job opening',
-    parameters:
+    inputSchema:
         z.object({
             roleName: z.string().describe('The name of the role you have been requested to create an opening for. Optional but you may interpret the role name from the request message').optional(),
             description: z.string().describe('Optional but you may interpret the description as detailed as you can from the request message as draft for the user to edit later').optional(),

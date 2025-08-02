@@ -17,7 +17,7 @@ interface CreateArtifactProps {
 export const dossier = ({ threadId, user, dataStream }: CreateArtifactProps) =>
   tool({
     description: "Handle operations like creating, viewing and updating documents in the dossier .",
-    parameters: z.discriminatedUnion("action", [
+    inputSchema: z.discriminatedUnion("action", [
       z.object({
         action: z.literal("create"),
         title: z.string().describe("Title of the document, if not provided, infer from the prompt."),
@@ -83,15 +83,19 @@ export const dossier = ({ threadId, user, dataStream }: CreateArtifactProps) =>
           for await (const delta of fullStream) {
             const { type } = delta;
 
-            if (type === 'text-delta') {
+            if (type === 'text') {
               const { textDelta } = delta;
 
               draftContent += textDelta;
 
-              dataStream.writeData({
-                id: id,
-                type: 'text-delta',
-                content: textDelta,
+              dataStream.write({
+                'type': 'data',
+
+                'value': [{
+                  id: id,
+                  type: 'text',
+                  content: textDelta,
+                }]
               });
             }
           }

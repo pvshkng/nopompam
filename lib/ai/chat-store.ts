@@ -1,12 +1,12 @@
 'use server'
 
-import { generateId, type Message } from "ai";
+import { generateId, type UIMessage } from "ai";
 import { redis } from "@/lib/crud/redis";
 
 type Chat = {
     _id: string;
     user: string;
-    messages: Message[];
+    messages: UIMessage[];
 };
 
 const options = { ex: 60 * 60 * 24 };

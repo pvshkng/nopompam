@@ -5,7 +5,7 @@ import "./message-area.css";
 import "./typewriter.css";
 import "./streaming-effect.css";
 // import "@/lib/LaTeX/katex.min.css";
-import { UIMessage } from "@ai-sdk/ui-utils";
+import { UIMessage } from 'ai';
 import { MessageBlock } from "./message-block";
 import { memo } from "react";
 import { MessageSkeleton } from "./message-loading-skeleton";
@@ -15,7 +15,6 @@ type MessageAreaProps = {
   name: string;
   image: string;
   messages: UIMessage[];
-  isLoading: boolean;
   artifacts: any[];
   setArtifacts: Dispatch<SetStateAction<any[]>>;
   dossierOpen: boolean;
@@ -32,10 +31,7 @@ const isLast = (messages, m) => {
 export default function PureMessageArea(props: MessageAreaProps) {
   const {
     status,
-    name,
-    image,
     messages,
-    isLoading,
     artifacts,
     setArtifacts,
     dossierOpen,
@@ -75,7 +71,6 @@ export default function PureMessageArea(props: MessageAreaProps) {
           <MessageBlock
             status={status}
             m={m}
-            isLoading={isLoading}
             artifacts={artifacts}
             setArtifacts={setArtifacts}
             isLast={isLast(messages, m)}

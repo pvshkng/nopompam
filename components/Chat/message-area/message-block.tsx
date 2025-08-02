@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { Message } from "@ai-sdk/react";
-import { UIMessage } from "@ai-sdk/ui-utils";
+import { UIMessage } from "ai";
 import { memo } from "react";
 
 // Message renderer
@@ -8,7 +7,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import remarkMermaid from "remark-mermaidjs";
 import remarkMermaidPlugin from "remark-mermaid-plugin";
 
 import rehypeRaw from "rehype-raw";
@@ -27,7 +25,6 @@ import { Stock } from "@/components/tools/stock";
 type MessageBlockProps = {
   status: string;
   m: UIMessage;
-  isLoading?: boolean;
   artifacts: any[];
   setArtifacts: any;
   isLast: boolean;
@@ -41,7 +38,6 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
   const {
     status,
     m,
-    isLoading,
     artifacts,
     setArtifacts,
     isLast,
@@ -78,17 +74,24 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                   "m-2 prose text-sm",
                   m.role === "user" ? "text-stone-300" : "text-black"
                   // m.role !== "user" &&
-                  //   isLoading &&
+                  //   status !== "ready" &&
                   //   isLast(messages, m) &&
                   //   "typewriting",
                 )}
-                remarkPlugins={[remarkGfm, remarkMermaidPlugin]} //remarkMath
+                remarkPlugins={[remarkGfm]} //remarkMath remarkMermaidPlugin
                 rehypePlugins={[rehypeRaw]} //rehypeKatex
                 components={components}
                 remarkRehypeOptions={{}}
               >
                 {p.text}
               </ReactMarkdown>
+            );
+
+          case "tool-web":
+            return (
+              <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
+                <ToolAnnotation tool={p} />
+              </div>
             );
 
           case "tool-invocation":

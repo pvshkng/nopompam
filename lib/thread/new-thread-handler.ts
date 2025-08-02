@@ -1,16 +1,16 @@
 export function handleNewThread({
-    messages,
+    data,
     _id,
     email,
     setThreads,
 }: {
-    messages: any;
+    data: any;
     _id: any;
     email: any;
     setThreads: React.Dispatch<React.SetStateAction<any[]>>;
 }) {
     // @ts-ignore
-    const title = messages.annotations?.[0]?.title || undefined;
+    const title = data.data?.title! || undefined;
     if (title) {
         const newThread = {
             _id: _id,

@@ -1,15 +1,16 @@
 "use server"
 
-import { generateText } from 'ai'
+import { generateText, UIMessage, ModelMessage } from 'ai'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 
-export async function generateTitle(message: string) {
+export async function generateTitle(message: UIMessage[]) {
+    //console.log("generateTitle: ", message[0].parts[0].text);
     const _prompt =
         `Generate a title for this conversation thread.
         The title should be short, no more than 10 words.
         No special characters, no emojis.
         <conversation>
-        ${message}
+        ${JSON.stringify(message)}
         </conversation>`;
 
     const provider = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_API_KEY });
@@ -19,7 +20,8 @@ export async function generateTitle(message: string) {
             model: provider("gemini-2.0-flash-001"),
             prompt: _prompt,
         })
-        return result.text
+        console.log("_prompt: ", _prompt);
+        return result.text;
 
     } catch (error) {
         console.error(error);
