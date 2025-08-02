@@ -42,7 +42,7 @@ export function MessageTemplate(props: any) {
               )}
             >
               <t.icon width={24} height={24} className="text-stone-500" />
-              <p className="text-stone-700 text-xs">{t.prompt}</p>
+              <p className="text-stone-700 text-xs max-sm:text-[10px]">{t.prompt}</p>
             </div>
           );
         })}

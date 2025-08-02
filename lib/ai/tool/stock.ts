@@ -1,8 +1,14 @@
 import { z } from "zod";
 import { tool } from "ai";
 
-const ALPHA_VANTAGE_API_KEY = "LCXPFAQK4MVL8L4A"
-
+const randomString = (length: number) => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.split('');
+    const randomChars = new Array(length);
+    for (let i = 0; i < length; i++) {
+        randomChars[i] = chars[Math.floor(Math.random() * chars.length)];
+    }
+    return randomChars.join('');
+}
 
 export const stock = ({ }) => tool({
     description: "Retrieve stock price of a company",
@@ -11,6 +17,7 @@ export const stock = ({ }) => tool({
     }),
     execute: async ({ symbol }) => {
         try {
+            const ALPHA_VANTAGE_API_KEY = randomString(16);
             const response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=${symbol}&apikey=${ALPHA_VANTAGE_API_KEY}`)
             const data = await response.json();
             return data

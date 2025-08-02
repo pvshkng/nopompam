@@ -1,3 +1,5 @@
+
+'use client'
 import {
   ClientTooltip,
   TooltipContent,
@@ -16,7 +18,7 @@ import { convertTimeSeriesData } from "./time-series-converter";
 
 export function AreaChartGradient(props: any) {
   const { toolInvocation } = props;
-  const rawData = convertTimeSeriesData(toolInvocation.result);
+  const rawData = convertTimeSeriesData(toolInvocation.result) || [];
   let data = rawData.map((d) => ({ ...d, date: new Date(d.date) }));
   let xScale = scaleTime()
     .domain([data[0].date, data[data.length - 1].date])
@@ -61,99 +63,99 @@ export function AreaChartGradient(props: any) {
         >
           {/* Area */}
           {/* <AnimatedArea> */}
-            <path
-              d={areaPath}
-              className="text-blue-200"
-              fill="url(#outlinedAreaGradient)"
-            />
-            <defs>
-              {/* Gradient definition */}
-              <linearGradient
-                id="outlinedAreaGradient"
-                x1="0"
-                x2="0"
-                y1="0"
-                y2="1"
-              >
-                <stop
-                  offset="0%"
-                  className="text-stone-500/50 dark:text-stone-500/20"
-                  stopColor="currentColor"
-                />
-                <stop
-                  offset="100%"
-                  className="text-stone-50/5 dark:text-stone-900/5"
-                  stopColor="currentColor"
-                />
-              </linearGradient>
-            </defs>
-            {/* Line */}
-            <path
-              d={d}
-              fill="none"
-              className="text-stone-400 dark:text-stone-600"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              vectorEffect="non-scaling-stroke"
-            />
-            {/* Invisible Tooltip Area */}
-            {data.map((d, index) => (
-              <ClientTooltip key={index}>
-                <TooltipTrigger>
-                  <g className="group/tooltip">
-                    {/* Tooltip Line */}
-                    <line
-                      x1={xScale(d.date)}
-                      y1={0}
-                      x2={xScale(d.date)}
-                      y2={100}
-                      stroke="currentColor"
-                      strokeWidth={1}
-                      className="opacity-0 group-hover/tooltip:opacity-100 text-zinc-300 dark:text-zinc-700 transition-opacity"
-                      vectorEffect="non-scaling-stroke"
-                      style={{ pointerEvents: "none" }}
-                    />
-                    {/* Invisible area closest to a specific point for the tooltip trigger */}
-                    <rect
-                      x={(() => {
-                        const prevX =
-                          index > 0
-                            ? xScale(data[index - 1].date)
-                            : xScale(d.date);
-                        return (prevX + xScale(d.date)) / 2;
-                      })()}
-                      y={0}
-                      width={(() => {
-                        const prevX =
-                          index > 0
-                            ? xScale(data[index - 1].date)
-                            : xScale(d.date);
-                        const nextX =
-                          index < data.length - 1
-                            ? xScale(data[index + 1].date)
-                            : xScale(d.date);
-                        const leftBound = (prevX + xScale(d.date)) / 2;
-                        const rightBound = (xScale(d.date) + nextX) / 2;
-                        return rightBound - leftBound;
-                      })()}
-                      height={100}
-                      fill="transparent"
-                    />
-                  </g>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div>
-                    {d.date.toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "2-digit",
-                    })}
-                  </div>
-                  <div className="text-gray-500 text-sm">
-                    {d.value.toLocaleString("en-US")}
-                  </div>
-                </TooltipContent>
-              </ClientTooltip>
-            ))}
+          <path
+            d={areaPath}
+            className="text-blue-200"
+            fill="url(#outlinedAreaGradient)"
+          />
+          <defs>
+            {/* Gradient definition */}
+            <linearGradient
+              id="outlinedAreaGradient"
+              x1="0"
+              x2="0"
+              y1="0"
+              y2="1"
+            >
+              <stop
+                offset="0%"
+                className="text-stone-500/50 dark:text-stone-500/20"
+                stopColor="currentColor"
+              />
+              <stop
+                offset="100%"
+                className="text-stone-50/5 dark:text-stone-900/5"
+                stopColor="currentColor"
+              />
+            </linearGradient>
+          </defs>
+          {/* Line */}
+          <path
+            d={d}
+            fill="none"
+            className="text-stone-400 dark:text-stone-600"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            vectorEffect="non-scaling-stroke"
+          />
+          {/* Invisible Tooltip Area */}
+          {data.map((d, index) => (
+            <ClientTooltip key={index}>
+              <TooltipTrigger>
+                <g className="group/tooltip">
+                  {/* Tooltip Line */}
+                  <line
+                    x1={xScale(d.date)}
+                    y1={0}
+                    x2={xScale(d.date)}
+                    y2={100}
+                    stroke="currentColor"
+                    strokeWidth={1}
+                    className="opacity-0 group-hover/tooltip:opacity-100 text-zinc-300 dark:text-zinc-700 transition-opacity"
+                    vectorEffect="non-scaling-stroke"
+                    style={{ pointerEvents: "none" }}
+                  />
+                  {/* Invisible area closest to a specific point for the tooltip trigger */}
+                  <rect
+                    x={(() => {
+                      const prevX =
+                        index > 0
+                          ? xScale(data[index - 1].date)
+                          : xScale(d.date);
+                      return (prevX + xScale(d.date)) / 2;
+                    })()}
+                    y={0}
+                    width={(() => {
+                      const prevX =
+                        index > 0
+                          ? xScale(data[index - 1].date)
+                          : xScale(d.date);
+                      const nextX =
+                        index < data.length - 1
+                          ? xScale(data[index + 1].date)
+                          : xScale(d.date);
+                      const leftBound = (prevX + xScale(d.date)) / 2;
+                      const rightBound = (xScale(d.date) + nextX) / 2;
+                      return rightBound - leftBound;
+                    })()}
+                    height={100}
+                    fill="transparent"
+                  />
+                </g>
+              </TooltipTrigger>
+              <TooltipContent>
+                <div>
+                  {d.date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "2-digit",
+                  })}
+                </div>
+                <div className="text-gray-500 text-sm">
+                  {d.value.toLocaleString("en-US")}
+                </div>
+              </TooltipContent>
+            </ClientTooltip>
+          ))}
           {/* </AnimatedArea> */}
         </svg>
 

@@ -83,6 +83,7 @@
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0",
+    "remark-mermaid-plugin": "^1.0.2",
     "scheduler": "^0.26.0",
     "sharp": "^0.33.5",
     "shiki": "^3.3.0",

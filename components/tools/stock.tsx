@@ -26,7 +26,7 @@ export const Stock = (props: any) => {
           </>
         )}
       </div>
-      {toolInvocation?.state === "result" ? (
+      {toolInvocation?.state === "result" && toolInvocation?.result ? (
         <AreaChartGradient toolInvocation={toolInvocation} />
       ) : null}
     </div>

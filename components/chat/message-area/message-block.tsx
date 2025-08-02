@@ -8,6 +8,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import remarkMermaid from "remark-mermaidjs";
+import remarkMermaidPlugin from "remark-mermaid-plugin";
+
 import rehypeRaw from "rehype-raw";
 import { components } from "@/components/markdown/markdown-component";
 import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
@@ -79,7 +82,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                   //   isLast(messages, m) &&
                   //   "typewriting",
                 )}
-                remarkPlugins={[remarkGfm, remarkMath]}
+                remarkPlugins={[remarkGfm, remarkMermaidPlugin]} //remarkMath
                 rehypePlugins={[rehypeRaw]} //rehypeKatex
                 components={components}
                 remarkRehypeOptions={{}}
