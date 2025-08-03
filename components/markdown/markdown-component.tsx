@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Copy } from "lucide-react";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { TLDR } from "./tldr";
+import { Stock } from "./stock";
 import { CandlestickChart } from "../charts/candle-stick-chart";
 
 import { Link } from "lucide-react";
@@ -117,6 +118,13 @@ export const components: Partial<any> = {
   // ),
   chart: () => {
     return <BarChartHorizontal />;
+  },
+  stock: ({ symbol }: { symbol: string }) => {
+    return (
+      <span className="flex flex-col size-full">
+        <Stock symbol={symbol} />
+      </span>
+    );
   },
   tldr: ({ children }) => {
     return <TLDR>{children}</TLDR>;

@@ -20,7 +20,6 @@ export async function generateTitle(message: UIMessage[]) {
             model: provider("gemini-2.0-flash-001"),
             prompt: _prompt,
         })
-        console.log("_prompt: ", _prompt);
         return result.text;
 
     } catch (error) {

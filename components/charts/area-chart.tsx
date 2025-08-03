@@ -1,5 +1,5 @@
+"use client";
 
-'use client'
 import {
   ClientTooltip,
   TooltipContent,
@@ -15,11 +15,12 @@ import {
   curveMonotoneX,
 } from "d3";
 import { convertTimeSeriesData } from "./time-series-converter";
+import { memo } from "react";
 
-export function AreaChartGradient(props: any) {
-  const { toolInvocation } = props;
-  const rawData = convertTimeSeriesData(toolInvocation.result) || [];
-  let data = rawData.map((d) => ({ ...d, date: new Date(d.date) }));
+function PureAreaChartGradient(/* props: any */) {
+  //const { rawData } = props;
+  const formattedData = convertTimeSeriesData(/* rawData */) || [];
+  let data = formattedData.map((d) => ({ ...d, date: new Date(d.date) }));
   let xScale = scaleTime()
     .domain([data[0].date, data[data.length - 1].date])
     .range([0, 100]);
@@ -202,3 +203,5 @@ export function AreaChartGradient(props: any) {
     </div>
   );
 }
+
+export const AreaChartGradient = memo(PureAreaChartGradient);

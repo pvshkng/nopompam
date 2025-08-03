@@ -20,6 +20,9 @@ import { handleNewThread } from "@/lib/thread/new-thread-handler";
 import { authClient } from "@/lib/auth-client";
 import { createAuthClient } from "better-auth/react";
 
+import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
+import { toast } from "sonner";
+
 import {
   ResizableHandle,
   ResizablePanel,
@@ -40,7 +43,12 @@ type PureRootProps = {
   image: string | null | undefined;
 };
 
-const { useSession } = createAuthClient();
+type Thread = {
+  _id: any;
+  user: any;
+  title: any;
+  timestamp: string;
+};
 
 function PureRoot(props: PureRootProps) {
   let {
@@ -54,20 +62,16 @@ function PureRoot(props: PureRootProps) {
     image,
   } = props;
   const params = useParams();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isCurrentBottom, setIsCurrentBottom] = useState(true);
+  const { containerRef, isBottom, scrollToBottom, handleScroll } =
+    useScrollToBottom();
+
   const [dossierOpen, setDossierOpen] = useState(false);
   const [sidebarToggled, setSidebarToggled] = useState(true);
   const [artifacts, setArtifacts] = useState(initialArtifacts);
   const [activeTab, setActiveTab] = useState(null);
   const [model, setModel] = useState("mistral-small-latest");
   // to do centralize this type
-  type Thread = {
-    _id: any;
-    user: any;
-    title: any;
-    timestamp: string;
-  };
+
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
   const [input, setInput] = useState("");
 
@@ -87,7 +91,7 @@ function PureRoot(props: PureRootProps) {
       size: 16,
     }),
 
-    onFinish: (messages) => {
+    onFinish: () => {
       /* if (!params?.slug!) {
         console.log("Creating new thread with messages: ", messages);
         handleNewThread({
@@ -99,39 +103,57 @@ function PureRoot(props: PureRootProps) {
       } */
     },
     onData: (data) => {
-      console.log("data in c: ", data);
-      if (data.type === "data-title") {
-        console.log("Creating new thread with title: ", data.data!.title);
-        handleNewThread({
-          data,
-          _id,
-          email,
-          setThreads,
-        });
+      try {
+        if (data.type === "data-title") {
+          console.log("Creating new thread with title: ", data.data!.title);
+          handleNewThread({
+            data,
+            _id,
+            email,
+            setThreads,
+            params,
+          });
+        }
+      } catch (error) {
+        console.error("Error handling thread data:", error);
       }
     },
-    /* onError: (e) => {
-      console.log(e);
-    }, */
+    onError: (e) => {
+      console.error("Chat error:", e);
+      toast(e.message);
+    },
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendMessage(
-      { text: input },
-      {
-        body: {
-          session: session,
-          user: session?.user?.email || undefined,
-          model: model,
-        },
-      }
-    );
+
+    if (!input.trim()) return;
+
+    const messageText = input.trim();
     setInput("");
+
+    try {
+      sendMessage(
+        { text: messageText },
+        {
+          body: {
+            session: session,
+            user: session?.user?.email || undefined,
+            model: model,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      setInput(messageText);
+      toast("Failed to send message");
+    }
   };
-  useEffect(() => {
+
+  /*  useEffect(() => {
     console.log("messages: ", messages);
-  }, [messages]);
+  }, [messages]); */
+
   /* useEffect(() => {
     if (!data || data.length === 0) return;
 
@@ -144,27 +166,6 @@ function PureRoot(props: PureRootProps) {
 
     setData([]);
   }, [data, artifacts, setArtifacts]); */
-
-  /* useEffect(() => {
-    if (isScrolledToBottom) {
-      scrollToBottom();
-    }
-  }, [messages, isScrolledToBottom]); */
-
-  const scrollToBottom = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop! = containerRef.current.scrollHeight!;
-    }
-  };
-
-  /*   const handleScroll = () => {
-    if (containerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-      const isBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px threshold
-      // setIsScrolledToBottom(isBottom);
-      setIsCurrentBottom(scrollTop >= 0);
-    }
-  }; */
 
   return (
     <>
@@ -191,7 +192,7 @@ function PureRoot(props: PureRootProps) {
                 <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
                   <div
                     ref={containerRef}
-                    //onScroll={handleScroll}
+                    onScroll={handleScroll}
                     id="scrollArea"
                     className="relative flex flex-col-reverse items-center h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
                   >
@@ -222,7 +223,7 @@ function PureRoot(props: PureRootProps) {
                   </div>
                   <BottomScrollButton
                     scrollToBottom={scrollToBottom}
-                    isCurrentBottom={isCurrentBottom}
+                    isBottom={isBottom}
                   />
                 </main>
                 <UserInput

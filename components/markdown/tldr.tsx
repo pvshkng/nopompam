@@ -26,7 +26,7 @@ export const TLDR = ({ children }: { children: React.ReactNode }) => {
         "border border-stone-300 rounded-md bg-neutral-100"
       )}
     >
-      <span className="flex flex-row text-stone-500 items-center gap-2">
+      <span className="text-xs flex flex-row text-stone-500 items-center gap-2">
         {isStreaming ? (
           <LoaderCircle size={16} className="!animate-spin !opacity-100" />
         ) : (

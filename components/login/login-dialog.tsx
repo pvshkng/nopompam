@@ -16,7 +16,9 @@ import { Button } from "@/components/ui/button";
 import { LoginComponent } from "@/components/login/login-component";
 import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
 import { useShallow } from "zustand/react/shallow";
-export function LoginDialog(props: any) {
+import { memo } from "react";
+
+function PureLoginDialog(props: any) {
   const { children } = props;
   const { isOpen, setIsOpen, open, close } = useAuthDialogStore(
     useShallow((state) => ({
@@ -64,3 +66,5 @@ export function LoginDialog(props: any) {
     </AlertDialog>
   );
 }
+
+export const LoginDialog = memo(PureLoginDialog);

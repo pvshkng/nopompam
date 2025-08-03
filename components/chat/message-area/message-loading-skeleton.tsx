@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const PureMessageSkeleton = () => {
   return (
-    <div className="flex flex-col items-start gap-2 my-3 !animate-in !fade-in !duration-1000">
+    <div className="stream-ignore flex flex-col items-start gap-2 my-3 !animate-in !fade-in !opacity-100 !duration-1000">
       <div className="h-[20px] w-full max-w-[50%] rounded-sm bg-stone-200 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-stone-50 to-transparent animate-wave"></div>
       </div>

@@ -1,13 +1,18 @@
+import { useParams } from "next/navigation";
+
+
 export function handleNewThread({
     data,
     _id,
     email,
     setThreads,
+    params
 }: {
     data: any;
     _id: any;
     email: any;
     setThreads: React.Dispatch<React.SetStateAction<any[]>>;
+    params: typeof useParams
 }) {
     // @ts-ignore
     const title = data.data?.title! || undefined;
@@ -19,7 +24,9 @@ export function handleNewThread({
             timestamp: Date.now().toString(),
         };
         setThreads((prevThreads) => [newThread, ...prevThreads]);
-        window.history.replaceState(null, "", `/chat/${_id}`);
+        if (!params?.slug!) {
+            window.history.replaceState(null, "", `/chat/${_id}`);
+        }
     } else return
 
 }

@@ -6,8 +6,9 @@ import { CloseIcon } from "@/components/icons/close";
 import { CodeEditor } from "./dossier-code-editor";
 import { Tiptap } from "@/components/tiptap/editor";
 import { ForwardRefEditor } from "@/components/editor";
+import { memo } from "react";
 
-export function Dossier(props: any) {
+function PureDossier(props: any) {
   const {
     dossierOpen,
     setDossierOpen,
@@ -103,3 +104,5 @@ export function Dossier(props: any) {
     </>
   );
 }
+
+export const Dossier = memo(PureDossier);

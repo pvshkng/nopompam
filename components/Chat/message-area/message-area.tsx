@@ -5,7 +5,7 @@ import "./message-area.css";
 import "./typewriter.css";
 import "./streaming-effect.css";
 // import "@/lib/LaTeX/katex.min.css";
-import { UIMessage } from 'ai';
+import { UIMessage } from "ai";
 import { MessageBlock } from "./message-block";
 import { memo } from "react";
 import { MessageSkeleton } from "./message-loading-skeleton";
@@ -21,11 +21,6 @@ type MessageAreaProps = {
   setDossierOpen: boolean;
   activeTab: any;
   setActiveTab: any;
-};
-
-// @ts-ignore
-const isLast = (messages, m) => {
-  return messages[messages.length - 1] === m;
 };
 
 export default function PureMessageArea(props: MessageAreaProps) {
@@ -73,7 +68,7 @@ export default function PureMessageArea(props: MessageAreaProps) {
             m={m}
             artifacts={artifacts}
             setArtifacts={setArtifacts}
-            isLast={isLast(messages, m)}
+            isLast={i === messages.length - 1}
             dossierOpen={dossierOpen}
             setDossierOpen={setDossierOpen}
             activeTab={activeTab}

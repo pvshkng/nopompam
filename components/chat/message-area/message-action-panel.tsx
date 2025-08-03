@@ -3,8 +3,9 @@
 import { cn } from "@/lib/utils";
 import { ThumbsUp, ThumbsDown, CopyIcon, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
+import { memo } from "react";
 
-export function ActionPanel(props: any) {
+function PureActionPanel(props: any) {
   const { status, messageId, message, isLast } = props;
   const strokeWidth = 1.5;
   return (
@@ -69,3 +70,5 @@ export function ActionPanel(props: any) {
     </>
   );
 }
+
+export const ActionPanel = memo(PureActionPanel);

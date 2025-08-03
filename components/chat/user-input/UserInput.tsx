@@ -66,7 +66,9 @@ function PureUserInput(props: any) {
           "w-full px-auto px-3 mb-1 bg-transparent"
         )}
       >
-        {messages.length === 0 && <MessageTemplate setInput={setInput} />}
+        {messages.length === 0 && status === "ready" && (
+          <MessageTemplate setInput={setInput} />
+        )}
         <div
           className={cn(
             "relative",

@@ -36,7 +36,6 @@ export const PureNavigation = (props: any) => {
       )}
     >
       <Link
-        replace
         href={{ pathname: "/chat" }}
         prefetch={false}
         className={cn(

@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
 import { ChartCandlestick, LoaderCircle } from "lucide-react";
 import { AreaChartGradient } from "@/components/charts/area-chart";
+import { memo } from "react";
 
-export const Stock = (props: any) => {
+const PureStock = (props: any) => {
   const { toolInvocation } = props;
   return (
     <div
@@ -32,3 +33,5 @@ export const Stock = (props: any) => {
     </div>
   );
 };
+
+export const Stock = memo(PureStock);

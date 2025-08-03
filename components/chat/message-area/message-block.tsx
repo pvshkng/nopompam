@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import remarkMermaidPlugin from "remark-mermaid-plugin";
+import remarkMermaidPlugin from "";
 
 import rehypeRaw from "rehype-raw";
 import { components } from "@/components/markdown/markdown-component";
@@ -21,6 +21,7 @@ import { ArtifactPreview } from "@/components/artifact/artifact-preview";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { CandlestickChart } from "@/components/charts/candle-stick-chart";
 import { Stock } from "@/components/tools/stock";
+import { Web } from "@/components/tools/web";
 
 type MessageBlockProps = {
   status: string;
@@ -78,9 +79,9 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                   //   isLast(messages, m) &&
                   //   "typewriting",
                 )}
-                remarkPlugins={[remarkGfm]} //remarkMath remarkMermaidPlugin
-                rehypePlugins={[rehypeRaw]} //rehypeKatex
-                components={components}
+                remarkPlugins={m.role == "user" ? [] : [remarkGfm]} //remarkMath remarkMermaidPlugin
+                rehypePlugins={m.role == "user" ? [] : [rehypeRaw]} //rehypeKatex
+                components={m.role == "user" ? {} : components}
                 remarkRehypeOptions={{}}
               >
                 {p.text}
@@ -90,7 +91,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           case "tool-web":
             return (
               <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
-                <ToolAnnotation tool={p} />
+                <Web tool={p} />
               </div>
             );
 
@@ -188,7 +189,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 status={status}
                 isLast={isLast}
                 messageId={m.id}
-                message={m.content}
+                message={m.parts.join("")}
               />
             )}
         </>
