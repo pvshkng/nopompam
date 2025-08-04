@@ -7,7 +7,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import remarkMermaidPlugin from "";
 
 import rehypeRaw from "rehype-raw";
 import { components } from "@/components/markdown/markdown-component";
@@ -26,27 +25,11 @@ import { Web } from "@/components/tools/web";
 type MessageBlockProps = {
   status: string;
   m: UIMessage;
-  artifacts: any[];
-  setArtifacts: any;
   isLast: boolean;
-  dossierOpen: boolean;
-  setDossierOpen: boolean;
-  activeTab: any;
-  setActiveTab: any;
 };
 
 export const PureMessageBlock = (props: MessageBlockProps) => {
-  const {
-    status,
-    m,
-    artifacts,
-    setArtifacts,
-    isLast,
-    dossierOpen,
-    setDossierOpen,
-    activeTab,
-    setActiveTab,
-  } = props;
+  const { status, m, isLast } = props;
 
   return (
     <div
@@ -100,7 +83,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
             const { toolName, toolCallId, state } = toolInvocation;
 
             switch (toolName) {
-              case "createArtifact":
+              /* case "createArtifact":
                 return (
                   <ArtifactPreview
                     key={j}
@@ -113,7 +96,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                   />
-                );
+                ); */
               case "chart":
                 return (
                   <div

@@ -14,14 +14,12 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import { Separator } from "@/components/ui/_index";
+import { Separator } from "@/components/ui/separator";
 import { ChevronLeft, Plus } from "lucide-react";
 export const PureNavigation = (props: any) => {
   const {
     _id,
     session,
-    sidebarToggled,
-    setSidebarToggled,
     threads,
     setThreads,
   } = props;
@@ -82,8 +80,6 @@ export const PureNavigation = (props: any) => {
           <ThreadManager
             _id={_id}
             session={session}
-            sidebarToggled={sidebarToggled}
-            setSidebarToggled={setSidebarToggled}
             threads={threads}
             setThreads={setThreads}
             Close={DrawerClose}

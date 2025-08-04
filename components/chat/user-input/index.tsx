@@ -6,13 +6,12 @@ import React from "react";
 import { useState, useRef } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { SendHorizontal, LoaderCircle } from "lucide-react";
-import "./UserInputFading.css";
 import { UserInputOptions } from "./user-input-options";
 import { MessageTemplate } from "@/components/chat/message-area/message-template";
 
 import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
 import { useShallow } from "zustand/react/shallow";
-
+import { useDossierStore } from "@/lib/stores/dossier-store";
 function PureUserInput(props: any) {
   const {
     session,
@@ -21,12 +20,10 @@ function PureUserInput(props: any) {
     input,
     setInput,
     handleSubmit,
-    dossierOpen,
-    setDossierOpen,
     model,
     setModel,
   } = props;
-
+  const { dossierOpen, setDossierOpen } = useDossierStore();
   const { suggestions } = props;
   const [isEditorActive, setEditorStatus] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);

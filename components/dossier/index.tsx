@@ -1,22 +1,33 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { CloseIcon } from "@/components/icons/close";
 import { CodeEditor } from "./dossier-code-editor";
 import { Tiptap } from "@/components/tiptap/editor";
 import { ForwardRefEditor } from "@/components/editor";
 import { memo } from "react";
 
+import { useDossierStore } from "@/lib/stores/dossier-store";
+
 function PureDossier(props: any) {
-  const {
+  /* const {
     dossierOpen,
     setDossierOpen,
     artifacts,
     setArtifacts,
     activeTab,
     setActiveTab,
-  } = props;
+  } = props; */
+  const {
+    dossierOpen,
+    documents,
+    activeTab,
+    setActiveTab,
+    openDossier,
+    closeDossier,
+    openDossierWithDocuments,
+  } = useDossierStore();
 
   const t = {
     artifactId: "edPrBYrAH3rLdJAk",
@@ -34,11 +45,11 @@ function PureDossier(props: any) {
     <>
       {/* <section className={cn("flex flex-col gap-4", "size-full")}> */}
       <Tabs
-        value={activeTab}
+        value={activeTab || undefined}
         onValueChange={setActiveTab}
         hidden={!dossierOpen}
         defaultValue={
-          (artifacts.length > 0 && artifacts[0].artifactId) || undefined
+          (documents.length > 0 && documents[0].artifactId) || undefined
         }
         className={cn("flex flex-col size-full !max-h-[300px]")}
       >
@@ -51,7 +62,7 @@ function PureDossier(props: any) {
             "bg-stone-300"
           )}
         >
-          {artifacts.map((t: any) => (
+          {documents.map((t: any) => (
             <TabsTrigger
               key={t.artifactId}
               value={`${t.artifactId}`}
@@ -82,7 +93,7 @@ function PureDossier(props: any) {
           ))}
         </TabsList>
 
-        {artifacts.map((t: any, i: any) => (
+        {documents.map((t: any, i: any) => (
           <TabsContent
             key={i}
             value={`${t.artifactId}`}

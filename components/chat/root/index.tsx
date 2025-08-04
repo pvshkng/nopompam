@@ -12,14 +12,10 @@ import { MobileDossier } from "@/components/dossier/mobile";
 import { BottomScrollButton } from "@/components/chat/message-area/scroll-to-bottom";
 import { Navigation } from "@/components/chat/navigation";
 import { MessageArea } from "@/components/chat/message-area/message-area";
-import { UserInput } from "@/components/chat/user-input/UserInput";
+import { UserInput } from "@/components/chat/user-input";
 import { LoginDialog } from "@/components/login/login-dialog";
 
-import { artifactStreamHandler } from "@/lib/artifacts/handler";
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
-import { authClient } from "@/lib/auth-client";
-import { createAuthClient } from "better-auth/react";
-
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { toast } from "sonner";
 
@@ -30,8 +26,8 @@ import {
 } from "@/components/ui/resizable";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useDossierStore } from "@/lib/stores/dossier-store";
 
-// TODO: to rename to ChatRoot
 type PureRootProps = {
   initialMessages: any[];
   initialThreads: any[];
@@ -65,10 +61,10 @@ function PureRoot(props: PureRootProps) {
   const { containerRef, isBottom, scrollToBottom, handleScroll } =
     useScrollToBottom();
 
-  const [dossierOpen, setDossierOpen] = useState(false);
   const [sidebarToggled, setSidebarToggled] = useState(true);
-  const [artifacts, setArtifacts] = useState(initialArtifacts);
-  const [activeTab, setActiveTab] = useState(null);
+  // const [dossierOpen, setDossierOpen] = useState(false);
+  // const [artifacts, setArtifacts] = useState(initialArtifacts);
+  // const [activeTab, setActiveTab] = useState(null);
   const [model, setModel] = useState("mistral-small-latest");
   // to do centralize this type
 
@@ -76,6 +72,17 @@ function PureRoot(props: PureRootProps) {
   const [input, setInput] = useState("");
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const {
+    dossierOpen,
+    setDossierOpen,
+    documents,
+    activeTab,
+    setActiveTab,
+    openDossier,
+    closeDossier,
+    openDossierWithDocuments,
+  } = useDossierStore();
 
   const { messages, status, sendMessage } = useChat({
     //maxSteps: 5,
@@ -173,9 +180,6 @@ function PureRoot(props: PureRootProps) {
         <Navigation
           _id={_id}
           session={session}
-          email={email}
-          sidebarToggled={sidebarToggled}
-          setSidebarToggled={setSidebarToggled}
           threads={threads}
           setThreads={setThreads}
         />
@@ -209,8 +213,7 @@ function PureRoot(props: PureRootProps) {
                             name={name!}
                             image={image!}
                             messages={messages}
-                            artifacts={artifacts}
-                            setArtifacts={setArtifacts}
+                        
                             dossierOpen={dossierOpen}
                             // @ts-ignore
                             setDossierOpen={setDossierOpen}
@@ -233,8 +236,6 @@ function PureRoot(props: PureRootProps) {
                   input={input}
                   setInput={setInput}
                   handleSubmit={handleSubmit}
-                  dossierOpen={dossierOpen}
-                  setDossierOpen={setDossierOpen}
                   model={model}
                   setModel={setModel}
                 />
@@ -263,26 +264,12 @@ function PureRoot(props: PureRootProps) {
                         "bg-stone-50"
                       )}
                     >
-                      <Dossier
-                        dossierOpen={dossierOpen}
-                        setDossierOpen={setDossierOpen}
-                        artifacts={artifacts}
-                        setArtifacts={setArtifacts}
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                      />
+                      <Dossier />
                     </ResizablePanel>
                   </>
                 )
               ) : (
-                <MobileDossier
-                  dossierOpen={dossierOpen}
-                  setDossierOpen={setDossierOpen}
-                  artifacts={artifacts}
-                  setArtifacts={setArtifacts}
-                  activeTab={activeTab}
-                  setActiveTab={setActiveTab}
-                />
+                <MobileDossier />
               )}
             </ResizablePanelGroup>
           </div>

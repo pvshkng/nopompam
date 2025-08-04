@@ -27,8 +27,6 @@ export default function PureMessageArea(props: MessageAreaProps) {
   const {
     status,
     messages,
-    artifacts,
-    setArtifacts,
     dossierOpen,
     setDossierOpen,
     activeTab,
@@ -66,13 +64,7 @@ export default function PureMessageArea(props: MessageAreaProps) {
           <MessageBlock
             status={status}
             m={m}
-            artifacts={artifacts}
-            setArtifacts={setArtifacts}
             isLast={i === messages.length - 1}
-            dossierOpen={dossierOpen}
-            setDossierOpen={setDossierOpen}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
           />
         </div>
       ))}

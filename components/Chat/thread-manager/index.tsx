@@ -12,7 +12,7 @@ import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
 import { useShallow } from "zustand/react/shallow";
 
 export function PureThreadManager(props: any) {
-  const { _id, session, threads, setThreads, Close, email } = props;
+  const { _id, session, threads, setThreads, Close } = props;
   const { isOpen, setIsOpen, openAuthDialog, close } = useAuthDialogStore(
     useShallow((state) => ({
       isOpen: state.isOpen,

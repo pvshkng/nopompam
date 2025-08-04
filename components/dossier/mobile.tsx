@@ -11,17 +11,21 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Dossier } from ".";
+import { useDossierStore } from "@/lib/stores/dossier-store";
 
 const PureMobileDossier = (props: any) => {
+  const { className } = props;
+
   const {
     dossierOpen,
     setDossierOpen,
-    artifacts,
-    setArtifacts,
     activeTab,
     setActiveTab,
-    className,
-  } = props;
+    openDossier,
+    closeDossier,
+    openDossierWithDocuments,
+  } = useDossierStore();
+
   return (
     <Drawer
       open={dossierOpen}
@@ -46,14 +50,7 @@ const PureMobileDossier = (props: any) => {
           <DrawerTitle hidden></DrawerTitle>
           <DrawerDescription hidden></DrawerDescription>
         </DrawerHeader>
-        <Dossier
-          dossierOpen={dossierOpen}
-          setDossierOpen={setDossierOpen}
-          artifacts={artifacts}
-          setArtifacts={setArtifacts}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
+        <Dossier />
         <DrawerFooter>
           <DrawerClose
             onClick={() => {

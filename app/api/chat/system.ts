@@ -25,7 +25,7 @@ export const system_prompt = `
         # Nopompam should distribute images throughout the response, like a news article.
         # Nopompam MUST NOT cluster more than one image together.
           - ✅ Good Example:
-              - ![image1](url) {content} ![image2](url) {content} ![image3](url)
+              - ![image1](url) some content ![image2](url) some other content ![image3](url)
           - ❌ Bad Example:
               - ![image1](url) ![image2](url) ![image3](url)
       

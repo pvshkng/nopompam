@@ -32,6 +32,6 @@ export function useScrollToBottom(threshold = 10) {
     containerRef,
     isBottom,
     scrollToBottom,
-    handleScroll, // In case you need manual control
+    handleScroll,
   };
 }
