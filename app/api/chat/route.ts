@@ -8,6 +8,7 @@ import { tools } from "@/lib/ai";
 import { documentSearch } from "@/lib/ai/tool/document-search";
 import { createArtifact } from "@/lib/ai/tool/create-artifact"
 import { web } from "@/lib/ai/tool/web";
+import { document } from "@/lib/ai/tool/document"
 import { stock } from "@/lib/ai/tool/stock";
 
 import { saveChat } from "@/lib/mongo/chat-store";
@@ -118,7 +119,7 @@ export async function POST(req: NextRequest) {
         } */
 
         const stream = createUIMessageStream({
-            originalMessages: messages,
+            // originalMessages: messages,
             execute: ({ writer }) => {
 
                 try {
@@ -127,9 +128,13 @@ export async function POST(req: NextRequest) {
                         system: system_prompt,
                         messages: convertToModelMessages(messages),
                         //experimental_telemetry: { isEnabled: true },
-                        // experimental_transform: smoothStream({
+                        experimental_transform: smoothStream({
+                            chunking: 'word',
+                            delayInMs: 10
+                        }),
                         tools: {
                             web: web({}),
+                            //document: document({ threadId: id, user: user, messages: convertToModelMessages(messages), writer: writer }),
                             // createArtifact: createArtifact({ threadId: id, user: user, messages: messages, writer: writer }),
                             // stock: stock({})
                         },

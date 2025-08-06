@@ -14,19 +14,22 @@ export function handleNewThread({
     setThreads: React.Dispatch<React.SetStateAction<any[]>>;
     params: typeof useParams
 }) {
-    // @ts-ignore
-    const title = data.data?.title! || undefined;
-    if (title) {
-        const newThread = {
-            _id: _id,
-            user: email,
-            title: title,
-            timestamp: Date.now().toString(),
-        };
-        setThreads((prevThreads) => [newThread, ...prevThreads]);
-        if (!params?.slug!) {
-            window.history.replaceState(null, "", `/chat/${_id}`);
+    try {
+        // @ts-ignore
+        const title = data.data?.title! || undefined;
+        if (title) {
+            const newThread = {
+                _id: _id,
+                user: email,
+                title: title,
+                timestamp: Date.now().toString(),
+            };
+            setThreads((prevThreads) => [newThread, ...prevThreads]);
+            if (!params?.slug!) {
+                window.history.replaceState(null, "", `/chat/${_id}`);
+            }
         }
-    } else return
-
+    } catch (error) {
+        console.error("Error in handleNewThread: ", error);
+    }
 }

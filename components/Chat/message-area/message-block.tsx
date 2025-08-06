@@ -21,6 +21,7 @@ import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { CandlestickChart } from "@/components/charts/candle-stick-chart";
 import { Stock } from "@/components/tools/stock";
 import { Web } from "@/components/tools/web";
+import { Document } from "@/components/tools/document";
 
 type MessageBlockProps = {
   status: string;
@@ -75,6 +76,12 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
             return (
               <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
                 <Web tool={p} />
+              </div>
+            );
+          case "tool-document":
+            return (
+              <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
+                <Document tool={p} />
               </div>
             );
 

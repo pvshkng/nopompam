@@ -18,7 +18,10 @@ import { LoginDialog } from "@/components/login/login-dialog";
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { toast } from "sonner";
-
+import {
+  DocumentStreamProvider,
+  documentStreamActions,
+} from "@/lib/context/document-context";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -98,18 +101,27 @@ function PureRoot(props: PureRootProps) {
       size: 16,
     }),
 
-    onFinish: () => {
-      /* if (!params?.slug!) {
-        console.log("Creating new thread with messages: ", messages);
-        handleNewThread({
-          messages,
-          _id,
-          email,
-          setThreads,
-        });
-      } */
-    },
+    onFinish: ({ message }) => {},
     onData: (data) => {
+      /* if (data.type === "data-document" && data.data) {
+        const { id, type, content } = data.data;
+
+        switch (type) {
+          case "kind":
+            documentStreamActions.updateDocument(id, { kind: content });
+            break;
+          case "title":
+            documentStreamActions.updateDocument(id, { title: content });
+            break;
+          case "clear":
+            documentStreamActions.clearContent(id);
+            break;
+          case "text":
+            documentStreamActions.appendContent(id, content);
+            break;
+        }
+      } */
+
       try {
         if (data.type === "data-title") {
           console.log("Creating new thread with title: ", data.data!.title);
@@ -176,106 +188,107 @@ function PureRoot(props: PureRootProps) {
 
   return (
     <>
-      <div className="flex flex-col h-full w-full bg-transparent">
-        <Navigation
-          _id={_id}
-          session={session}
-          threads={threads}
-          setThreads={setThreads}
-        />
-        <div className="flex flex-row size-full overflow-hidden">
-          <div
-            className={cn(
-              "relative flex h-full w-full min-w-[400px]",
-              "flex-1 flex-col overflow-hidden",
-              "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
-            )}
-          >
-            <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[350px]">
-                <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
-                  <div
-                    ref={containerRef}
-                    onScroll={handleScroll}
-                    id="scrollArea"
-                    className="relative flex flex-col-reverse items-center h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
-                  >
-                    <div
-                      id="wrapper"
-                      className="flex flex-col-reverse mx-auto px-6 bg-transparent h-full w-full max-w-[800px] text-black"
-                    >
-                      {messages.length === 0 ? (
-                        <></>
-                      ) : (
-                        <>
-                          <MessageArea
-                            status={status}
-                            name={name!}
-                            image={image!}
-                            messages={messages}
-                        
-                            dossierOpen={dossierOpen}
-                            // @ts-ignore
-                            setDossierOpen={setDossierOpen}
-                            activeTab={activeTab}
-                            setActiveTab={setActiveTab}
-                          />
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <BottomScrollButton
-                    scrollToBottom={scrollToBottom}
-                    isBottom={isBottom}
-                  />
-                </main>
-                <UserInput
-                  session={session}
-                  messages={messages}
-                  status={status}
-                  input={input}
-                  setInput={setInput}
-                  handleSubmit={handleSubmit}
-                  model={model}
-                  setModel={setModel}
-                />
-              </ResizablePanel>
-
-              {isDesktop ? (
-                dossierOpen && (
-                  <>
-                    <ResizableHandle
-                      /* hidden */
-
-                      className={cn(
-                        //!dossierOpen && "hidden",
-                        "relative overflow-visible",
-                        "max-md:hidden"
-                      )}
-                      withHandle={false}
-                      onClick={() => {}}
-                    />
-                    <ResizablePanel
-                      defaultSize={undefined}
-                      className={cn(
-                        !dossierOpen && "hidden",
-                        "flex flex-col h-full w-full min-w-[300px]",
-                        "max-md:hidden",
-                        "bg-stone-50"
-                      )}
-                    >
-                      <Dossier />
-                    </ResizablePanel>
-                  </>
-                )
-              ) : (
-                <MobileDossier />
+      {/* <DocumentStreamProvider> */}
+        <div className="flex flex-col h-full w-full bg-transparent">
+          <Navigation
+            _id={_id}
+            session={session}
+            threads={threads}
+            setThreads={setThreads}
+          />
+          <div className="flex flex-row size-full overflow-hidden">
+            <div
+              className={cn(
+                "relative flex h-full w-full min-w-[400px]",
+                "flex-1 flex-col overflow-hidden",
+                "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
               )}
-            </ResizablePanelGroup>
+            >
+              <ResizablePanelGroup direction="horizontal">
+                <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[350px]">
+                  <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
+                    <div
+                      ref={containerRef}
+                      onScroll={handleScroll}
+                      id="scrollArea"
+                      className="relative flex flex-col-reverse items-center h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
+                    >
+                      <div
+                        id="wrapper"
+                        className="flex flex-col-reverse mx-auto px-6 bg-transparent h-full w-full max-w-[800px] text-black"
+                      >
+                        {messages.length === 0 ? (
+                          <></>
+                        ) : (
+                          <>
+                            <MessageArea
+                              status={status}
+                              name={name!}
+                              image={image!}
+                              messages={messages}
+                              dossierOpen={dossierOpen}
+                              // @ts-ignore
+                              setDossierOpen={setDossierOpen}
+                              activeTab={activeTab}
+                              setActiveTab={setActiveTab}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <BottomScrollButton
+                      scrollToBottom={scrollToBottom}
+                      isBottom={isBottom}
+                    />
+                  </main>
+                  <UserInput
+                    session={session}
+                    messages={messages}
+                    status={status}
+                    input={input}
+                    setInput={setInput}
+                    handleSubmit={handleSubmit}
+                    model={model}
+                    setModel={setModel}
+                  />
+                </ResizablePanel>
+
+                {isDesktop ? (
+                  dossierOpen && (
+                    <>
+                      <ResizableHandle
+                        /* hidden */
+
+                        className={cn(
+                          //!dossierOpen && "hidden",
+                          "relative overflow-visible",
+                          "max-md:hidden"
+                        )}
+                        withHandle={false}
+                        onClick={() => {}}
+                      />
+                      <ResizablePanel
+                        defaultSize={undefined}
+                        className={cn(
+                          !dossierOpen && "hidden",
+                          "flex flex-col h-full w-full min-w-[300px]",
+                          "max-md:hidden",
+                          "bg-stone-50"
+                        )}
+                      >
+                        <Dossier />
+                      </ResizablePanel>
+                    </>
+                  )
+                ) : (
+                  <MobileDossier />
+                )}
+              </ResizablePanelGroup>
+            </div>
           </div>
         </div>
-      </div>
-      <LoginDialog />
+        <LoginDialog />
+      {/* </DocumentStreamProvider> */}
     </>
   );
 }

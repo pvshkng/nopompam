@@ -9,7 +9,7 @@ import { UIMessage } from "ai";
 import { MessageBlock } from "./message-block";
 import { memo } from "react";
 import { MessageSkeleton } from "./message-loading-skeleton";
-import { LoaderCircle } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 type MessageAreaProps = {
   status: string;
   name: string;
@@ -24,14 +24,7 @@ type MessageAreaProps = {
 };
 
 export default function PureMessageArea(props: MessageAreaProps) {
-  const {
-    status,
-    messages,
-    dossierOpen,
-    setDossierOpen,
-    activeTab,
-    setActiveTab,
-  } = props;
+  const { status, messages } = props;
 
   return (
     <div id="msgArea" className={cn("text-sm py-7 mb-auto")}>
@@ -43,24 +36,6 @@ export default function PureMessageArea(props: MessageAreaProps) {
             m.role == "user" ? "justify-end" : "justify-center"
           )}
         >
-          {/* Tool Annotation */}
-          {/* {m.parts.some((p, i) => p.type === "tool-invocation") && (
-            <div key={generateId(5)} className="flex flex-col gap-1 my-2">
-              {m.parts.map((p, k) => (
-                <>
-                  {p.type === "tool-invocation" &&
-                    (!isLoading || i !== m.length - 1) && (
-                      <div
-                        key={`tool-${m.id}-${k}`}
-                        className="flex flex-col w-full"
-                      >
-                        <ToolAnnotation tool={p.toolInvocation} />
-                      </div>
-                    )}
-                </>
-              ))}
-            </div>
-          )} */}
           <MessageBlock
             status={status}
             m={m}
@@ -68,7 +43,18 @@ export default function PureMessageArea(props: MessageAreaProps) {
           />
         </div>
       ))}
-      {status === "submitted" && <MessageSkeleton />}
+      <AnimatePresence>
+        {status === "submitted" && (
+          <motion.div
+            initial={{ opacity: 0, x: 0 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 0, }}
+            transition={{ duration: 0.1 }}
+          >
+            <MessageSkeleton />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
