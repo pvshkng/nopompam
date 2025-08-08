@@ -12,6 +12,8 @@ import rehypeRaw from "rehype-raw";
 import { components } from "@/components/markdown/markdown-component";
 import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
 
+import "./typewriter.css";
+
 // Tool components
 import { ToolComponents } from "@/components/chat/message-area/message-tool-components";
 import { ToolAnnotation } from "@/components/chat/message-area/message-tool-annotation";
@@ -22,6 +24,8 @@ import { CandlestickChart } from "@/components/charts/candle-stick-chart";
 import { Stock } from "@/components/tools/stock";
 import { Web } from "@/components/tools/web";
 import { Document } from "@/components/tools/document";
+import { MessageSkeleton } from "./message-loading-skeleton";
+import { AnimatePresence, motion } from "framer-motion";
 
 type MessageBlockProps = {
   status: string;
@@ -47,6 +51,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
             )
           : "rounded-bl-[0] w-full"
       )}
+      //style={{ minHeight: isLast && m.role == "assistant" ? "30dvh" : "auto" }}
     >
       {m.parts.map((p, j) => {
         switch (p.type) {
@@ -57,11 +62,11 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 className={cn(
                   "stream-section",
                   "m-2 prose text-sm",
-                  m.role === "user" ? "text-stone-300" : "text-black"
-                  // m.role !== "user" &&
-                  //   status !== "ready" &&
-                  //   isLast(messages, m) &&
-                  //   "typewriting",
+                  m.role === "user" ? "text-stone-300" : "text-black",
+                  m.role === "assistant" &&
+                    status !== "ready" &&
+                    isLast &&
+                    "typewriting"
                 )}
                 remarkPlugins={m.role == "user" ? [] : [remarkGfm]} //remarkMath remarkMermaidPlugin
                 rehypePlugins={m.role == "user" ? [] : [rehypeRaw]} //rehypeKatex
@@ -132,60 +137,26 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                   </div>
                 );
             }
-
-          /* if (state === "result") {
-              const { result } = toolInvocation;
-              const artifactId = result?.id;
-
-              return (
-                <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
-                  <ToolAnnotation tool={toolInvocation} />
-                  {toolName === "createArtifact" && (
-                    <ArtifactPreview
-                      artifactId={toolCallId}
-                      artifacts={artifacts}
-                      setArtifacts={setArtifacts}
-                    />
-                  )}
-                </div>
-              );
-            } */
-
-          // if (
-          //   p.toolInvocation.toolName === "documentSearch" &&
-          //   "result" in p.toolInvocation &&
-          //   p.toolInvocation.result
-          // ) {
-          //   return <DocumentsReference result={p.toolInvocation.result} />;
-          // }
         }
       })}
 
-      {/* Message tail tool component */}
-      {/* <ToolComponents m={m} /> */}
-
-      {
-        <>
-          {/* {m.annotations?.map((a) => (
-                          <div>ANNOTATION: {JSON.stringify(a, null, 2)}</div>
-                        ))} */}
-
-          {/* {JSON.stringify(m, null, 2)} */}
-
-          {/* Action Container */}
-          {m.role === "assistant" &&
-            (!isLast || (isLast && status === "ready")) && (
-              <ActionPanel
-                status={status}
-                isLast={isLast}
-                messageId={m.id}
-                message={m.parts.join("")}
-              />
-            )}
-        </>
-      }
+      {m.role === "assistant" &&
+        (!isLast || (isLast && status === "ready")) && (
+          <ActionPanel
+            status={status}
+            isLast={isLast}
+            messageId={m.id}
+            message={m.parts.join("")}
+          />
+        )}
     </div>
   );
 };
 
-export const MessageBlock = memo(PureMessageBlock);
+export const MessageBlock = memo(
+  PureMessageBlock /* , (prevProps, nextProps) => {
+  return (
+    prevProps.m.id === nextProps.m.id && prevProps.isLast === nextProps.isLast
+  );
+} */
+);

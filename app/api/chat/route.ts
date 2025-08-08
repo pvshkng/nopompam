@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
                     const result = streamText({
                         model: provider(model),
                         system: system_prompt,
-                        messages: convertToModelMessages(messages),
+                        messages: convertToModelMessages(messages, { ignoreIncompleteToolCalls: true }),
                         //experimental_telemetry: { isEnabled: true },
                         experimental_transform: smoothStream({
                             chunking: 'word',
