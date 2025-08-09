@@ -34,7 +34,6 @@ export async function POST(req: NextRequest) {
         const { messages, id, user, model, session } = await req.json();
 
         const modelMessages = convertToModelMessages(messages, { ignoreIncompleteToolCalls: true })
-        console.log(modelMessages)
         if (!session) {
             const result = await mock();
             return result.toUIMessageStreamResponse({});

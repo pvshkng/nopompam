@@ -101,7 +101,6 @@ export const components: Partial<any> = {
     return <p>{children}</p>;
   },
   document: ({ node, children, ...props }) => {
-    console.log("node: ", node);
     return <Document {...props}>{children}</Document>;
   },
 

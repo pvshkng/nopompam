@@ -2,7 +2,6 @@ import { streamText, simulateReadableStream, smoothStream } from 'ai';
 import { MockLanguageModelV2 } from 'ai/test';
 
 const mockText = `
-
 <document>
 An h1 header
 ============

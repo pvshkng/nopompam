@@ -9,6 +9,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 
 import rehypeRaw from "rehype-raw";
+
 import { components } from "@/components/markdown/markdown-component";
 import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
 
@@ -62,7 +63,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 className={cn(
                   "stream-section",
                   "m-2 prose text-sm",
-                  m.role === "user" ? "text-stone-300" : "text-black",
+                  m.role === "user" ? "text-stone-300" : "text-black"
                   // m.role === "assistant" &&
                   //   status !== "ready" &&
                   //   isLast &&
@@ -95,20 +96,6 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
             const { toolName, toolCallId, state } = toolInvocation;
 
             switch (toolName) {
-              /* case "createArtifact":
-                return (
-                  <ArtifactPreview
-                    key={j}
-                    toolInvocation={toolInvocation}
-                    artifactId={toolCallId}
-                    artifacts={artifacts}
-                    setArtifacts={setArtifacts}
-                    dossierOpen={dossierOpen}
-                    setDossierOpen={setDossierOpen}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                  />
-                ); */
               case "chart":
                 return (
                   <div
