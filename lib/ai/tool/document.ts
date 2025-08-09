@@ -28,7 +28,7 @@ export const document = ({ threadId, user, messages, writer }: DocumentProps) =>
       const id = toolCallId //generateId(8); 
       try {
 
-        writer.write({
+        /* writer.write({
           type: 'data-document',
           data: { id: id, type: "kind", content: kind }
         });
@@ -43,7 +43,7 @@ export const document = ({ threadId, user, messages, writer }: DocumentProps) =>
         writer.write({
           type: 'data-document',
           data: { id: id, type: "clear", content: "" }
-        });
+        }); */
 
 
         let draftContent = '';

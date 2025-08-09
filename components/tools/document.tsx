@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Link, LoaderCircle, Globe } from "lucide-react";
 import { MessageSkeleton } from "@/components/chat/message-area/message-loading-skeleton";
 import { memo, useState } from "react";
-import { useDocumentStream } from "@/lib/context/document-context";
+import { useDossierStore } from "@/lib/stores/dossier-store";
 
 type ToolState =
   | "input-streaming"
@@ -12,16 +12,19 @@ type ToolState =
   | "output-error";
 
 const PureDocument = (props: any) => {
-  //tool.type =
   const { tool }: any = props;
   const documentId = tool?.toolCallId || tool?.id || "default";
-  //const document = useDocumentStream(documentId);
-
+  const { openDossier, setStreamingContent, streamingContent, setIsStreaming } =
+    useDossierStore();
   return (
     <>
       <div
         //defaultOpen={tool?.state == "output-available"}
-        className="py-3 px-4 my-2 mx-2 border border-stone-300 rounded-md bg-neutral-100"
+        className="cursor-pointer py-3 px-4 my-2 mx-2 border border-stone-300 rounded-md bg-neutral-100"
+        onClick={() => {
+          setStreamingContent(tool.output.content || "");
+          openDossier("documents");
+        }}
       >
         <div className="justify-between w-full flex flex-row items-center gap-2 text-[15px] leading-6 font-semibold">
           <span className="flex text-stone-500 items-center gap-2 overflow-hidden max-w-full">
@@ -51,13 +54,13 @@ const PureDocument = (props: any) => {
               case "output-available":
                 return (
                   <>
-                    <div
+                    {/* <div
                       className={cn(
                         "flex flex-col overflow-hidden transition-all w-full"
                       )}
                     >
                       {tool.output && JSON.stringify(tool.output)}
-                    </div>
+                    </div> */}
                   </>
                 );
               default:

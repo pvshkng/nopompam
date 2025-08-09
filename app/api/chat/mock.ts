@@ -1,7 +1,8 @@
-import { streamText, simulateReadableStream, smoothStream } from 'ai';
 import { MockLanguageModelV2 } from 'ai/test';
+import { streamText, smoothStream, simulateReadableStream, convertToModelMessages, stepCountIs, hasToolCall, createUIMessageStream, generateId, createUIMessageStreamResponse } from "ai";
+const mockText = "ayo"
 
-const mockText = `
+const t = `
 <document>
 An h1 header
 ============
@@ -169,39 +170,55 @@ from the left side). Here's a code sample:
 
 export async function mock() {
 
-    const result = streamText({
-        model: new MockLanguageModelV2({
-            doStream: async () => ({
-                stream: simulateReadableStream({
-                    chunks: [
-                        { type: 'text-start', id: 'text-1' },
-                        ...Array.from(mockText).map((char, idx) => ({
-                            type: 'text-delta',
-                            id: `text-1`,
-                            delta: char,
-                        })),
-                        { type: 'text-end', id: 'text-1' },
-                        /* {
-                            type: 'data-document',
-                            data: { id: "123", type: "id", content: mockText },
-                        }, */
-                        {
-                            type: 'finish',
-                            finishReason: 'stop',
-                            logprobs: undefined,
-                            usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
-                        },
-                    ],
+    const stream = createUIMessageStream({
+        execute: ({ writer }) => {
+
+            const result = streamText({
+                model: new MockLanguageModelV2({
+                    doStream: async () => ({
+                        stream: simulateReadableStream({
+                            chunks: [
+                                { type: 'text-start', id: 'text-1' },
+                                ...Array.from(mockText).map((char, idx) => ({
+                                    type: 'text-delta',
+                                    id: `text-1`,
+                                    delta: char,
+                                })),
+                                //{ type: 'tool-output-available', id: 'tool-1', output: 'Hello, world!' },
+                                { type: 'text-end', id: 'text-1' },
+                                { type: 'tool-input-start', id: 'tool-1', toolName: 'document' },
+                                { type: 'tool-input-delta', id: 'tool-1', delta: 'Hello, ' },
+                                { type: 'tool-input-delta', id: 'tool-1', delta: 'world!' },
+                                { type: 'tool-input-end', id: 'tool-1' },
+                                { type: 'tool-call', toolCallId: 'tool-1', toolName: 'document', input: 'Hello, world!' },
+                                //{ type: 'tool-result', id: 'tool-1', toolName: 'document', result: 'Hello, world!' },
+                                /* {
+                                    type: 'data-document',
+                                    data: { id: "123", type: "id", content: mockText },
+                                }, */
+                                {
+                                    type: 'finish',
+                                    finishReason: 'stop',
+                                    logprobs: undefined,
+                                    usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
+                                },
+                            ],
+
+                        }),
+                    }),
                 }),
-            }),
-        }),
-        prompt: 'Hello, test!',
-        experimental_transform: smoothStream({
-            chunking: 'word',
-            delayInMs: 10
-        }),
-    });
+                prompt: 'Hello, test!',
+                experimental_transform: smoothStream({
+                    chunking: 'word',
+                    delayInMs: 10
+                }),
+            });
 
+            writer.merge(result.toUIMessageStream({}));
 
-    return result;
+        }
+    })
+
+    return createUIMessageStreamResponse({ stream })
+
 }

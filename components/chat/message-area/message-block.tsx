@@ -16,17 +16,8 @@ import { ActionPanel } from "@/components/chat/message-area/message-action-panel
 import "./typewriter.css";
 
 // Tool components
-import { ToolComponents } from "@/components/chat/message-area/message-tool-components";
-import { ToolAnnotation } from "@/components/chat/message-area/message-tool-annotation";
-import { DocumentsReference } from "@/components/tools/documents-reference";
-import { ArtifactPreview } from "@/components/artifact/artifact-preview";
-import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
-import { CandlestickChart } from "@/components/charts/candle-stick-chart";
-import { Stock } from "@/components/tools/stock";
 import { Web } from "@/components/tools/web";
 import { Document } from "@/components/tools/document";
-import { MessageSkeleton } from "./message-loading-skeleton";
-import { AnimatePresence, motion } from "framer-motion";
 
 type MessageBlockProps = {
   status: string;
@@ -90,40 +81,6 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 <Document tool={p} />
               </div>
             );
-
-          case "tool-invocation":
-            const { toolInvocation } = p;
-            const { toolName, toolCallId, state } = toolInvocation;
-
-            switch (toolName) {
-              case "chart":
-                return (
-                  <div
-                    key={`tool-${m.id}-${j}`}
-                    className="flex flex-col w-full"
-                  >
-                    <Stock toolInvocation={toolInvocation} />
-                  </div>
-                );
-              case "stock":
-                return (
-                  <div
-                    key={`tool-${m.id}-${j}`}
-                    className="flex flex-col w-full"
-                  >
-                    <Stock toolInvocation={toolInvocation} />
-                  </div>
-                );
-              default:
-                return (
-                  <div
-                    key={`tool-${m.id}-${j}`}
-                    className="flex flex-col w-full"
-                  >
-                    <ToolAnnotation tool={toolInvocation} />
-                  </div>
-                );
-            }
         }
       })}
 

@@ -40,7 +40,13 @@ function PureDossier(props: any) {
 
   return (
     <>
-      <ForwardRefEditor
+      <textarea
+        className="h-full"
+        value={streamingContent}
+        onChange={() => {}}
+      />
+
+      {/* <ForwardRefEditor
         ref={editorRef}
         markdown={streamingContent}
         //plugins={[headingsPlugin(), markdownShortcutPlugin()]}
@@ -51,7 +57,7 @@ function PureDossier(props: any) {
         autoFocus={true}
         //className=""
         contentEditableClassName="max-h-dvh overflow-scroll"
-      />
+      /> */}
     </>
   );
 }

@@ -18,10 +18,7 @@ import { LoginDialog } from "@/components/login/login-dialog";
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { toast } from "sonner";
-import {
-  DocumentStreamProvider,
-  documentStreamActions,
-} from "@/lib/context/document-context";
+
 import {
   ResizableHandle,
   ResizablePanel,
@@ -47,6 +44,12 @@ type Thread = {
   user: any;
   title: any;
   timestamp: string;
+};
+
+type DataDocument = {
+  id: string;
+  type: "text" | "kind" | "title" | "clear";
+  content: string;
 };
 
 function PureRoot(props: PureRootProps) {
@@ -75,16 +78,16 @@ function PureRoot(props: PureRootProps) {
   const [input, setInput] = useState("");
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
-
+  let hasStartedStreaming = false;
   const {
-    dossierOpen,
-    setDossierOpen,
-    documents,
     activeTab,
     setActiveTab,
+    dossierOpen,
+    setDossierOpen,
     openDossier,
-    closeDossier,
-    openDossierWithDocuments,
+    setIsStreaming,
+    appendStreamingContent,
+    clearStreamingContent,
   } = useDossierStore();
 
   const { messages, status, sendMessage } = useChat({
@@ -101,27 +104,58 @@ function PureRoot(props: PureRootProps) {
       size: 16,
     }),
 
-    onFinish: ({ message }) => {},
+    onFinish: ({ message }) => {
+      console.log("Stream finished");
+      hasStartedStreaming = false;
+      useDossierStore.getState().setIsStreaming(false);
+
+      // Log final content
+      const finalContent = useDossierStore.getState().streamingContent;
+      console.log("Final content:", {
+        length: finalContent.length,
+        content: finalContent,
+      });
+    },
     onData: (data) => {
-      console.log("Chat data:", data);
-      /* if (data.type === "data-document" && data.data) {
-        const { id, type, content } = data.data;
+      console.log("Chat data received:", data);
+
+      if (data.type === "data-document" && data.data) {
+        const { id, type, content } = data.data as DataDocument;
 
         switch (type) {
-          case "kind":
-            documentStreamActions.updateDocument(id, { kind: content });
-            break;
-          case "title":
-            documentStreamActions.updateDocument(id, { title: content });
-            break;
-          case "clear":
-            documentStreamActions.clearContent(id);
-            break;
           case "text":
-            documentStreamActions.appendContent(id, content);
+            // Only clear and setup on the very first chunk
+            if (!hasStartedStreaming) {
+              console.log("Starting fresh document stream");
+              hasStartedStreaming = true;
+
+              if (!useDossierStore.getState().dossierOpen) {
+                useDossierStore.getState().openDossier("documents");
+              }
+
+              useDossierStore.getState().clearStreamingContent();
+              useDossierStore.getState().setIsStreaming(true);
+            }
+
+            // Always append content
+            if (content) {
+              console.log("Appending chunk:", {
+                chunk: content,
+                chunkLength: content.length,
+              });
+              useDossierStore.getState().appendStreamingContent(content);
+
+              // Log current total content
+              const currentContent =
+                useDossierStore.getState().streamingContent;
+              console.log("Current total content:", {
+                length: currentContent.length,
+                preview: currentContent.substring(0, 50) + "...",
+              });
+            }
             break;
         }
-      } */
+      }
 
       try {
         if (data.type === "data-title") {

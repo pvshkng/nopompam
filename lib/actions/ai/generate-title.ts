@@ -17,7 +17,7 @@ export async function generateTitle(message: UIMessage[]) {
 
     try {
         const result = await generateText({
-            model: provider("gemini-2.0-flash-001"),
+            model: provider("gemini-2.5-flash"),
             prompt: _prompt,
         })
         return result.text;

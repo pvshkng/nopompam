@@ -4,8 +4,8 @@ export type DossierStore = {
     dossierOpen: boolean;
     documents: any[];
     activeTab: string | null;
-    streamingContent: string; 
-    isStreaming: boolean; 
+    streamingContent: string;
+    isStreaming: boolean;
 };
 
 export type DossierActions = {
@@ -25,7 +25,7 @@ export type DossierActions = {
 };
 
 
-export const useDossierStore = create<DossierStore & DossierActions>((set) => ({
+export const useDossierStore = create<DossierStore & DossierActions>((set, get) => ({
     dossierOpen: false,
     documents: [],
     activeTab: null,
@@ -65,11 +65,26 @@ export const useDossierStore = create<DossierStore & DossierActions>((set) => ({
         dossierOpen: true
     })),
 
-    
+
     setStreamingContent: (content) => set({ streamingContent: content }),
     setIsStreaming: (streaming) => set({ isStreaming: streaming }),
-    appendStreamingContent: (content) => set((state) => ({
-        streamingContent: state.streamingContent + content
-    })),
-    clearStreamingContent: () => set({ streamingContent: '', isStreaming: false }),
+appendStreamingContent: (content) => {
+        const currentState = get();
+        const newContent = currentState.streamingContent + content;
+        
+        console.log('Store append:', {
+            incoming: content,
+            currentLength: currentState.streamingContent.length,
+            newLength: newContent.length,
+            current: currentState.streamingContent,
+            new: newContent
+        });
+        
+        set({ streamingContent: newContent });
+    },
+
+    clearStreamingContent: () => {
+        console.log('Clearing streaming content');
+        set({ streamingContent: '', isStreaming: false });
+    },
 }));
