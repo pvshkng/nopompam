@@ -29,7 +29,32 @@ import {
   InsertThematicBreak,
   ListsToggle,
   ShowSandpackInfo,
+  codeBlockPlugin,
+  codeMirrorPlugin,
+  tablePlugin,
+  frontmatterPlugin,
+  linkPlugin,
+  imagePlugin,
+  sandpackPlugin,
+  diffSourcePlugin,
 } from "@mdxeditor/editor";
+
+const codeBlockLanguages = [
+  "js",
+  "css",
+  "txt",
+  "md",
+  "tsx",
+  "python",
+  "json",
+  "html",
+  "sql",
+  "bash",
+  "yaml",
+  "javascript",
+  "typescript",
+  "",
+];
 
 // Only import this to the next file
 export default function InitializedMDXEditor({
@@ -45,6 +70,20 @@ export default function InitializedMDXEditor({
         quotePlugin(),
         thematicBreakPlugin(),
         markdownShortcutPlugin(),
+        codeBlockPlugin({ defaultCodeBlockLanguage: "txt" }),
+        codeMirrorPlugin({
+          codeBlockLanguages: codeBlockLanguages.reduce((acc, language) => {
+            acc[language] = language;
+            return acc;
+          }, {}),
+        }),
+        tablePlugin(),
+        frontmatterPlugin(),
+        linkPlugin(),
+        imagePlugin(),
+        //sandpackPlugin({ sandpackConfig: { presets: ["react-ts"] } }),
+
+        diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "" }),
         toolbarPlugin({
           toolbarClassName: "my-classname",
           toolbarContents: () => (

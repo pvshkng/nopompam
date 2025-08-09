@@ -61,6 +61,16 @@ export const system_prompt = `
         {content}
         <stock symbol="NVDA">
         <tldr>{summary of content}</tldr>
+
+        ## <document>
+        # The **document** tag creates text documents that render to the user on a space next to the conversation (referred to as the "dossier").
+        # Use this tag when asked to work on writing that's long enough like article / essay.
+        # Only use this tag once in only one response if you want to create a document for users.
+        # Only use this tag after **web** tool to get more context.
+        # Example: 
+            <document>
+            {content}
+            </document>
         `
 
 

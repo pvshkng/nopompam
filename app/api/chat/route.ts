@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
         const mcpTools = await mcpClient.tools() */
         const { messages, id, user, model, session } = await req.json();
 
+        const modelMessages = convertToModelMessages(messages, { ignoreIncompleteToolCalls: true })
+        console.log(modelMessages)
         if (!session) {
             const result = await mock();
             return result.toUIMessageStreamResponse({});
@@ -126,7 +128,7 @@ export async function POST(req: NextRequest) {
                     const result = streamText({
                         model: provider(model),
                         system: system_prompt,
-                        messages: convertToModelMessages(messages, { ignoreIncompleteToolCalls: true }),
+                        messages: modelMessages,
                         //experimental_telemetry: { isEnabled: true },
                         experimental_transform: smoothStream({
                             chunking: 'word',

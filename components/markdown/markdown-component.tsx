@@ -11,6 +11,7 @@ import { Copy } from "lucide-react";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { TLDR } from "./tldr";
 import { Stock } from "./stock";
+import { Document } from "./document";
 import { CandlestickChart } from "../charts/candle-stick-chart";
 
 import { Link } from "lucide-react";
@@ -82,6 +83,28 @@ export const components: Partial<any> = {
       }}
     />
   ),
+
+  chart: () => {
+    return <BarChartHorizontal />;
+  },
+  stock: ({ symbol }: { symbol: string }) => {
+    return (
+      <span className="flex flex-col size-full">
+        <Stock symbol={symbol} />
+      </span>
+    );
+  },
+  tldr: ({ children }) => {
+    return <TLDR>{children}</TLDR>;
+  },
+  think: ({ children }) => {
+    return <p>{children}</p>;
+  },
+  document: ({ node, children, ...props }) => {
+    console.log("node: ", node);
+    return <Document {...props}>{children}</Document>;
+  },
+
   // pre: ({
   //   children,
   //   className,
@@ -116,22 +139,6 @@ export const components: Partial<any> = {
   //     {children}
   //   </code>
   // ),
-  chart: () => {
-    return <BarChartHorizontal />;
-  },
-  stock: ({ symbol }: { symbol: string }) => {
-    return (
-      <span className="flex flex-col size-full">
-        <Stock symbol={symbol} />
-      </span>
-    );
-  },
-  tldr: ({ children }) => {
-    return <TLDR>{children}</TLDR>;
-  },
-  think: ({ children }) => {
-    return <p>{children}</p>;
-  },
 };
 
 export async function highlight(code: string, lang: BundledLanguage) {

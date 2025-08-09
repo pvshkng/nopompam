@@ -4,6 +4,8 @@ export type DossierStore = {
     dossierOpen: boolean;
     documents: any[];
     activeTab: string | null;
+    streamingContent: string; 
+    isStreaming: boolean; 
 };
 
 export type DossierActions = {
@@ -15,12 +17,20 @@ export type DossierActions = {
     openDossierWithDocuments: (documents: any[], tab?: string) => void;
     resetDossier: () => void;
     switchTab: (tab: string) => void;
+
+    setStreamingContent: (content: string) => void;
+    setIsStreaming: (streaming: boolean) => void;
+    appendStreamingContent: (content: string) => void;
+    clearStreamingContent: () => void;
 };
+
 
 export const useDossierStore = create<DossierStore & DossierActions>((set) => ({
     dossierOpen: false,
     documents: [],
     activeTab: null,
+    streamingContent: '',
+    isStreaming: false,
 
     setDossierOpen: (open) => set({ dossierOpen: open }),
     setDocuments: (documents) => set({ documents }),
@@ -45,11 +55,21 @@ export const useDossierStore = create<DossierStore & DossierActions>((set) => ({
     resetDossier: () => set({
         dossierOpen: false,
         documents: [],
-        activeTab: null
+        activeTab: null,
+        streamingContent: '',
+        isStreaming: false
     }),
 
     switchTab: (tab) => set((state) => ({
         activeTab: tab,
         dossierOpen: true
     })),
+
+    
+    setStreamingContent: (content) => set({ streamingContent: content }),
+    setIsStreaming: (streaming) => set({ isStreaming: streaming }),
+    appendStreamingContent: (content) => set((state) => ({
+        streamingContent: state.streamingContent + content
+    })),
+    clearStreamingContent: () => set({ streamingContent: '', isStreaming: false }),
 }));

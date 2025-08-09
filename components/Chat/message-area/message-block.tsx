@@ -63,10 +63,10 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                   "stream-section",
                   "m-2 prose text-sm",
                   m.role === "user" ? "text-stone-300" : "text-black",
-                  m.role === "assistant" &&
-                    status !== "ready" &&
-                    isLast &&
-                    "typewriting"
+                  // m.role === "assistant" &&
+                  //   status !== "ready" &&
+                  //   isLast &&
+                  //   "typewriting"
                 )}
                 remarkPlugins={m.role == "user" ? [] : [remarkGfm]} //remarkMath remarkMermaidPlugin
                 rehypePlugins={m.role == "user" ? [] : [rehypeRaw]} //rehypeKatex
