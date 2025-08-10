@@ -50,19 +50,9 @@ const PureDocument = (props: any) => {
               case "input-streaming":
                 return <MessageSkeleton />;
               case "input-available":
-                return <div>{"document"}</div>;
+                return;
               case "output-available":
-                return (
-                  <>
-                    {/* <div
-                      className={cn(
-                        "flex flex-col overflow-hidden transition-all w-full"
-                      )}
-                    >
-                      {tool.output && JSON.stringify(tool.output)}
-                    </div> */}
-                  </>
-                );
+                return;
               default:
                 return <></>;
             }

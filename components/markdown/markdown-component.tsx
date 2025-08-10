@@ -11,9 +11,6 @@ import { Copy } from "lucide-react";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { TLDR } from "./tldr";
 import { Stock } from "./stock";
-import { Document } from "./document";
-import { CandlestickChart } from "../charts/candle-stick-chart";
-
 import { Link } from "lucide-react";
 
 export const components: Partial<any> = {
@@ -100,10 +97,6 @@ export const components: Partial<any> = {
   think: ({ children }) => {
     return <p>{children}</p>;
   },
-  document: ({ node, children, ...props }) => {
-    return <Document {...props}>{children}</Document>;
-  },
-
   // pre: ({
   //   children,
   //   className,

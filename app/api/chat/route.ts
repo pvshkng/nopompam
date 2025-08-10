@@ -20,21 +20,20 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { system_prompt } from "./system";
 import { getProvider } from "./provider";
+import { m } from "motion/react";
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
 
     try {
         const { messages, id, user, model, session } = await req.json();
-        console.log("original message", JSON.stringify(messages));
         const modelMessages = convertToModelMessages(messages, { ignoreIncompleteToolCalls: true })
-        console.log('modelMessages', JSON.stringify(modelMessages));
         if (!session) {
             const result = await mock();
             return result
         }
+        let memory = []
         const provider = getProvider(model);
-
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {
@@ -51,7 +50,7 @@ export async function POST(req: NextRequest) {
                         }),
                         tools: {
                             web: web({}),
-                            document: document({ threadId: id, user: user, messages: convertToModelMessages(messages), writer: writer }),
+                            document: document({ threadId: id, user: user, memory: messages, writer: writer }),
                             // createArtifact: createArtifact({ threadId: id, user: user, messages: messages, writer: writer }),
                             // stock: stock({})
                         },
@@ -65,7 +64,7 @@ export async function POST(req: NextRequest) {
 
                     writer.merge(result.toUIMessageStream({
                         generateMessageId: () => generateId(),
-                        onFinish: async ({ responseMessage }) => {
+                        onFinish: async ({ responseMessage, messages }) => {
                             try {
                                 let title = undefined;
                                 if (messages.length === 1) {
@@ -90,7 +89,7 @@ export async function POST(req: NextRequest) {
                     console.error("Error: ", error);
                 }
 
-            }
+            },
         });
 
         return createUIMessageStreamResponse({ stream })

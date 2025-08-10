@@ -9,18 +9,19 @@ import { cn } from "@/lib/utils";
 
 const models = {
   google: [
-    "mistral-large-latest",
-    "mistral-small-latest",
-    "pixtral-large-latest",
-    "pixtral-12b-2409",
-    "gemini-2.5-pro",
     "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "mistral-small-latest",
+    "mistral-large-latest",
+    "pixtral-large-latest",
+    
+    //"pixtral-12b-2409",
 
-    "deepseek/deepseek-chat-v3-0324:free", // good
-    "moonshotai/kimi-k2:free",
-    "qwen/qwen3-coder:free",
-    "qwen/qwen3-235b-a22b:free",
-    "qwen/qwen3-30b-a3b:free",
+    // "deepseek/deepseek-chat-v3-0324:free", // good
+    // "moonshotai/kimi-k2:free",
+    // "qwen/qwen3-coder:free",
+    // "qwen/qwen3-235b-a22b:free",
+    // "qwen/qwen3-30b-a3b:free",
     // "gemini-2.5-pro-preview-05-06",
     // "gemini-2.5-flash-preview-04-17",
     // "gemini-2.5-flash-lite-preview-06-17",

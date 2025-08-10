@@ -4,12 +4,10 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import { CloseIcon } from "@/components/icons/close";
 import { CodeEditor } from "./dossier-code-editor";
-import { Tiptap } from "@/components/tiptap/editor";
-import { ForwardRefEditor } from "@/components/editor";
+import { Tiptap } from "@/components/tiptap";
 import { memo } from "react";
-
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import { useDossierStore } from "@/lib/stores/dossier-store";
-import { headingsPlugin, markdownShortcutPlugin } from "@mdxeditor/editor";
 
 function PureDossier(props: any) {
   const {
@@ -23,41 +21,24 @@ function PureDossier(props: any) {
     clearStreamingContent,
   } = useDossierStore();
 
-  const editorRef = useRef<any>(null);
+  /*  const editorRef = useRef<any>(null);
   useEffect(() => {
     if (streamingContent && editorRef.current) {
       editorRef.current.setMarkdown(streamingContent);
     }
-  }, [streamingContent]);
+  }, [streamingContent]); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     return () => {
       if (!dossierOpen) {
         clearStreamingContent();
       }
     };
-  }, [dossierOpen, clearStreamingContent]);
+  }, [dossierOpen, clearStreamingContent]); */
 
   return (
     <>
-      <textarea
-        className="h-full"
-        value={streamingContent}
-        onChange={() => {}}
-      />
-
-      {/* <ForwardRefEditor
-        ref={editorRef}
-        markdown={streamingContent}
-        //plugins={[headingsPlugin(), markdownShortcutPlugin()]}
-        onChange={(e) => {
-          console.log(e);
-          setStreamingContent(e);
-        }}
-        autoFocus={true}
-        //className=""
-        contentEditableClassName="max-h-dvh overflow-scroll"
-      /> */}
+      <SimpleEditor content={streamingContent} />
     </>
   );
 }

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect, use } from "react";
 import { CloseIcon } from "@/components/icons/close";
 import { CodeEditor } from "./dossier-code-editor";
-import { Tiptap } from "@/components/tiptap/editor";
+import { Tiptap } from "@/components/tiptap";
 import { ForwardRefEditor } from "@/components/editor";
 import { memo } from "react";
 

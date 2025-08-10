@@ -136,7 +136,7 @@ nextjs-portal {
   background: #7e7e7e !important;
 }
 
-::-moz-selection { 
+::-moz-selection {
   color: rgb(255, 255, 255);
   background: rgb(0, 0, 0);
 }

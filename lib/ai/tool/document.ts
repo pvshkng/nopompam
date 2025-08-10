@@ -11,11 +11,11 @@ const client = createGoogleGenerativeAI({
 interface DocumentProps {
   threadId: string;
   user: any;
-  messages: any[];
+  memory: any[];
   writer: UIMessageStreamWriter;
 }
 
-export const document = ({ threadId, user, messages, writer }: DocumentProps) =>
+export const document = ({ threadId, user, memory, writer }: DocumentProps) =>
   tool({
     description: "Create a text document and stream its content.",
     inputSchema: z.object({
@@ -23,8 +23,8 @@ export const document = ({ threadId, user, messages, writer }: DocumentProps) =>
       kind: z.enum(["text"]),
     }),
     execute: async ({ title, kind }, { toolCallId }) => {
-      console.log("Initializing document tool")
-      console.log(`message: ${messages}`)
+      console.log(`memory: ${JSON.stringify(memory)}`)
+      const modelMessages = convertToModelMessages(memory, { ignoreIncompleteToolCalls: true });
       const id = toolCallId //generateId(8); 
       try {
 
@@ -49,20 +49,26 @@ export const document = ({ threadId, user, messages, writer }: DocumentProps) =>
         let draftContent = '';
         const { fullStream } = streamText({
           model: client("gemini-2.5-flash"),
-          experimental_transform: smoothStream({ chunking: 'word' }),
+          experimental_transform: smoothStream({ chunking: "line" }),
           system: `
                   Write document about the given topic. 
                   Do not include anything other than the content of the document.
 
-                  Use markdown to format the content. 
+                  Use **HTML** to format the content. 
                   For example:
                   - use headings to define sections
                   - use horizontal rules to split sections
                   - use tables for comparison
                   - use bullet points for entries, etc.
+                  - include images if provided and relevant.
+                  - DO NOT MAKE UP IMAGES, only use images that are provided.
+
+                  HTML MUST BE VALID and well-formed.
+
+                  DO NOT USE MARKDOWN.
                   `,
 
-          messages: [...messages, { role: "user", content: `Write a document about ${title}.` }],
+          messages: [...modelMessages, { role: "user", content: `Write a document about ${title}.` }],
           onFinish: async ({ response },) => {
             // draftContent
             await storeArtifact({

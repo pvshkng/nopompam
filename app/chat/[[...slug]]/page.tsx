@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { ChatProvider } from "@/components/chat/ChatContext/ChatContext";
 // import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { Root } from "@/components/chat/root";
+import { Root } from "@/components/chat";
 import { createChat, getChat } from "@/lib/ai/chat-store";
 import { getThreads, getThread } from "@/lib/mongo/chat-store";
 import { getArtifacts } from "@/lib/mongo/artifact-store";
@@ -52,21 +51,17 @@ export default async function Chat({
 
   return (
     <>
-      {/* @ts-ignore */}
-      <ChatProvider initialMessages={messages} _id={_id} email={email}>
-        {/* <c.GradientBackground /> */}
-        <GridBackground />
-        <Root
-          initialMessages={messages}
-          initialThreads={initialThreads}
-          initialArtifacts={artifacts}
-          _id={_id || generateId(24)}
-          session={session}
-          email={email}
-          name={name}
-          image={image}
-        />
-      </ChatProvider>
+      <GridBackground />
+      <Root
+        initialMessages={messages}
+        initialThreads={initialThreads}
+        initialArtifacts={artifacts}
+        _id={_id || generateId()}
+        session={session}
+        email={email}
+        name={name}
+        image={image}
+      />
     </>
   );
 }
