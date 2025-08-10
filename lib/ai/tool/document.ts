@@ -2,7 +2,7 @@ import { UIMessageStreamWriter, tool, smoothStream, streamText, convertToModelMe
 import { z } from "zod";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { storeArtifact } from "@/lib/mongo/artifact-store"
-import type UIMessage from 'ai';
+import type { UIMessage, ModelMessage } from 'ai';
 // TODO: move sw else
 const client = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY,
@@ -11,11 +11,11 @@ const client = createGoogleGenerativeAI({
 interface DocumentProps {
   threadId: string;
   user: any;
-  memory: any[];
+  getMemory: () => ModelMessage[];
   writer: UIMessageStreamWriter;
 }
 
-export const document = ({ threadId, user, memory, writer }: DocumentProps) =>
+export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =>
   tool({
     description: "Create a text document and stream its content.",
     inputSchema: z.object({
@@ -23,8 +23,17 @@ export const document = ({ threadId, user, memory, writer }: DocumentProps) =>
       kind: z.enum(["text"]),
     }),
     execute: async ({ title, kind }, { toolCallId }) => {
-      console.log(`memory: ${JSON.stringify(memory)}`)
-      const modelMessages = convertToModelMessages(memory, { ignoreIncompleteToolCalls: true });
+
+      const memory = getMemory();
+      let modelMessages
+
+      try {
+        modelMessages = convertToModelMessages(memory) || [];
+      } catch (error) {
+        console.error("Error converting thread to model messages: ", error);
+      }
+
+
       const id = toolCallId //generateId(8); 
       try {
 
@@ -49,7 +58,7 @@ export const document = ({ threadId, user, memory, writer }: DocumentProps) =>
         let draftContent = '';
         const { fullStream } = streamText({
           model: client("gemini-2.5-flash"),
-          experimental_transform: smoothStream({ chunking: "line" }),
+          // experimental_transform: smoothStream({ chunking: "line" }),
           system: `
                   Write document about the given topic. 
                   Do not include anything other than the content of the document.
@@ -62,6 +71,7 @@ export const document = ({ threadId, user, memory, writer }: DocumentProps) =>
                   - use bullet points for entries, etc.
                   - include images if provided and relevant.
                   - DO NOT MAKE UP IMAGES, only use images that are provided.
+                  - ALWAYS include references to sources at the end if available.
 
                   HTML MUST BE VALID and well-formed.
 
@@ -113,9 +123,5 @@ export const document = ({ threadId, user, memory, writer }: DocumentProps) =>
         console.error("Error during artifact creation: ", error);
         return error
       }
-
-
-
-
     },
   });

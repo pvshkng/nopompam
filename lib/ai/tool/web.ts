@@ -20,7 +20,6 @@ export const web = ({ }) => tool({
                     includeFavicon: true
                 }
             );
-            console.log("Tavily response: ", response);
             return response
         } catch (error) {
             console.error("Tavily error: ", error);

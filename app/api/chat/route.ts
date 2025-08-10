@@ -50,21 +50,26 @@ export async function POST(req: NextRequest) {
                         }),
                         tools: {
                             web: web({}),
-                            document: document({ threadId: id, user: user, memory: messages, writer: writer }),
-                            // createArtifact: createArtifact({ threadId: id, user: user, messages: messages, writer: writer }),
-                            // stock: stock({})
+                            document: document({ threadId: id, user: user, getMemory: () => messages, writer: writer }),
                         },
 
                         stopWhen: stepCountIs(5),
                         onError(error) {
                             console.error("Error in chat route: ", error);
-                        }
+                        },
+                        /* prepareStep: async ({ model, stepNumber, steps, messages }) => {
+                            memory = messages
+                            return {
+                                memory: memory,
+                                messages: messages.length > 20 ? messages.slice(-10) : messages,
+                            };
+                        } */
 
                     });
 
                     writer.merge(result.toUIMessageStream({
                         generateMessageId: () => generateId(),
-                        onFinish: async ({ responseMessage, messages }) => {
+                        onFinish: async ({ responseMessage, messages: _messages }) => {
                             try {
                                 let title = undefined;
                                 if (messages.length === 1) {
