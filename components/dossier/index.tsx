@@ -43,8 +43,8 @@ function PureDossier(props: any) {
   return (
     <div className={cn("relative flex flex-col size-full")}>
       <DossierNavigation />
-      <DossierFloating />
-      
+      {/* <DossierFloating /> */}
+
       {streamingContent ? (
         <SimpleEditor content={streamingContent} />
       ) : (
