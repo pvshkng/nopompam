@@ -4,7 +4,6 @@ import { X, House, NotebookPen, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { name: "123", title: "blaaaah", icon: House },
   {
     name: "documents",
     title: "การวิเคราะห์ประวัติและสถานการณ์ปัจจุบันของ",
@@ -48,8 +47,7 @@ const PureDossierNavigation = (props: any) => {
       >
         <button
           className={cn(
-            "border m-0 p-1 border-b-0 min-w-0",
-            "overflow-hidden",
+            "flex items-center justify-center min-w-7 border m-0 p-1 border-b-0",
             isActive("home") &&
               "border-stone-300 max-w-full bg-white shadow-[0px_1px_0px_1px_#FFFFFF]"
           )}
@@ -59,7 +57,7 @@ const PureDossierNavigation = (props: any) => {
         >
           <House
             className={cn(
-              "w-4 h-4 flex-shrink-0",
+              "w-4 h-4",
               isActive("home") ? "stroke-stone-500" : "stroke-stone-200"
             )}
           />
