@@ -32,17 +32,12 @@ const PureMobileDossier = (props: any) => {
       onOpenChange={() => {
         setDossierOpen(!dossierOpen);
       }}
-      /* fixed={true} */
-      /* modal={false} */
-      //dismissible={true}
-      //nested={true}
     >
       {/* <DrawerTrigger hidden>Open</DrawerTrigger> */}
       <DrawerContent
         className={cn(
           "data-[vaul-drawer-direction=bottom]:!max-h-[95vh]",
           "data-[vaul-drawer-direction=bottom]:!h-full",
-          //"bg-stone-200",
           className
         )}
       >
@@ -51,7 +46,7 @@ const PureMobileDossier = (props: any) => {
           <DrawerDescription hidden></DrawerDescription>
         </DrawerHeader>
         <Dossier />
-        <DrawerFooter>
+        {/* <DrawerFooter>
           <DrawerClose
             onClick={() => {
               setDossierOpen(false);
@@ -59,7 +54,7 @@ const PureMobileDossier = (props: any) => {
           >
             Close
           </DrawerClose>
-        </DrawerFooter>
+        </DrawerFooter> */}
       </DrawerContent>
     </Drawer>
   );

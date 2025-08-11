@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Link, LoaderCircle, Globe } from "lucide-react";
+import { Link, LoaderCircle, NotebookPen } from "lucide-react";
 import { MessageSkeleton } from "@/components/chat/message-area/message-loading-skeleton";
 import { memo, useState } from "react";
 import { useDossierStore } from "@/lib/stores/dossier-store";
@@ -31,7 +31,7 @@ const PureDocument = (props: any) => {
             {tool?.state !== "output-available" ? (
               <LoaderCircle size={16} className="!animate-spin !opacity-100 " />
             ) : (
-              <Globe size={16} className="shrink-0" aria-hidden="true" />
+              <NotebookPen size={16} className="shrink-0" aria-hidden="true" />
             )}
 
             <span className="text-xs truncate">

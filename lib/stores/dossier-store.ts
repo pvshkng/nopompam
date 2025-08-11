@@ -68,10 +68,10 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
 
     setStreamingContent: (content) => set({ streamingContent: content }),
     setIsStreaming: (streaming) => set({ isStreaming: streaming }),
-appendStreamingContent: (content) => {
+    appendStreamingContent: (content) => {
         const currentState = get();
         const newContent = currentState.streamingContent + content;
-        
+
         console.log('Store append:', {
             incoming: content,
             currentLength: currentState.streamingContent.length,
@@ -79,7 +79,7 @@ appendStreamingContent: (content) => {
             current: currentState.streamingContent,
             new: newContent
         });
-        
+
         set({ streamingContent: newContent });
     },
 

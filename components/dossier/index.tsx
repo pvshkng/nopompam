@@ -4,14 +4,18 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import { CloseIcon } from "@/components/icons/close";
 import { CodeEditor } from "./dossier-code-editor";
-import { Tiptap } from "@/components/tiptap";
 import { memo } from "react";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+import { DossierFloating } from "./dossier-floating";
+import { BlankDocument } from "./dossier-blank";
+import { DossierNavigation } from "./dossier-navigation";
 import { useDossierStore } from "@/lib/stores/dossier-store";
+import { X, Maximize2, Minimize2 } from "lucide-react";
 
 function PureDossier(props: any) {
   const {
     openDossier,
+    closeDossier,
     setStreamingContent,
     setIsStreaming,
     appendStreamingContent,
@@ -37,9 +41,16 @@ function PureDossier(props: any) {
   }, [dossierOpen, clearStreamingContent]); */
 
   return (
-    <>
-      <SimpleEditor content={streamingContent} />
-    </>
+    <div className={cn("relative flex flex-col size-full")}>
+      <DossierNavigation />
+      <DossierFloating />
+      
+      {streamingContent ? (
+        <SimpleEditor content={streamingContent} />
+      ) : (
+        <BlankDocument />
+      )}
+    </div>
   );
 }
 
