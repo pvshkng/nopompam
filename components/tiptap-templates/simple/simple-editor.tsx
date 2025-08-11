@@ -295,7 +295,7 @@ export function SimpleEditor({ content }: { content?: string }) {
         <EditorContent
           editor={editor}
           role="presentation"
-          className="simple-editor-content!flex !overflow-y-auto !h-full p-4"
+          className="simple-editor-content!flex !overflow-y-auto !h-full p-4 bg-neutral-50"
         />
       </EditorContext.Provider>
     </div>

@@ -38,6 +38,7 @@ const PureMobileDossier = (props: any) => {
         className={cn(
           "data-[vaul-drawer-direction=bottom]:!max-h-[95vh]",
           "data-[vaul-drawer-direction=bottom]:!h-full",
+
           className
         )}
       >
