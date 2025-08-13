@@ -7,54 +7,89 @@ import { tavily } from "@tavily/core"
 
 const tvly = tavily({ apiKey: process.env.TAVILY_API_KEY! });
 
-// TODO: move sw else
-const client = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_API_KEY,
-  baseURL: process.env.GOOGLE_API_ENDPOINT,
-});
-interface DocumentProps {
-  threadId: string;
-  user: any;
-  getMemory: () => ModelMessage[];
+interface SearchProps {
   writer: UIMessageStreamWriter;
 }
 
 const minBreadth = 1;
 const maxBreadth = 10;
 
-export const search = ({ threadId, user, getMemory, writer }: DocumentProps) =>
+export const search = ({ writer }: SearchProps) =>
   tool({
     description: "Search for relevant information and use the results for further processing.",
-    inputSchema:
-      z.object({
-        queries:
-          z.array(
-            z.string()
-              .min(minBreadth)
-              .max(maxBreadth)
-              .describe("Queries refined, rewritten and enriched from user input to search for relevant information with extended context.")
-          )
-      })
-
-    ,
+    inputSchema: z.object({
+      queries: z.array(
+        z.string()
+          .describe("Refine, rewrite and enrich user input to 2 to 5 search queries to search for relevant information with extended context.")
+      )
+    }),
     execute: async ({ queries }, { toolCallId }) => {
-      let results = [];
-      try {
-        for (const q of queries) {
-          const response = await tvly.search(
-            q,
-            {
-              includeImages: true,
-              includeImageDescriptions: true,
-              includeFavicon: true
-            }
-          );
-          results.push(...response.results);
+      let results: { [key: number]: any } = {};
+      
+      // Initialize draft tool in store
+      writer.write({
+        type: 'data-tool-search',
+        data: {
+          type: 'init',
+          toolCallId,
+          toolType: 'search',
+          queries,
         }
+      });
+
+      try {
+        for (let i = 0; i < queries.length; i++) {
+          try {
+            const response = await tvly.search(
+              queries[i],
+              {
+                includeImages: true,
+                includeImageDescriptions: true,
+                includeFavicon: true
+              }
+            );
+
+            results[i] = response.results;
+            
+            writer.write({
+              type: 'data-tool-search',
+              data: {
+                type: 'query-complete',
+                toolCallId,
+                queryId: i,
+                status: "complete",
+                result: response.results
+              }
+            });
+          } catch (error) {
+            writer.write({
+              type: 'data-tool-search',
+              data: {
+                type: 'query-error',
+                toolCallId,
+                queryId: i,
+                status: "error",
+              }
+            });
+            console.error(`Error while searching query id ${i} with error: ${error}`);
+          }
+        }
+
+        // Finalize tool
+        writer.write({
+          type: 'data-tool-search',
+          data: {
+            type: 'finalize',
+            toolCallId,
+            output: results
+          }
+        });
+
       } catch (error) {
         console.error("Error during search execution: ", error);
         return { error: "Search execution failed." };
       }
-      return {}
+      
+      return results;
     },
   });

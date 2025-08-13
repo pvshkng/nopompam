@@ -1,15 +1,8 @@
 import { NextRequest } from "next/server";
 import { streamText, smoothStream, convertToModelMessages, stepCountIs, hasToolCall, createUIMessageStream, generateId, createUIMessageStreamResponse } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { createOpenAI } from '@ai-sdk/openai';
-import { createMistral } from '@ai-sdk/mistral';
-
-import { tools } from "@/lib/ai";
-import { documentSearch } from "@/lib/ai/tool/document-search";
-import { createArtifact } from "@/lib/ai/tool/create-artifact"
 import { web } from "@/lib/ai/tool/web";
 import { document } from "@/lib/ai/tool/document"
-import { stock } from "@/lib/ai/tool/stock";
+import { search } from "@/lib/ai/tool/search";
 
 import { saveChat } from "@/lib/mongo/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
@@ -49,8 +42,9 @@ export async function POST(req: NextRequest) {
                             delayInMs: 10
                         }),
                         tools: {
-                            web: web({}),
-                            document: document({ threadId: id, user: user, getMemory: () => messages, writer: writer }),
+                            // web: web({}),
+                            search: search({ writer }),
+                            // document: document({ threadId: id, user: user, getMemory: () => messages, writer: writer }),
                         },
 
                         stopWhen: stepCountIs(5),

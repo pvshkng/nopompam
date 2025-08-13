@@ -1,6 +1,6 @@
 import { tavily } from "@tavily/core"
 import { z } from "zod";
-import { DataStreamWriter, tool, generateId, smoothStream, streamText } from "ai";
+import { tool, generateId, smoothStream, streamText } from "ai";
 
 const tvly = tavily({ apiKey: process.env.TAVILY_API_KEY! });
 

@@ -14,6 +14,7 @@ import { Navigation } from "@/components/chat/navigation";
 import { MessageArea } from "@/components/chat/message-area/message-area";
 import { UserInput } from "@/components/chat/user-input";
 import { LoginDialog } from "@/components/login/login-dialog";
+import { useToolStore, SearchQuery } from "@/lib/stores/tool-store";
 
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
@@ -110,7 +111,50 @@ function PureRoot(props: PureRootProps) {
       });
     },
     onData: (data) => {
-      console.log("Chat data received:", data);
+      console.log("All data received:", data);
+      
+      if (data.type === "data-tool-search" && data.data) {
+        const searchData = data.data;
+        const { toolCallId } = searchData;
+
+        switch (searchData.type) {
+          case "init":
+            console.log("Initializing search tool:", searchData);
+            useToolStore
+              .getState()
+              .initializeDraftTool(
+                toolCallId,
+                searchData.toolType,
+                searchData.queries
+              );
+            break;
+
+          case "query-complete":
+            console.log("Query completed:", searchData);
+            useToolStore
+              .getState()
+              .updateQueryStatus(
+                toolCallId,
+                searchData.queryId,
+                "complete",
+                searchData.result
+              );
+            break;
+
+          case "query-error":
+            console.log("Query error:", searchData);
+            useToolStore
+              .getState()
+              .updateQueryStatus(toolCallId, searchData.queryId, "error");
+            break;
+
+          case "finalize":
+            console.log("Finalizing search tool:", searchData);
+            // This will clean up the draft tool since tool.output will take over
+            useToolStore.getState().finalizeTool(toolCallId, searchData.output);
+            break;
+        }
+      }
 
       if (data.type === "data-document" && data.data) {
         const { id, type, content } = data.data as DataDocument;
