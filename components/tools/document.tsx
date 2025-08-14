@@ -14,16 +14,34 @@ type ToolState =
 const PureDocument = (props: any) => {
   const { tool }: any = props;
   const documentId = tool?.toolCallId || tool?.id || "default";
-  const { openDossier, setStreamingContent, streamingContent, setIsStreaming } =
-    useDossierStore();
+
   return (
     <>
       <div
         //defaultOpen={tool?.state == "output-available"}
         className="cursor-pointer py-3 px-4 my-2 mx-2 border border-stone-300 rounded-md bg-neutral-100"
         onClick={() => {
-          setStreamingContent(tool.output.content || "");
-          openDossier("documents");
+          const { getDocument, addDocument, switchTab } =
+            useDossierStore.getState();
+
+          // Check if document already exists
+          const existingDoc = getDocument(documentId);
+
+          if (existingDoc) {
+            // Document exists, just switch to it
+            switchTab(documentId);
+          } else if (
+            tool?.state === "output-available" &&
+            tool.output?.content
+          ) {
+            // Create new document from completed tool output
+            addDocument({
+              id: documentId,
+              title: tool.input?.title || "Untitled Document",
+              kind: "text",
+              content: tool.output.content,
+            });
+          }
         }}
       >
         <div className="justify-between w-full flex flex-row items-center gap-2 text-[15px] leading-6 font-semibold">

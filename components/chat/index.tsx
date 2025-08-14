@@ -47,11 +47,11 @@ type Thread = {
   timestamp: string;
 };
 
-type DataDocument = {
+interface DataDocument {
   id: string;
-  type: "text" | "kind" | "title" | "clear";
-  content: string;
-};
+  type: "init" | "start" | "text" | "stop" | "error";
+  content: any;
+}
 
 function PureRoot(props: PureRootProps) {
   let {
@@ -79,9 +79,9 @@ function PureRoot(props: PureRootProps) {
     dossierOpen,
     setDossierOpen,
     openDossier,
-    setIsStreaming,
-    appendStreamingContent,
-    clearStreamingContent,
+    // setIsStreaming,
+    // appendStreamingContent,
+    // clearStreamingContent,
   } = useDossierStore();
 
   const { messages, status, sendMessage } = useChat({
@@ -98,21 +98,10 @@ function PureRoot(props: PureRootProps) {
       size: 16,
     }),
 
-    onFinish: ({ message }) => {
-      console.log("Stream finished");
-      hasStartedStreaming = false;
-      useDossierStore.getState().setIsStreaming(false);
-
-      // Log final content
-      const finalContent = useDossierStore.getState().streamingContent;
-      console.log("Final content:", {
-        length: finalContent.length,
-        content: finalContent,
-      });
-    },
+    onFinish: ({ message }) => {},
     onData: (data) => {
       console.log("All data received:", data);
-      
+
       if (data.type === "data-tool-search" && data.data) {
         const searchData = data.data;
         const { toolCallId } = searchData;
@@ -158,38 +147,40 @@ function PureRoot(props: PureRootProps) {
 
       if (data.type === "data-document" && data.data) {
         const { id, type, content } = data.data as DataDocument;
+        const store = useDossierStore.getState();
 
         switch (type) {
+          case "init":
+            // Create new document
+            store.addDocument({
+              id: content.id,
+              title: content.title,
+              kind: content.kind,
+              content: "",
+            });
+            break;
+
+          case "start":
+            // Start streaming for this document
+            store.startDocumentStreaming(id);
+            break;
+
           case "text":
-            // Only clear and setup on the very first chunk
-            if (!hasStartedStreaming) {
-              console.log("Starting fresh document stream");
-              hasStartedStreaming = true;
-
-              if (!useDossierStore.getState().dossierOpen) {
-                useDossierStore.getState().openDossier("documents");
-              }
-
-              useDossierStore.getState().clearStreamingContent();
-              useDossierStore.getState().setIsStreaming(true);
-            }
-
-            // Always append content
+            // Append content to specific document
             if (content) {
-              console.log("Appending chunk:", {
-                chunk: content,
-                chunkLength: content.length,
-              });
-              useDossierStore.getState().appendStreamingContent(content);
-
-              // Log current total content
-              const currentContent =
-                useDossierStore.getState().streamingContent;
-              console.log("Current total content:", {
-                length: currentContent.length,
-                preview: currentContent.substring(0, 50) + "...",
-              });
+              store.appendDocumentContent(id, content);
             }
+            break;
+
+          case "stop":
+            // Stop streaming for this document
+            store.stopDocumentStreaming(id);
+            break;
+
+          case "error":
+            // Handle error for this document
+            console.error(`Error in document ${id}:`, content);
+            store.stopDocumentStreaming(id);
             break;
         }
       }

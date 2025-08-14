@@ -1,55 +1,59 @@
 "use client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useState, useEffect, useRef } from "react";
-import { CloseIcon } from "@/components/icons/close";
-import { CodeEditor } from "./dossier-code-editor";
 import { memo } from "react";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import { DossierFloating } from "./dossier-floating";
 import { BlankDocument } from "./dossier-blank";
 import { DossierNavigation } from "./dossier-navigation";
 import { useDossierStore } from "@/lib/stores/dossier-store";
-import { X, Maximize2, Minimize2 } from "lucide-react";
 
 function PureDossier(props: any) {
   const {
-    openDossier,
-    closeDossier,
-    setStreamingContent,
-    setIsStreaming,
-    appendStreamingContent,
-    switchTab,
-    streamingContent,
     dossierOpen,
-    clearStreamingContent,
+    documents,
+    activeTab,
+    getDocument,
+    updateDocumentContent,
   } = useDossierStore();
 
-  /*  const editorRef = useRef<any>(null);
-  useEffect(() => {
-    if (streamingContent && editorRef.current) {
-      editorRef.current.setMarkdown(streamingContent);
-    }
-  }, [streamingContent]); */
+  // Get the active document
+  const activeDocument =
+    activeTab && activeTab !== "home" ? getDocument(activeTab) : null;
 
-  /* useEffect(() => {
-    return () => {
-      if (!dossierOpen) {
-        clearStreamingContent();
-      }
-    };
-  }, [dossierOpen, clearStreamingContent]); */
+  // Calculate the content to display (streaming + existing content)
+  const displayContent = activeDocument
+    ? activeDocument.content + activeDocument.streamingContent
+    : "";
+
+  const handleContentChange = (content: string) => {
+    if (activeDocument) {
+      updateDocumentContent(activeDocument.id, content);
+    }
+  };
+
+  const renderContent = () => {
+    if (activeTab === "home" || !activeDocument) {
+      return <BlankDocument />;
+    }
+
+    switch (activeDocument.kind) {
+      case "text":
+        return (
+          <SimpleEditor
+            content={displayContent}
+            handleContentChange={handleContentChange}
+            readOnly={activeDocument.isStreaming}
+          />
+        );
+      default:
+        return <BlankDocument />;
+    }
+  };
 
   return (
     <div className={cn("relative flex flex-col size-full")}>
       <DossierNavigation />
-      {/* <DossierFloating /> */}
-
-      {streamingContent ? (
-        <SimpleEditor content={streamingContent} />
-      ) : (
-        <BlankDocument />
-      )}
+      {renderContent()}
     </div>
   );
 }

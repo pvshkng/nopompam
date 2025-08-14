@@ -1,34 +1,56 @@
 import { useDossierStore } from "@/lib/stores/dossier-store";
 import { memo } from "react";
-import { X, House, NotebookPen, Save } from "lucide-react";
+import { X, House, NotebookPen, Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const tabs = [
-  {
-    name: "documents",
-    title: "การวิเคราะห์ประวัติและสถานการณ์ปัจจุบันของ",
-    icon: NotebookPen,
-    edited: true,
-  },
-  {
-    name: "documents1",
-    title: "สกุลเงินดิจิทัลแรกของโลก",
-    icon: NotebookPen,
-    edited: true,
-  },
-  {
-    name: "documents2",
-    title: "ประวัติการเดินทางของ Bitcoin",
-    icon: NotebookPen,
-    edited: true,
-  },
-];
-
 const PureDossierNavigation = (props: any) => {
-  const { closeDossier, setActiveTab, activeTab } = useDossierStore();
+  const {
+    closeDossier,
+    setActiveTab,
+    activeTab,
+    documents,
+    closeTab,
+    markDocumentSaved,
+    getDocument,
+    removeDocument,
+  } = useDossierStore();
+
   const isActive = (tabName: string) => {
     return activeTab === tabName;
   };
+
+  const handleTabClose = (e: React.MouseEvent, docId: string) => {
+    e.stopPropagation();
+    const closed = closeTab(docId);
+    if (closed) {
+      // placeholder
+      removeDocument(docId);
+    }
+  };
+
+  const handleSave = async () => {
+    if (activeTab && activeTab !== "home") {
+      const doc = getDocument(activeTab);
+      if (doc?.hasUnsavedChanges) {
+        // Here you would implement your save logic
+        // For now, just mark as saved
+        markDocumentSaved(activeTab);
+
+        // You might want to call an API to save the document
+        // try {
+        //   await saveDocument(doc);
+        //   markDocumentSaved(activeTab);
+        // } catch (error) {
+        //   console.error('Save failed:', error);
+        // }
+      }
+    }
+  };
+
+  const activeDocument =
+    activeTab && activeTab !== "home" ? getDocument(activeTab) : null;
+  const canSave = activeDocument?.hasUnsavedChanges;
+
   return (
     <div
       className={cn(
@@ -39,12 +61,8 @@ const PureDossierNavigation = (props: any) => {
       )}
     >
       {/* TABS */}
-      <div
-        className={cn(
-          //"overflow-auto",
-          "flex flex-row p-1 pb-0 h-full gap-1 flex-1 min-w-0"
-        )}
-      >
+      <div className={cn("flex flex-row p-1 pb-0 h-full gap-1 flex-1 min-w-0")}>
+        {/* Home Tab */}
         <button
           className={cn(
             "flex items-center justify-center min-w-7 border m-0 p-1 border-b-0",
@@ -63,61 +81,91 @@ const PureDossierNavigation = (props: any) => {
           />
         </button>
 
-        {/* Dynamic Tabs */}
-        {tabs.map((t, i) => (
-          <button
-            key={i}
+        {/* Dynamic Document Tabs */}
+        {documents.map((doc) => (
+          <div
+            key={doc.id}
             className={cn(
-              "gap-1",
+              "relative group",
               "flex flex-row flex-shrink items-center justify-center",
               "overflow-hidden",
-              "min-w-0",
-              "border m-0 p-1 border-b-0",
-              isActive(t.name) &&
-                "border-stone-300 bg-white shadow-[0px_1px_0px_0px_#FFFFFF]"
+              "min-w-0 max-w-48",
+              "border m-0 border-b-0",
+              isActive(doc.id) &&
+                "border-stone-300 bg-white shadow-[0px_1px_0px_0px_#FFFFFF]",
+              !isActive(doc.id) && "border-stone-200"
             )}
-            onClick={() => {
-              setActiveTab(t.name);
-            }}
           >
-            <t.icon
+            <button
               className={cn(
-                "w-4 h-4 flex-shrink-0",
-                isActive(t.name) ? "stroke-stone-500" : "stroke-stone-200"
+                "flex flex-row items-center gap-1 p-1 pr-0 flex-1 min-w-0"
               )}
-            />
-            <span
-              className={cn(
-                "text-xs truncate text-stone-200",
-                isActive(t.name) && "!text-stone-500"
-              )}
+              onClick={() => {
+                setActiveTab(doc.id);
+              }}
             >
-              {t.title}
-            </span>
-          </button>
-        ))}
+              <div className="flex items-center gap-1 min-w-0">
+                {doc.isStreaming ? (
+                  <Loader2 className="w-4 h-4 animate-spin stroke-blue-500" />
+                ) : (
+                  <NotebookPen
+                    className={cn(
+                      "w-4 h-4 flex-shrink-0",
+                      isActive(doc.id) ? "stroke-stone-500" : "stroke-stone-200"
+                    )}
+                  />
+                )}
+                <span
+                  className={cn(
+                    "text-xs truncate",
+                    isActive(doc.id) ? "text-stone-500" : "text-stone-200"
+                  )}
+                >
+                  {doc.title}
+                </span>
+                {doc.hasUnsavedChanges && (
+                  <div
+                    className={cn(
+                      "w-1.5 h-1.5 rounded-full bg-orange-400 flex-shrink-0"
+                    )}
+                  />
+                )}
+              </div>
+            </button>
 
-        {/* <button className={cn("border m-0 p-1 border-b-0")} onClick={() => {}}>
-          <NotebookPen size={16} className="stroke-stone-200" />
-        </button> */}
+            {/* Close button - only show on hover or if active */}
+            <button
+              className={cn(
+                "p-1 opacity-0 group-hover:opacity-100 transition-opacity",
+                isActive(doc.id) && "opacity-100"
+              )}
+              onClick={(e) => handleTabClose(e, doc.id)}
+            >
+              <X className="w-3 h-3 stroke-stone-400 hover:stroke-stone-600" />
+            </button>
+          </div>
+        ))}
       </div>
 
-      {/* Close, Minimize */}
+      {/* Actions */}
       <div className={cn("p-1 flex flex-row items-center justify-end gap-1")}>
-        {/* <button>
-          <Maximize2 size={16} className="stroke-stone-700" />
-        </button> */}
         <button
           className={cn(
-            "border m-0 p-1 bg-stone-400"
-            // bg-stone-700
+            "border m-0 p-1",
+            canSave
+              ? "bg-orange-500 hover:bg-orange-600"
+              : "bg-stone-400 cursor-not-allowed",
+            "transition-colors"
           )}
-          onClick={() => {}}
+          onClick={handleSave}
+          disabled={!canSave}
         >
           <Save size={16} className="stroke-stone-100" />
         </button>
         <button
-          className={cn("border m-0 p-1 bg-stone-700")}
+          className={cn(
+            "border m-0 p-1 bg-stone-700 hover:bg-stone-800 transition-colors"
+          )}
           onClick={() => {
             closeDossier();
           }}

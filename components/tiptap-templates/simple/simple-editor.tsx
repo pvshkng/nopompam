@@ -194,7 +194,7 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function SimpleEditor({ content }: { content?: string }) {
+export function SimpleEditor({ content, handleContentChange }: { content?: string, handleContentChange: (content: string) => void }) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
@@ -294,6 +294,7 @@ export function SimpleEditor({ content }: { content?: string }) {
 
         <EditorContent
           editor={editor}
+          onChange={handleContentChange}
           role="presentation"
           className="simple-editor-content!flex !overflow-y-auto !h-full p-4 bg-neutral-50"
         />
