@@ -19,13 +19,13 @@ export const maxDuration = 60;
 export async function POST(req: NextRequest) {
 
     try {
+        let memory = []
         const { messages, id, user, model, session } = await req.json();
         const modelMessages = convertToModelMessages(messages, { ignoreIncompleteToolCalls: true })
         if (!session) {
             const result = await mock();
             return result
         }
-        let memory = []
         const provider = getProvider(model);
         const stream = createUIMessageStream({
             // originalMessages: messages,
@@ -44,20 +44,21 @@ export async function POST(req: NextRequest) {
                         tools: {
                             // web: web({}),
                             search: search({ writer }),
-                            // document: document({ threadId: id, user: user, getMemory: () => messages, writer: writer }),
+                            document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
                         },
 
                         stopWhen: stepCountIs(5),
                         onError(error) {
                             console.error("Error in chat route: ", error);
                         },
-                        /* prepareStep: async ({ model, stepNumber, steps, messages }) => {
+                        prepareStep: async ({ model, stepNumber, steps, messages }) => {
+                            console.log("Preparing step: ", stepNumber, " of ", steps.length);
+                            console.log("Preparing messages: ", JSON.stringify(messages, null, 2));
                             memory = messages
                             return {
-                                memory: memory,
                                 messages: messages.length > 20 ? messages.slice(-10) : messages,
                             };
-                        } */
+                        }
 
                     });
 

@@ -113,14 +113,13 @@ function PureUserInput(props: any) {
           </div>
           <button
             onClick={(e) => {
-              handleSubmit(e);
               inputRef.current!.style.height = "auto";
-              /*  if (session) {
+               if (session) {
                 handleSubmit(e);
                 inputRef.current!.style.height = "auto";
               } else {
                 openAuthDialog();
-              } */
+              }
             }}
             disabled={status !== "ready"}
             className={cn(

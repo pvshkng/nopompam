@@ -17,7 +17,13 @@ interface DocumentProps {
 
 export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =>
   tool({
-    description: "Create a text document and stream its content.",
+    description: `
+    ## document
+    # The "document" tool creates and updates text documents that render to the user on a space next to the conversation (referred to as the "dossier").
+    # Use this tool when asked to work on writing that's long enough like article / essay.
+    # Only invoke this tool once for each document you want to create.
+    # DO NOT REPEAT THE CONTENT OF THIS TOOL SINCE IT'S ALREADY IN THE UI.
+    `,
     inputSchema: z.object({
       title: z.string().describe("The title of the artifact. If the title is not provided, it will be inferred from the prompt."),
       kind: z.enum(["text"]),
@@ -25,15 +31,13 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
     execute: async ({ title, kind }, { toolCallId }) => {
 
       const memory = getMemory();
-      let modelMessages
+      const prompt = `
+                  Content:
+                  ${JSON.stringify(memory, null, 2)}
 
-      try {
-        modelMessages = convertToModelMessages(memory) || [];
-      } catch (error) {
-        console.error("Error converting thread to model messages: ", error);
-      }
-
-
+                  Write a document about ${title}.
+                  `
+      console.log("Document prompt: ", prompt);
       const id = toolCallId //generateId(8); 
       try {
 
@@ -58,7 +62,7 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
         let draftContent = '';
         const { fullStream } = streamText({
           model: client("gemini-2.5-flash"),
-          // experimental_transform: smoothStream({ chunking: "line" }),
+          // experimental_transform: smoothStream({ chunking: "word" }),
           system: `
                   Write document about the given topic. 
                   Do not include anything other than the content of the document.
@@ -74,11 +78,10 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
                   - ALWAYS include references to sources at the end if available.
 
                   HTML MUST BE VALID and well-formed.
-
-                  DO NOT USE MARKDOWN.
+                  DO NOT INCLUDE BACKTICKS OR MARKDOWN SYNTAX.
                   `,
 
-          messages: [...modelMessages, { role: "user", content: `Write a document about ${title}.` }],
+          prompt: prompt,
           onFinish: async ({ response },) => {
             // draftContent
             await storeArtifact({

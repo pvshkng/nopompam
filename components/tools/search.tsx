@@ -142,7 +142,7 @@ function SearchContent({ tool, draftTool }) {
               )}
             />
 
-            <div className="text-[10px] ml-7 w-full text-stone-400">
+            <div className="text-[10px] ml-6 max-w-full text-stone-400 overflow-hidden">
               {q.status === "pending" && <ToolSkeleton />}
               {q.status === "complete" && q.results.length > 0 && (
                 <SearchResult results={q.results} />
@@ -190,7 +190,7 @@ export function Search({
         </span>
       </ToolHeader>
       <ToolContent>
-        <div className="flex flex-col w-full item-center justify-center mx-auto mt-2">
+        <div className="flex flex-col w-full item-center justify-center mt-2">
           <SearchContent tool={tool} draftTool={draftTool} />
         </div>
       </ToolContent>
