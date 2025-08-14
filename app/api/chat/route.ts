@@ -3,25 +3,26 @@ import { streamText, smoothStream, convertToModelMessages, stepCountIs, hasToolC
 import { web } from "@/lib/ai/tool/web";
 import { document } from "@/lib/ai/tool/document"
 import { search } from "@/lib/ai/tool/search";
+import { convertToUIMessages } from "@/lib/ai/utils";
 
 import { saveChat } from "@/lib/mongo/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
-import { experimental_createMCPClient } from "ai"
 
 import { mock } from "@/app/api/chat/mock";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { system_prompt } from "./system";
 import { getProvider } from "./provider";
-import { m } from "motion/react";
+
 export const maxDuration = 60;
+
 
 export async function POST(req: NextRequest) {
 
     try {
         let memory = []
         const { messages, id, user, model, session } = await req.json();
-        const modelMessages = convertToModelMessages(messages, { ignoreIncompleteToolCalls: true })
+        const modelMessages = convertToModelMessages(messages)
+
+
         if (!session) {
             const result = await mock();
             return result
@@ -33,10 +34,10 @@ export async function POST(req: NextRequest) {
 
                 try {
                     const result = streamText({
+
                         model: provider(model),
                         system: system_prompt,
-                        messages: modelMessages,
-                        //experimental_telemetry: { isEnabled: true },
+                        prompt: modelMessages,
                         experimental_transform: smoothStream({
                             chunking: 'word',
                             delayInMs: 10
@@ -52,19 +53,15 @@ export async function POST(req: NextRequest) {
                             console.error("Error in chat route: ", error);
                         },
                         prepareStep: async ({ model, stepNumber, steps, messages }) => {
-                            console.log("Preparing step: ", stepNumber, " of ", steps.length);
-                            console.log("Preparing messages: ", JSON.stringify(messages, null, 2));
                             memory = messages
-                            return {
-                                messages: messages.length > 20 ? messages.slice(-10) : messages,
-                            };
+                            return {}
                         }
 
                     });
 
                     writer.merge(result.toUIMessageStream({
                         generateMessageId: () => generateId(),
-                        onFinish: async ({ responseMessage, messages: _messages }) => {
+                        onFinish: async ({ messages: _messages }) => {
                             try {
                                 let title = undefined;
                                 if (messages.length === 1) {
@@ -78,7 +75,7 @@ export async function POST(req: NextRequest) {
                                     _id: id,
                                     title: title,
                                     user: user,
-                                    messages: [...messages, responseMessage],
+                                    messages: [...messages, ..._messages]//[...messages, responseMessage],
                                 });
                             } catch (error) {
                                 console.error("Error creating chat: ", error);
