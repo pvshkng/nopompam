@@ -13,7 +13,7 @@ import rehypeRaw from "rehype-raw";
 import { components } from "@/components/markdown/markdown-component";
 import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
 
-import "./typewriter.css";
+import "@/styles/typewriter.css";
 
 // Tool components
 import { Web } from "@/components/tools/web";

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { memo } from "react";
+import { memo, use } from "react";
 import { ThreadManager } from "@/components/chat/thread-manager";
 import Link from "next/link";
 
@@ -16,13 +16,11 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 import { ChevronLeft, Plus } from "lucide-react";
+import { useDossierStore } from "@/lib/stores/dossier-store";
+
 export const PureNavigation = (props: any) => {
-  const {
-    _id,
-    session,
-    threads,
-    setThreads,
-  } = props;
+  const { _id, session, threads, setThreads } = props;
+  const { setDossierOpen, dossierOpen } = useDossierStore();
 
   return (
     <div
@@ -62,7 +60,7 @@ export const PureNavigation = (props: any) => {
             //"shadow-md"
           )}
         >
-          Options
+          Conversations
           <ChevronLeft
             width={16}
             height={16}
@@ -86,6 +84,21 @@ export const PureNavigation = (props: any) => {
           />
         </DrawerContent>
       </Drawer>
+      <Separator orientation="horizontal" className="w-full bg-stone-300" />
+      <button
+        onClick={() => {
+          setDossierOpen(!dossierOpen);
+        }}
+        className={cn(
+          "[writing-mode:sideways-lr]",
+          "flex flex-row items-center font-black text-xs gap-1",
+          "text-stone-700"
+          //"border border-stone-200",
+          //"shadow-md"
+        )}
+      >
+        Dossier
+      </button>
       {/* <Separator orientation="vertical" className="h-5" /> */}
       {/* <ModelSelector /> */}
     </div>

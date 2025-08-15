@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import "../chat/message-area/streaming-effect.css";
+import "@/styles/streaming-effect.css";
 import { NotebookPen, LoaderCircle } from "lucide-react";
 import { ToolInvocation } from "ai";
 

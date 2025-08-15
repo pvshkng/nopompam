@@ -1,9 +1,9 @@
 "use client";
 import React, { Dispatch, SetStateAction } from "react";
 import { cn } from "@/lib/utils";
-import "./message-area.css";
-import "./typewriter.css";
-import "./streaming-effect.css";
+import "@/styles/message-area.css";
+import "@/styles/typewriter.css";
+import "@/styles/streaming-effect.css";
 // import "@/lib/LaTeX/katex.min.css";
 import { UIMessage } from "ai";
 import { MessageBlock } from "./message-block";

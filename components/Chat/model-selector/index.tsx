@@ -14,7 +14,15 @@ const models = {
     "mistral-small-latest",
     "mistral-large-latest",
     "pixtral-large-latest",
-    
+
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "moonshotai/kimi-k2-instruct",
+    "qwen/qwen3-32b",
+    "deepseek-r1-distill-llama-70b",
+    "meta-llama/llama-4-maverick-17b-128e-instruct",
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+
     //"pixtral-12b-2409",
 
     // "deepseek/deepseek-chat-v3-0324:free", // good

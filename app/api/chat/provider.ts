@@ -5,6 +5,20 @@ import { createMistral } from '@ai-sdk/mistral';
 export const getProvider = (model: string) => {
     let provider
     switch (model) {
+
+        case "openai/gpt-oss-120b":
+        case "openai/gpt-oss-20b":
+        case "moonshotai/kimi-k2-instruct":
+        case "qwen/qwen3-32b":
+        case "deepseek-r1-distill-llama-70b":
+        case "meta-llama/llama-4-maverick-17b-128e-instruct":
+        case "meta-llama/llama-4-scout-17b-16e-instruct":
+            provider = createOpenAI({
+                apiKey: process.env.GROQ_API_KEY,
+                baseURL: "https://api.groq.com/openai/v1"
+            });
+            break;
+
         case "ministral-3b-latest":
         case "ministral-8b-latest":
         case "mistral-large-latest":

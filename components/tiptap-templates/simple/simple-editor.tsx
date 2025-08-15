@@ -5,6 +5,7 @@ import "@/styles/_keyframe-animations.scss";
 import * as React from "react";
 import { useEffect } from "react";
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
+import "@/styles/streaming-effect.css";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
@@ -194,7 +195,13 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function SimpleEditor({ content, handleContentChange }: { content?: string, handleContentChange: (content: string) => void }) {
+export function SimpleEditor({
+  content,
+  handleContentChange,
+}: {
+  content?: string;
+  handleContentChange: (content: string) => void;
+}) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
@@ -250,7 +257,7 @@ export function SimpleEditor({ content, handleContentChange }: { content?: strin
         editor.commands.setContent(content);
       }
     }
-  }, [/* editor,  */content]);
+  }, [/* editor,  */ content]);
 
   const rect = useCursorVisibility({
     editor,
@@ -294,9 +301,12 @@ export function SimpleEditor({ content, handleContentChange }: { content?: strin
 
         <EditorContent
           editor={editor}
-          onChange={handleContentChange}
+          onChange={(e) => {
+            console.log(e)
+            handleContentChange();
+          }}
           role="presentation"
-          className="simple-editor-content!flex !overflow-y-auto !h-full p-4 bg-neutral-50"
+          className="simple-editor-content !flex !overflow-y-auto !h-full p-4 bg-neutral-50"
         />
       </EditorContext.Provider>
     </div>

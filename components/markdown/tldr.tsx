@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { BookCheckIcon, LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 export const TLDR = ({ children }: { children: React.ReactNode }) => {
   const [isStreaming, setIsStreaming] = useState(true);

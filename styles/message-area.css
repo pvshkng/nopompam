@@ -1,37 +1,13 @@
-@keyframes messageInUser {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes messageInAi {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.message-in-user {
-  animation: messageInUser 0.2s ease-out 0s 1 normal none;
-}
-
-.message-in-ai {
-  animation: messageInAi 0.2s ease-out 0s 1 normal none;
-}
-
 *::-webkit-scrollbar {
   height: 5px !important;
 }
 
-pre {
+/* pre {
   margin: 0 !important;
   margin-bottom: 1rem !important;
   max-width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
 }
 
 pre code {
@@ -46,7 +22,7 @@ pre:has(code) {
 
 pre:not(:has(code)) {
   background-color: transparent !important;
-}
+} */
 
 blockquote {
   font-style: italic;
@@ -55,7 +31,6 @@ blockquote {
   padding: 1rem;
   border-left: 3px solid #ccc;
 }
-
 
 blockquote ul > li {
   line-height: 1;
@@ -92,7 +67,7 @@ table {
 }
 
 table thead {
-  background-color: #d6d3d1  ;
+  background-color: #d6d3d1;
 }
 
 table tbody {

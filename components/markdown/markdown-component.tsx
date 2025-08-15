@@ -97,40 +97,40 @@ export const components: Partial<any> = {
   think: ({ children }) => {
     return <p>{children}</p>;
   },
-  // pre: ({
-  //   children,
-  //   className,
-  //   ...props
-  // }: {
-  //   children: any;
-  //   className?: string;
-  // }) => {
-  //   let code = "";
-  //   let language: BundledLanguage = "md";
-  //   if (children && children.props) {
-  //     const match = /language-(\w+)/.exec(children.props.className || "");
-  //     if (match) {
-  //       const detectedLanguage = match[1];
-  //       language = isBundledLanguage(detectedLanguage)
-  //         ? detectedLanguage
-  //         : "md";
-  //     }
+  pre: ({
+    children,
+    className,
+    ...props
+  }: {
+    children: any;
+    className?: string;
+  }) => {
+    let code = "";
+    let language: BundledLanguage = "";
+    if (children && children.props) {
+      const match = /language-(\w+)/.exec(children.props.className || "");
+      if (match) {
+        const detectedLanguage = match[1];
+        language = isBundledLanguage(detectedLanguage)
+          ? detectedLanguage
+          : "";
+      }
 
-  //     code = children.props.children || "";
-  //   }
+      code = children.props.children || "";
+    }
 
-  //   return <HighlightedCodeBlock language={language} code={code} />;
-  // },
+    return <HighlightedCodeBlock language={language} code={code} />;
+  },
 
-  // code: ({
-  //   className,
-  //   children,
-  //   ...props
-  // }: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }) => (
-  //   <code className={className} {...props}>
-  //     {children}
-  //   </code>
-  // ),
+  code: ({
+    className,
+    children,
+    ...props
+  }: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }) => (
+    <code className={className} {...props}>
+      {children}
+    </code>
+  ),
 };
 
 export async function highlight(code: string, lang: BundledLanguage) {

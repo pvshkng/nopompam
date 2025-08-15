@@ -49,7 +49,7 @@ export type DossierActions = {
 export const useDossierStore = create<DossierStore & DossierActions>((set, get) => ({
     dossierOpen: false,
     documents: [],
-    activeTab: null,
+    activeTab: 'home',
 
     // Basic dossier actions
     setDossierOpen: (open) => set({ dossierOpen: open }),

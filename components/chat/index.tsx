@@ -100,7 +100,6 @@ function PureRoot(props: PureRootProps) {
 
     onFinish: ({ message }) => {},
     onData: (data) => {
-      console.log("All data received:", data);
 
       if (data.type === "data-tool-search" && data.data) {
         const searchData = data.data;

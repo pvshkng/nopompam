@@ -16,11 +16,9 @@ function PureDossier(props: any) {
     updateDocumentContent,
   } = useDossierStore();
 
-  // Get the active document
   const activeDocument =
     activeTab && activeTab !== "home" ? getDocument(activeTab) : null;
 
-  // Calculate the content to display (streaming + existing content)
   const displayContent = activeDocument
     ? activeDocument.content + activeDocument.streamingContent
     : "";
