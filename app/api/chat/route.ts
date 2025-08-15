@@ -11,6 +11,7 @@ import { generateTitle } from "@/lib/actions/ai/generate-title";
 import { mock } from "@/app/api/chat/mock";
 import { system_prompt } from "./system";
 import { getProvider } from "./provider";
+import { removeProviderExecuted } from "@/lib/ai/utils";
 
 export const maxDuration = 60;
 
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     try {
         let memory = []
         const { messages, id, user, model, session } = await req.json();
-        const modelMessages = convertToModelMessages(messages)
+        const modelMessages = convertToModelMessages(removeProviderExecuted(messages))
 
 
         if (!session) {
