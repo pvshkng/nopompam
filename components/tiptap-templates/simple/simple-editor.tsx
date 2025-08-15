@@ -198,9 +198,11 @@ const MobileToolbarContent = ({
 export function SimpleEditor({
   content,
   handleContentChange,
+  readOnly,
 }: {
   content?: string;
   handleContentChange: (content: string) => void;
+  readOnly: boolean;
 }) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
@@ -247,6 +249,12 @@ export function SimpleEditor({
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
+    onUpdate: ({ editor }) => {
+      if (!readOnly) {
+        const htmlContent = editor.getHTML();
+        handleContentChange(htmlContent);
+      }
+    },
     content: content,
   });
 
@@ -301,12 +309,8 @@ export function SimpleEditor({
 
         <EditorContent
           editor={editor}
-          onChange={(e) => {
-            console.log(e)
-            handleContentChange();
-          }}
           role="presentation"
-          className="simple-editor-content !flex !overflow-y-auto !h-full p-4 bg-neutral-50"
+          className="simple-editor-content !flex !flex-col-reverse !overflow-y-auto !h-full p-4 bg-neutral-50"
         />
       </EditorContext.Provider>
     </div>

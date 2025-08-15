@@ -62,17 +62,31 @@
   --tt-gray-dark-900: rgba(245, 245, 245, 1);
 
   /* Brand colors */
-  --tt-brand-color-50: rgba(239, 238, 255, 1);
-  --tt-brand-color-100: rgba(222, 219, 255, 1);
-  --tt-brand-color-200: rgba(195, 189, 255, 1);
-  --tt-brand-color-300: rgba(157, 138, 255, 1);
-  --tt-brand-color-400: rgba(122, 82, 255, 1);
-  --tt-brand-color-500: rgba(98, 41, 255, 1);
-  --tt-brand-color-600: rgba(84, 0, 229, 1);
-  --tt-brand-color-700: rgba(75, 0, 204, 1);
-  --tt-brand-color-800: rgba(56, 0, 153, 1);
-  --tt-brand-color-900: rgba(43, 25, 102, 1);
-  --tt-brand-color-950: hsla(257, 100%, 9%, 1);
+  --npp-brand-color-50: --;
+  --npp-brand-color-100: rgba(222, 219, 255, 1);
+  --npp-brand-color-200: rgba(195, 189, 255, 1);
+  --npp-brand-color-300: rgba(157, 138, 255, 1);
+  --npp-brand-color-400: rgba(122, 82, 255, 1);
+  --npp-brand-color-500: rgba(98, 41, 255, 1);
+  --npp-brand-color-600: rgba(84, 0, 229, 1);
+  --npp-brand-color-700: rgba(75, 0, 204, 1);
+  --npp-brand-color-800: rgba(56, 0, 153, 1);
+  --npp-brand-color-900: rgba(43, 25, 102, 1);
+  --npp-brand-color-950: hsla(257, 100%, 9%, 1);
+
+  --tt-brand-color-50: oklch(98.5% 0.001 106.423);
+  --tt-brand-color-100: oklch(97% 0.001 106.424);
+  --tt-brand-color-200: oklch(92.3% 0.003 48.717);
+  --tt-brand-color-300: oklch(86.9% 0.005 56.366);
+  --tt-brand-color-400: oklch(70.9% 0.01 56.259);
+  --tt-brand-color-500: oklch(55.3% 0.013 58.071);
+  --tt-brand-color-600: oklch(44.4% 0.011 73.639);
+  --tt-brand-color-700: oklch(37.4% 0.01 67.558);
+  --tt-brand-color-800: oklch(26.8% 0.007 34.298);
+  --tt-brand-color-900: oklch(21.6% 0.006 56.043);
+  --tt-brand-color-950: oklch(14.7% 0.004 49.25);
+
+  /* Nopompam Brand colors */
 
   /* Green */
   --tt-color-green-inc-5: hsla(129, 100%, 97%, 1);
@@ -123,8 +137,7 @@
   ******************/
 
   /* Shadows Light */
-  --tt-shadow-elevated-md:
-    0px 16px 48px 0px rgba(17, 24, 39, 0.04),
+  --tt-shadow-elevated-md: 0px 16px 48px 0px rgba(17, 24, 39, 0.04),
     0px 12px 24px 0px rgba(17, 24, 39, 0.04),
     0px 6px 8px 0px rgba(17, 24, 39, 0.02),
     0px 2px 3px 0px rgba(17, 24, 39, 0.02);
@@ -200,9 +213,9 @@
   --tt-card-bg-color: var(--tt-gray-dark-50);
   --tt-card-border-color: var(--tt-gray-dark-a-50);
 
-  --tt-shadow-elevated-md:
-    0px 16px 48px 0px rgba(0, 0, 0, 0.5), 0px 12px 24px 0px rgba(0, 0, 0, 0.24),
-    0px 6px 8px 0px rgba(0, 0, 0, 0.22), 0px 2px 3px 0px rgba(0, 0, 0, 0.12);
+  --tt-shadow-elevated-md: 0px 16px 48px 0px rgba(0, 0, 0, 0.5),
+    0px 12px 24px 0px rgba(0, 0, 0, 0.24), 0px 6px 8px 0px rgba(0, 0, 0, 0.22),
+    0px 2px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
 /* Text colors */
