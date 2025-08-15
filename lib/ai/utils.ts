@@ -18,17 +18,31 @@ export function convertToUIMessages(messages: any) {
     }));
 }
 
-export function removeProviderExecuted(messages: UIMessage[]): UIMessage[] {
-    return messages.map(message => ({
-        ...message,
-        parts: message.parts
-            .map(part => {
-                if ('providerExecuted' in part) {
-                    const { providerExecuted, ...rest } = part;
-                    return rest;
-                }
-                return part;
-            })
-            .filter(Boolean),
-    }));
+export function removeProviderExecuted(messages: UIMessage[] | ModelMessage[]): (UIMessage | ModelMessage)[] {
+    return messages.map(message => {
+        if ('content' in message) {
+            return {
+                ...message,
+                content: message.content.map(part => {
+                    if ('providerExecuted' in part || 'providerOptions' in part) {
+                        const { providerExecuted, providerOptions, ...rest } = part;
+                        return rest;
+                    }
+                    return part;
+                }).filter(Boolean),
+            };
+        }
+        return {
+            ...message,
+            parts: message.parts
+                .map(part => {
+                    if ('providerExecuted' in part) {
+                        const { providerExecuted, ...rest } = part;
+                        return rest;
+                    }
+                    return part;
+                })
+                .filter(Boolean),
+        };
+    });
 }

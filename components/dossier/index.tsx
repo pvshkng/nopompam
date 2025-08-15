@@ -51,7 +51,7 @@ function PureDossier(props: any) {
   return (
     <div className={cn("relative flex flex-col size-full")}>
       <DossierNavigation />
-      {renderContent()}
+      <>{renderContent()}</>
     </div>
   );
 }

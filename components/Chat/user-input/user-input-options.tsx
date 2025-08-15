@@ -21,6 +21,9 @@ export const UserInputOptions = (props: any) => {
             <ModelSelector model={model} setModel={setModel} />
             <Attachment />
           </div>
+          <p className="text-xs text-stone-500">
+            Made with ❤︎ by <a href="https://puvish.dev" target="_blank" className="underline">puvish.dev</a>
+          </p>
         </div>
       </div>
     </>

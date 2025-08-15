@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/drawer";
 
 import { Separator } from "@/components/ui/separator";
-import { ChevronLeft, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 
 export const PureNavigation = (props: any) => {
@@ -60,8 +60,8 @@ export const PureNavigation = (props: any) => {
             //"shadow-md"
           )}
         >
-          Conversations
-          <ChevronLeft
+          Chat
+          <ChevronRight
             width={16}
             height={16}
             strokeWidth={3}
@@ -98,6 +98,12 @@ export const PureNavigation = (props: any) => {
         )}
       >
         Dossier
+        <ChevronRight
+          width={16}
+          height={16}
+          strokeWidth={3}
+          stroke={"#44403c"}
+        />
       </button>
       {/* <Separator orientation="vertical" className="h-5" /> */}
       {/* <ModelSelector /> */}

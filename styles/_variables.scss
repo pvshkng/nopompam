@@ -74,6 +74,7 @@
   --npp-brand-color-900: rgba(43, 25, 102, 1);
   --npp-brand-color-950: hsla(257, 100%, 9%, 1);
 
+  /* Nopompam Brand colors */
   --tt-brand-color-50: oklch(98.5% 0.001 106.423);
   --tt-brand-color-100: oklch(97% 0.001 106.424);
   --tt-brand-color-200: oklch(92.3% 0.003 48.717);
@@ -85,8 +86,6 @@
   --tt-brand-color-800: oklch(26.8% 0.007 34.298);
   --tt-brand-color-900: oklch(21.6% 0.006 56.043);
   --tt-brand-color-950: oklch(14.7% 0.004 49.25);
-
-  /* Nopompam Brand colors */
 
   /* Green */
   --tt-color-green-inc-5: hsla(129, 100%, 97%, 1);
@@ -196,7 +195,7 @@
   --tt-sidebar-bg-color: var(--tt-gray-light-100);
   --tt-scrollbar-color: var(--tt-gray-light-a-200);
   --tt-cursor-color: var(--tt-brand-color-500);
-  --tt-selection-color: rgba(157, 138, 255, 0.2);
+  --tt-selection-color: var(--tt-brand-color-900);
   --tt-card-bg-color: var(--white);
   --tt-card-border-color: var(--tt-gray-light-a-100);
 }

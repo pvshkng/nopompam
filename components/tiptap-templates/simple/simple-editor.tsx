@@ -220,7 +220,7 @@ export function SimpleEditor({
         autocorrect: "off",
         autocapitalize: "off",
         "aria-label": "Main content area, start typing to enter text.",
-        class: "simple-editor",
+        class: "simple-editor stream-section",
       },
     },
     extensions: [
@@ -279,40 +279,36 @@ export function SimpleEditor({
   }, [isMobile, mobileView]);
 
   return (
-    <div className="flex flex-col size-full">
-      {" "}
-      {/* simple-editor-wrapper */}
-      <EditorContext.Provider value={{ editor }}>
-        <Toolbar
-          ref={toolbarRef}
-          style={{
-            ...(isMobile
-              ? {
-                  bottom: `calc(100% - ${height - rect.y}px)`,
-                }
-              : {}),
-          }}
-        >
-          {mobileView === "main" ? (
-            <MainToolbarContent
-              onHighlighterClick={() => setMobileView("highlighter")}
-              onLinkClick={() => setMobileView("link")}
-              isMobile={isMobile}
-            />
-          ) : (
-            <MobileToolbarContent
-              type={mobileView === "highlighter" ? "highlighter" : "link"}
-              onBack={() => setMobileView("main")}
-            />
-          )}
-        </Toolbar>
+    <EditorContext.Provider value={{ editor }}>
+      <Toolbar
+        ref={toolbarRef}
+        style={{
+          ...(isMobile
+            ? {
+                bottom: `calc(100% - ${height - rect.y}px)`,
+              }
+            : {}),
+        }}
+      >
+        {mobileView === "main" ? (
+          <MainToolbarContent
+            onHighlighterClick={() => setMobileView("highlighter")}
+            onLinkClick={() => setMobileView("link")}
+            isMobile={isMobile}
+          />
+        ) : (
+          <MobileToolbarContent
+            type={mobileView === "highlighter" ? "highlighter" : "link"}
+            onBack={() => setMobileView("main")}
+          />
+        )}
+      </Toolbar>
 
-        <EditorContent
-          editor={editor}
-          role="presentation"
-          className="simple-editor-content !flex !flex-col-reverse !overflow-y-auto !h-full p-4 bg-neutral-50"
-        />
-      </EditorContext.Provider>
-    </div>
+      <EditorContent
+        editor={editor}
+        role="presentation"
+        className="simple-editor-content !flex !flex-col-reverse !overflow-y-auto !h-full p-4 bg-neutral-50"
+      />
+    </EditorContext.Provider>
   );
 }

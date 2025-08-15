@@ -137,8 +137,8 @@ function SearchContent({ tool, draftTool }) {
             {/* Pseudo dotted line */}
             <div
               className={cn(
-                "absolute left-[10px] -top-5 -bottom-0 w-px border-l border-dotted border-stone-500",
-                q.index === queries.length - 1 && "hidden"
+                "absolute left-[10px] -top-5 -bottom-0 w-px border-l border-dotted border-stone-500"
+                //q.index === queries.length - 1 && "hidden"
               )}
             />
 
@@ -181,11 +181,7 @@ export function Search({
     <Tool>
       <ToolHeader>
         <span className="flex text-stone-500 items-center gap-2 overflow-hidden max-w-full">
-          {isStreaming ? (
-            <LoaderCircle size={16} className="!animate-spin !opacity-100" />
-          ) : (
-            <SearchCode size={16} className="shrink-0" />
-          )}
+          <SearchCode size={16} className="shrink-0" />
           <span className="text-xs truncate">SEARCH</span>
         </span>
       </ToolHeader>
