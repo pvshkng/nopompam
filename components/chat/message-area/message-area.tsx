@@ -43,19 +43,6 @@ export default function PureMessageArea(props: MessageAreaProps) {
           />
         </div>
       ))}
-
-      <AnimatePresence>
-        {status === "submitted" && (
-          <motion.div
-            initial={{ opacity: 0, x: 0 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 0 }}
-            transition={{ duration: 0.1 }}
-          >
-            <MessageSkeleton />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

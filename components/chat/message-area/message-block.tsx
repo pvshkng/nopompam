@@ -1,19 +1,20 @@
 import { cn } from "@/lib/utils";
 import { UIMessage } from "ai";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 
 // Message renderer
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
+// import remarkMath from "remark-math";
+// import rehypeKatex from "rehype-katex";
 
 import rehypeRaw from "rehype-raw";
 
 import { components } from "@/components/markdown/markdown-component";
 import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
+import { GradientText } from "@/components/chat/message-area/message-gradient-text";
 
-import "@/styles/typewriter.css";
+import "@/styles/pulse.css";
 
 // Tool components
 import { Web } from "@/components/tools/web";
@@ -28,6 +29,16 @@ type MessageBlockProps = {
 
 export const PureMessageBlock = (props: MessageBlockProps) => {
   const { status, m, isLast } = props;
+
+  const markdownOptions = useMemo(
+    () => ({
+      remarkPlugins: m.role === "user" ? [] : [remarkGfm],
+      rehypePlugins: m.role === "user" ? [] : [rehypeRaw],
+      components: m.role === "user" ? {} : components,
+      remarkRehypeOptions: {},
+    }),
+    [m.role]
+  );
 
   return (
     <div
@@ -61,10 +72,11 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                   //   isLast &&
                   //   "typewriting"
                 )}
-                remarkPlugins={m.role == "user" ? [] : [remarkGfm]} //remarkMath remarkMermaidPlugin
-                rehypePlugins={m.role == "user" ? [] : [rehypeRaw]} //rehypeKatex
-                components={m.role == "user" ? {} : components}
-                remarkRehypeOptions={{}}
+                // remarkPlugins={m.role == "user" ? [] : [remarkGfm]} //remarkMath remarkMermaidPlugin
+                // rehypePlugins={m.role == "user" ? [] : [rehypeRaw]} //rehypeKatex
+                // components={m.role == "user" ? {} : components}
+                // remarkRehypeOptions={{}}
+                {...markdownOptions}
               >
                 {p.text}
               </ReactMarkdown>
@@ -100,14 +112,21 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
             message={m.parts.join("")}
           />
         )}
+      {m.role === "assistant" && isLast && status !== "ready" && (
+        <div className="flex flex-row gap-2 items-center mx-4">
+          <div className="pulse-loader max-h-1 max-w-1" />
+          <GradientText text="Thinking..." className="text-sm mx-2 font-bold" />
+        </div>
+      )}
     </div>
   );
 };
 
-export const MessageBlock = memo(
-  PureMessageBlock /* , (prevProps, nextProps) => {
+export const MessageBlock = memo(PureMessageBlock, (prevProps, nextProps) => {
   return (
-    prevProps.m.id === nextProps.m.id && prevProps.isLast === nextProps.isLast
+    prevProps.m.id === nextProps.m.id &&
+    prevProps.m.parts === nextProps.m.parts &&
+    prevProps.isLast === nextProps.isLast &&
+    prevProps.status === nextProps.status
   );
-} */
-);
+});

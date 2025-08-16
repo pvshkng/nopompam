@@ -1,0 +1,26 @@
+/* HTML: <div class="pulse-loader"></div> */
+.pulse-loader {
+  width: 5px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #44403c;
+  box-shadow: 0 0 0 0 #0004;
+  animation: l2 1.5s infinite linear;
+  position: relative;
+}
+.pulse-loader:before,
+.pulse-loader:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 #0004;
+  animation: inherit;
+  animation-delay: -0.5s;
+}
+.pulse-loader:after {
+  animation-delay: -1s;
+}
+@keyframes l2 {
+    100% {box-shadow: 0 0 0 15px #0000}
+}
