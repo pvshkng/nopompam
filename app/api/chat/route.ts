@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
                                     _id: id,
                                     title: title,
                                     user: user,
-                                    messages: [...messages, ..._messages]//[...messages, responseMessage],
+                                    messages: [...messages, ..._messages]
                                 });
                             } catch (error) {
                                 console.error("Error creating chat: ", error);

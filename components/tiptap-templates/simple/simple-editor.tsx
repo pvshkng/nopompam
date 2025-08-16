@@ -210,6 +210,7 @@ export function SimpleEditor({
     "main" | "highlighter" | "link"
   >("main");
   const toolbarRef = React.useRef<HTMLDivElement>(null);
+  const editorContentRef = React.useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -267,6 +268,17 @@ export function SimpleEditor({
     }
   }, [/* editor,  */ content]);
 
+  const scrollToBottom = () => {
+    const container = editorContentRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [editor?.getHTML()]);
+
   const rect = useCursorVisibility({
     editor,
     overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
@@ -305,9 +317,13 @@ export function SimpleEditor({
       </Toolbar>
 
       <EditorContent
+        ref={editorContentRef}
         editor={editor}
         role="presentation"
-        className="simple-editor-content !flex !flex-col-reverse !overflow-y-auto !h-full p-4 bg-neutral-50"
+        className="simple-editor-content !flex !overflow-y-auto !h-full p-4 bg-neutral-50"
+        style={{
+          scrollBehavior: "auto",
+        }}
       />
     </EditorContext.Provider>
   );

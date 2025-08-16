@@ -84,7 +84,7 @@ function PureRoot(props: PureRootProps) {
     // clearStreamingContent,
   } = useDossierStore();
 
-  const { messages, status, sendMessage } = useChat({
+  const { messages, status, sendMessage, stop } = useChat({
     //maxSteps: 5,
     transport: new DefaultChatTransport({
       api: "/api/chat",
@@ -286,6 +286,7 @@ function PureRoot(props: PureRootProps) {
                   />
                 </main>
                 <UserInput
+                  stop={stop}
                   session={session}
                   messages={messages}
                   status={status}

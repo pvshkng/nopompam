@@ -51,26 +51,38 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
         }
         return message;
       });
-      
-      const prompt = [{
-        role: "system",
-        content: `Write document about the given topic. 
-                  Do not include anything other than the content of the document.
 
-                  Use **HTML** to format the content. 
-                  For example:
-                  - use headings to define sections
-                  - use horizontal rules to split sections
-                  - use tables for comparison
-                  - use bullet points for entries, etc.
-                  - include images if provided and relevant.
-                  - DO NOT MAKE UP IMAGES, only use images that are provided.
-                  - ALWAYS include references to sources at the end if available.
+      const prompt = [
+        ...cleanedMessages,
+        {
+          role: "user",
+          content: `
+          <instructions>
+          Write document about the given topic. 
+          The content will be rendered in Tiptap editor, so format it accordingly.
+          Do not include anything other than the content of the document.
 
-                  HTML MUST BE VALID and well-formed.
-                  DO NOT INCLUDE BACKTICKS OR MARKDOWN SYNTAX.` },
-      ...cleanedMessages,
-      { role: "user", content: `Write a document about ${title}` }] as ModelMessage[];
+          Use **HTML** to format the content. 
+          For example:
+          - USE tables for comparison or data presentation regardless of quality or quantity of data
+          - USE headings to define sections
+          - USE horizontal rules to split sections
+          - USE bullet points for entries, etc.
+          - INCLUDE relevant images if provided in the context, chat history or other sources.
+          - DO NOT MAKE UP IMAGES, only use images that are provided.
+          - ALWAYS include references to sources at the end if available.
+
+          HTML MUST BE VALID and well-formed.
+
+          Prohibitions:
+          - DO NOT WRAP THE OUTPUT IN \`\`\`html \`\`\`
+          - DO NOT INCLUDE <html> tag, just output the content
+          - DO NOT INCLUDE BACKTICKS OR MARKDOWN SYNTAX.
+          </instructions>
+
+          Now write a document about the following topic:
+          ${title}
+          ` }] as ModelMessage[];
 
       console.log("Document tool called with prompt: ", prompt);
 

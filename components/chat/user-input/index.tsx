@@ -4,8 +4,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import React from "react";
 import { useState, useRef } from "react";
-import { PaperPlaneIcon } from "@radix-ui/react-icons";
-import { SendHorizontal, LoaderCircle } from "lucide-react";
+import { ArrowUp, CircleStop, LoaderCircle } from "lucide-react";
 import { UserInputOptions } from "./user-input-options";
 import { MessageTemplate } from "@/components/chat/message-area/message-template";
 
@@ -14,6 +13,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 function PureUserInput(props: any) {
   const {
+    stop,
     session,
     messages,
     status,
@@ -113,28 +113,27 @@ function PureUserInput(props: any) {
           </div>
           <button
             onClick={(e) => {
+              if (status !== "ready") {
+                stop();
+              }
               inputRef.current!.style.height = "auto";
-               if (session) {
+              if (session) {
                 handleSubmit(e);
                 inputRef.current!.style.height = "auto";
               } else {
                 openAuthDialog();
               }
             }}
-            disabled={status !== "ready"}
+            //disabled={status !== "ready"}
             className={cn(
               "flex items-center justify-center bg-stone-700 p-1 px-2"
             )}
             //hidden={!isEditorActive}
           >
             {status === "ready" ? (
-              <SendHorizontal size={24} color="white" />
+              <ArrowUp size={24} color="white" />
             ) : (
-              <LoaderCircle
-                size={24}
-                color="white"
-                className="!animate-spin !opacity-100"
-              />
+              <CircleStop size={24} color="white" />
             )}
             {/* <Image src="/icon/enter.svg" width={24} height={24} alt="send" /> */}
           </button>

@@ -84,8 +84,9 @@ export async function saveChat({ _id, title, user, messages }: { _id: string; ti
             // @ts-ignore
             { _id: _id, user },
             { $set: update },
-            { upsert: true }
+            { upsert: true },
         );
+
     } catch (_) {
         console.error("Error: ", _);
     }
