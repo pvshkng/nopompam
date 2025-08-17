@@ -70,21 +70,20 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
           - USE bullet points for entries, etc.
           - INCLUDE relevant images if provided in the context, chat history or other sources.
           - DO NOT MAKE UP IMAGES, only use images that are provided.
-          - ALWAYS include references to sources at the end if available.
+          - ALWAYS include references to sources with href at the end if available.
 
           HTML MUST BE VALID and well-formed.
 
           Prohibitions:
           - DO NOT WRAP THE OUTPUT IN \`\`\`html \`\`\`
           - DO NOT INCLUDE <html> tag, just output the content
+          - DO NOT LEAVE TRAILING EMPTY BULLET POINTS
           - DO NOT INCLUDE BACKTICKS OR MARKDOWN SYNTAX.
           </instructions>
 
           Now write a document about the following topic:
           ${title}
           ` }] as ModelMessage[];
-
-      console.log("Document tool called with prompt: ", prompt);
 
       const id = toolCallId;
       try {
@@ -114,7 +113,7 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
 
         let draftContent = '';
         const { fullStream } = streamText({
-          model: client("gemini-2.5-flash"),
+          model: client("gemini-2.5-pro"),
           messages: prompt,
           onFinish: async ({ response }) => {
             // Send stop streaming signal

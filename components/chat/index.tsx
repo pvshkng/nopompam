@@ -15,7 +15,7 @@ import { MessageArea } from "@/components/chat/message-area/message-area";
 import { UserInput } from "@/components/chat/user-input";
 import { LoginDialog } from "@/components/login/login-dialog";
 import { useToolStore, SearchQuery } from "@/lib/stores/tool-store";
-
+import { motion } from "framer-motion";
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { toast } from "sonner";
@@ -86,6 +86,7 @@ function PureRoot(props: PureRootProps) {
 
   const { messages, status, sendMessage, stop } = useChat({
     //maxSteps: 5,
+    experimental_throttle: 50,
     transport: new DefaultChatTransport({
       api: "/api/chat",
       credentials: "include",
@@ -100,7 +101,6 @@ function PureRoot(props: PureRootProps) {
 
     onFinish: ({ message }) => {},
     onData: (data) => {
-
       if (data.type === "data-tool-search" && data.data) {
         const searchData = data.data;
         const { toolCallId } = searchData;

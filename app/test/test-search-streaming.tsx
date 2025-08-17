@@ -202,51 +202,19 @@ export function TestSearchStreaming() {
 
     // Simulate first query completion after 2 seconds
     setTimeout(() => {
-      updateQueryStatus("test-tool-123", 0, "complete", [
-        {
-          title: "What's new in Azure OpenAI in Azure AI Foundry Models?",
-          url: "https://learn.microsoft.com/en-us/azure/ai-foundry/openai/whats-new",
-          content:
-            "On August 6, 2024, OpenAI announced the latest version of their flagship GPT-4o model version 2024-08-06 . GPT-4o 2024-08-06 has all the capabilities of the",
-          favicon: "https://learn.microsoft.com/favicon.ico",
-        },
-      ]);
+      updateQueryStatus("test-tool-123", 0, "complete", mockTool.output["0"]);
     }, 2000);
 
     // Simulate second query completion after 4 seconds
     setTimeout(() => {
-      updateQueryStatus("test-tool-123", 1, "complete", [
-        {
-          title: "PTT Holdings Management Update",
-          url: "https://example.com/ptt-news",
-          content:
-            "Recent management changes and strategic direction updates for PTT Holdings",
-          favicon: "https://example.com/favicon.ico",
-        },
-      ]);
+      updateQueryStatus("test-tool-123", 1, "complete", mockTool.output["1"]);
     }, 4000);
 
     // Finalize after 5 seconds
     setTimeout(() => {
       const finalResults = {
-        "0": [
-          {
-            title: "What's new in Azure OpenAI in Azure AI Foundry Models?",
-            url: "https://learn.microsoft.com/en-us/azure/ai-foundry/openai/whats-new",
-            content:
-              "On August 6, 2024, OpenAI announced the latest version of their flagship GPT-4o model version 2024-08-06 . GPT-4o 2024-08-06 has all the capabilities of the",
-            favicon: "https://learn.microsoft.com/favicon.ico",
-          },
-        ],
-        "1": [
-          {
-            title: "PTT Holdings Management Update",
-            url: "https://example.com/ptt-news",
-            content:
-              "Recent management changes and strategic direction updates for PTT Holdings",
-            favicon: "https://example.com/favicon.ico",
-          },
-        ],
+        "0": mockTool.output["0"],
+        "1": mockTool.output["1"],
       };
 
       finalizeTool("test-tool-123", finalResults);

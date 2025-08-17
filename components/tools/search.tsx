@@ -5,6 +5,7 @@ import { useToolStore, SearchQuery } from "@/lib/stores/tool-store";
 import { cn } from "@/lib/utils";
 import {
   SearchCode,
+  Search as SearchIcon,
   LoaderCircle,
   CircleCheckBig,
   Link,
@@ -23,16 +24,30 @@ import { UITool } from "ai";
 import { useState, useEffect, useMemo } from "react";
 import { Suspense } from "react";
 import { TavilySearchResponse } from "@tavily/core";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 
-function SearchResult({ results }: { results: TavilySearchResponse[] }) {
+type TavilySearchResult = TavilySearchResponse["results"][number];
+
+function SearchResult({ results }: { results: TavilySearchResult[] }) {
   if (!results || results.length === 0) return null;
 
-  return results.map((result: any, i: number) => (
+  return results.map((result, i: number) => (
     <a key={i} className="text-xs mt-3 block" href={result?.url!}>
       <span className="flex gap-1 mb-1 font-semibold items-center overflow-hidden underline">
-        <Suspense fallback={<Link className="text-stone-500 size-3" />}>
+        <Suspense
+          fallback={
+            <SearchIcon
+              width={32}
+              height={32}
+              className="size-8 text-stone-700"
+            />
+          }
+        >
           <img
-            src={result.favicon}
+            src={`https://www.google.com/s2/favicons?domain=${
+              new URL(result.url).hostname
+            }&sz=16`}
             alt={""}
             width={12}
             height={12}
@@ -101,18 +116,18 @@ function SearchContent({ tool, draftTool }) {
   return (
     <Accordion
       type="multiple"
-      value={openItems}
+      value={tool.state === "output-available" ? undefined : openItems}
       onValueChange={setOpenItems}
       className="flex flex-col w-full mx-auto"
     >
       {queries.map((q) => (
         <AccordionItem key={q.index} value={q.index.toString()}>
-          <AccordionPrimitive.Header className="!border-none">
+          <AccordionPrimitive.Header className="!border-none my-0">
             <AccordionPrimitive.Trigger className="w-full">
               <span className="flex flex-row items-center justify-start gap-1 text-[10px] w-full">
                 <div
                   className={cn(
-                    "flex items-center justify-center rounded-full p-1 border border-dashed",
+                    "flex items-center justify-center rounded-full p-1 border ",
                     q.status === "pending" &&
                       "text-stone-400 border-stone-400 bg-stone-50",
                     q.status === "complete" &&
@@ -137,24 +152,54 @@ function SearchContent({ tool, draftTool }) {
             {/* Pseudo dotted line */}
             <div
               className={cn(
-                "absolute left-[10px] -top-5 -bottom-0 w-px border-l border-dotted border-stone-500"
+                "absolute left-[10px] top-0 -bottom-0 w-px border-l border-dotted border-stone-400"
+                // q.status === "pending" &&
+                //   "text-stone-400 border-stone-400 bg-stone-50",
+                // q.status === "complete" &&
+                //   "text-green-600 border-green-600 bg-green-50"
                 //q.index === queries.length - 1 && "hidden"
               )}
             />
 
             <div className="text-[10px] ml-6 max-w-full text-stone-400 overflow-hidden">
-              {q.status === "pending" && <ToolSkeleton />}
+              {/* {q.status === "pending" && <ToolSkeleton />}
               {q.status === "complete" && q.results.length > 0 && (
                 <SearchResult results={q.results} />
-              )}
-              {q.status === "complete" && q.results.length === 0 && (
-                <div className="text-stone-500 text-xs">No results found</div>
-              )}
-              {q.status === "error" && (
-                <div className="text-red-500 text-xs">
-                  Error searching this query
-                </div>
-              )}
+              )} */}
+              <AnimatePresence mode="wait">
+                {q.status === "pending" && (
+                  <motion.div
+                    key="skeleton"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <ToolSkeleton />
+                  </motion.div>
+                )}
+
+                {q.status === "complete" && q.results.length > 0 && (
+                  <motion.div
+                    key="results"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <SearchResult results={q.results} />
+                  </motion.div>
+                )}
+                {q.status === "complete" && q.results.length === 0 && (
+                  <div className="text-stone-500 text-xs">No results found</div>
+                )}
+                {q.status === "error" && (
+                  <div className="text-red-500 text-xs">
+                    Error searching this query
+                  </div>
+                )}
+              </AnimatePresence>
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -186,7 +231,7 @@ export function Search({
         </span>
       </ToolHeader>
       <ToolContent>
-        <div className="flex flex-col w-full item-center justify-center mt-2">
+        <div className="flex flex-col w-full item-center justify-center mt-2 transition-all">
           <SearchContent tool={tool} draftTool={draftTool} />
         </div>
       </ToolContent>

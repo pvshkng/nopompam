@@ -29,22 +29,6 @@ export const components: Partial<any> = {
   },
   a: ({ children, className, href, ...props }) => (
     <>
-      <style>{`
-      img:not([src]):not([srcset])::before,
-      img[alt]::after {
-        display: none;
-      }
-
-      img:not([src]):not([srcset]) + .favicon-fallback,
-      img[src=""]::after + .favicon-fallback {
-        opacity: 1;
-      }
-
-      /* Hide fallback when image loads successfully */
-      img:not([src=""]):not([alt=""]) + .favicon-fallback {
-        opacity: 0;
-      }
-      `}</style>
       <a
         href={href}
         {...props}
@@ -55,14 +39,16 @@ export const components: Partial<any> = {
         <img
           onError={(e) => {
             // @ts-ignore
-            e.target.style.display = "none";
+            // e.target.style.display = "none";
             // @ts-ignore
-            e.target.nextElementSibling.style.display = "inline";
+            // e.target.nextElementSibling.style.display = "inline";
+            e.target.src = "/icon/link.svg";
           }}
-          src={new URL("/favicon.ico", href).href}
+          src={`https://www.google.com/s2/favicons?domain=${
+            new URL(href).hostname
+          }&sz=16`}
           className="inline max-h-3 max-w-3 mr-1"
         />
-        <Link className="inline size-3 mr-1" style={{ display: "none" }} />
         {children}
       </a>
     </>
@@ -111,9 +97,7 @@ export const components: Partial<any> = {
       const match = /language-(\w+)/.exec(children.props.className || "");
       if (match) {
         const detectedLanguage = match[1];
-        language = isBundledLanguage(detectedLanguage)
-          ? detectedLanguage
-          : "";
+        language = isBundledLanguage(detectedLanguage) ? detectedLanguage : "";
       }
 
       code = children.props.children || "";

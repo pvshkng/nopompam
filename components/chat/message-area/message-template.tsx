@@ -10,10 +10,10 @@ import {
 
 // prettier-ignore
 const templates = [
-  { icon: ChartCandlestick, prompt: "Research NVIDIA stock.", type: "research", },
+  { icon: ChartCandlestick, prompt: "Research Figma IPO", type: "research", },
   { icon: Globe, prompt: "What's happening in Texas?", type: "web" },
   { icon: Gamepad2, prompt: "When will Silksong be released?", type: "web" },
-  { icon: Clapperboard, prompt: "Is Pedro Pascal gay?", type: "web" },
+  { icon: Clapperboard, prompt: "Does the Matrix really exist?", type: "web" },
   { icon: Brain, prompt: "Is Gemini better than OpenAI?", type: "web" },
 ];
 
@@ -34,7 +34,7 @@ export function MessageTemplate(props: any) {
               key={i}
               onClick={() => setInput(t.prompt)}
               className={cn(
-                "flex items-center",
+                "flex flex-row items-center justify-center",
                 "gap-2 p-2",
                 "rounded-sm  bg-neutral-100 border border-stone-300",
                 "cursor-pointer",
@@ -42,7 +42,7 @@ export function MessageTemplate(props: any) {
               )}
             >
               <t.icon width={24} height={24} className="text-stone-500" />
-              <p className="text-stone-700 text-xs max-sm:text-[10px]">{t.prompt}</p>
+              <p className="text-stone-700 text-xs max-sm:text-[10px] m-0 p-0">{t.prompt}</p>
             </div>
           );
         })}

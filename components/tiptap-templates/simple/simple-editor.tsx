@@ -276,7 +276,9 @@ export function SimpleEditor({
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (readOnly) {
+      scrollToBottom();
+    }
   }, [editor?.getHTML()]);
 
   const rect = useCursorVisibility({

@@ -1,16 +1,17 @@
 import { cn } from "@/lib/utils";
 import { UIMessage } from "ai";
 import { memo, useMemo } from "react";
+import Image from "next/image";
 
 // Message renderer
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 // import remarkMath from "remark-math";
 // import rehypeKatex from "rehype-katex";
-
 import rehypeRaw from "rehype-raw";
-
 import { components } from "@/components/markdown/markdown-component";
+
+import { MemoizedMarkdown } from "@/components/markdown/memoized-markdown";
 import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
 import { GradientText } from "@/components/chat/message-area/message-gradient-text";
 
@@ -61,25 +62,17 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
         switch (p.type) {
           case "text":
             return (
-              <ReactMarkdown
-                key={`${m.id}-${j}`}
+              <MemoizedMarkdown
+                key={`${m.id}-text-${j}`}
+                role={m.role}
+                id={`${m.id}-${j}`}
+                content={p.text}
                 className={cn(
                   "stream-section",
                   "m-2 prose text-sm",
                   m.role === "user" ? "text-stone-300" : "text-black"
-                  // m.role === "assistant" &&
-                  //   status !== "ready" &&
-                  //   isLast &&
-                  //   "typewriting"
                 )}
-                // remarkPlugins={m.role == "user" ? [] : [remarkGfm]} //remarkMath remarkMermaidPlugin
-                // rehypePlugins={m.role == "user" ? [] : [rehypeRaw]} //rehypeKatex
-                // components={m.role == "user" ? {} : components}
-                // remarkRehypeOptions={{}}
-                {...markdownOptions}
-              >
-                {p.text}
-              </ReactMarkdown>
+              />
             );
 
           case "tool-web":
@@ -113,10 +106,23 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           />
         )}
       {m.role === "assistant" && isLast && status !== "ready" && (
-        <div className="flex flex-row gap-2 items-center mx-4">
-          <div className="pulse-loader max-h-1 max-w-1" />
-          <GradientText text="Thinking..." className="text-sm mx-2 font-bold" />
-        </div>
+        <>
+          <div className="flex flex-row gap-2 items-center mx-4 my-1">
+            <div className="pulse-loader flex !size-5 max-h-5 max-w-5 bg-transparent">
+              <Image
+                src="/avatar/furmata.png"
+                height={20}
+                width={20}
+                alt="avatar"
+                className="animate-spin rounded-full"
+              />
+            </div>
+            <GradientText
+              text="Thinking..."
+              className="text-sm mx-2 font-bold"
+            />
+          </div>
+        </>
       )}
     </div>
   );

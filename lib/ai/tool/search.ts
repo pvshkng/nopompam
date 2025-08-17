@@ -59,9 +59,9 @@ export const search = ({ writer }: SearchProps) =>
             const response = await tvly.search(
               queries[i],
               {
-                includeImages: true,
-                includeImageDescriptions: true,
-                includeFavicon: true
+                // includeImages: true,
+                // includeImageDescriptions: true,
+                // includeFavicon: true
               }
             );
 
