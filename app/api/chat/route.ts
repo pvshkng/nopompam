@@ -12,6 +12,7 @@ import { mock } from "@/app/api/chat/mock";
 import { system_prompt } from "./system";
 import { getProvider } from "./provider";
 import { removeProviderExecuted } from "@/lib/ai/utils";
+import _ from "lodash";
 
 export const maxDuration = 60;
 

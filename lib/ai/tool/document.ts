@@ -113,7 +113,7 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
 
         let draftContent = '';
         const { fullStream } = streamText({
-          model: client("gemini-2.5-pro"),
+          model: client("gemini-2.5-flash"),
           messages: prompt,
           onFinish: async ({ response }) => {
             // Send stop streaming signal
