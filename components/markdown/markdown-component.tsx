@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Copy } from "lucide-react";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
 import { TLDR } from "./tldr";
+import { FollowUp } from "./follow-up";
 import { Stock } from "./stock";
 import { Link } from "lucide-react";
 
@@ -79,6 +80,9 @@ export const components: Partial<any> = {
   },
   tldr: ({ children }) => {
     return <TLDR>{children}</TLDR>;
+  },
+  followup: ({ children }) => {
+    return <FollowUp>{children}</FollowUp>;
   },
   think: ({ children }) => {
     return <p>{children}</p>;

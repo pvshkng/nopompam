@@ -7,6 +7,7 @@ import {
   Clapperboard,
   Brain,
 } from "lucide-react";
+import { useInputStore } from "@/lib/stores/input-store";
 
 // prettier-ignore
 const templates = [
@@ -18,8 +19,7 @@ const templates = [
 ];
 
 export function MessageTemplate(props: any) {
-  const { setInput } = props;
-  // handleSubmit({}, { body: {} });
+  const { setInput } = useInputStore();
   return (
     <>
       <div
@@ -42,7 +42,9 @@ export function MessageTemplate(props: any) {
               )}
             >
               <t.icon width={24} height={24} className="text-stone-500" />
-              <p className="text-stone-700 text-xs max-sm:text-[10px] m-0 p-0">{t.prompt}</p>
+              <p className="text-stone-700 text-xs max-sm:text-[10px] m-0 p-0">
+                {t.prompt}
+              </p>
             </div>
           );
         })}

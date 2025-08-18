@@ -28,7 +28,7 @@ import {
 
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useDossierStore } from "@/lib/stores/dossier-store";
-
+import { useInputStore } from "@/lib/stores/input-store";
 type PureRootProps = {
   initialMessages: any[];
   initialThreads: any[];
@@ -69,7 +69,7 @@ function PureRoot(props: PureRootProps) {
     useScrollToBottom();
   const [model, setModel] = useState("gemini-2.5-flash");
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
-  const [input, setInput] = useState("");
+  const { input, setInput, clearInput } = useInputStore();
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
   let hasStartedStreaming = false;
@@ -78,10 +78,6 @@ function PureRoot(props: PureRootProps) {
     setActiveTab,
     dossierOpen,
     setDossierOpen,
-    openDossier,
-    // setIsStreaming,
-    // appendStreamingContent,
-    // clearStreamingContent,
   } = useDossierStore();
 
   const { messages, status, sendMessage, stop } = useChat({
@@ -211,7 +207,7 @@ function PureRoot(props: PureRootProps) {
     if (!input.trim()) return;
 
     const messageText = input.trim();
-    setInput("");
+    clearInput();
 
     try {
       sendMessage(
@@ -290,8 +286,6 @@ function PureRoot(props: PureRootProps) {
                   session={session}
                   messages={messages}
                   status={status}
-                  input={input}
-                  setInput={setInput}
                   handleSubmit={handleSubmit}
                   model={model}
                   setModel={setModel}

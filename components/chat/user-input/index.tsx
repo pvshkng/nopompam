@@ -11,24 +11,15 @@ import { MessageTemplate } from "@/components/chat/message-area/message-template
 import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
 import { useShallow } from "zustand/react/shallow";
 import { useDossierStore } from "@/lib/stores/dossier-store";
-function PureUserInput(props: any) {
-  const {
-    stop,
-    session,
-    messages,
-    status,
-    input,
-    setInput,
-    handleSubmit,
-    model,
-    setModel,
-  } = props;
-  const { dossierOpen, setDossierOpen } = useDossierStore();
-  const { suggestions } = props;
-  const [isEditorActive, setEditorStatus] = useState(false);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+import { useInputStore } from "@/lib/stores/input-store";
 
-  const { isOpen, setIsOpen, openAuthDialog, close } = useAuthDialogStore(
+function PureUserInput(props: any) {
+  const { stop, session, messages, status, handleSubmit, model, setModel } =
+    props;
+  const { dossierOpen, setDossierOpen } = useDossierStore();
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { input, setInput } = useInputStore();
+  const { openAuthDialog } = useAuthDialogStore(
     useShallow((state) => ({
       isOpen: state.isOpen,
       setIsOpen: state.setIsOpen,
@@ -36,14 +27,6 @@ function PureUserInput(props: any) {
       close: state.close,
     }))
   );
-
-  /* useEffect(() => {
-    let input = document.getElementById("userInput");
-    input?.addEventListener("keypress", handleKeypress);
-    return () => {
-      input?.removeEventListener("keypress", handleKeypress);
-    };
-  }, [handleKeypress]); */
 
   return (
     <div
@@ -64,7 +47,7 @@ function PureUserInput(props: any) {
         )}
       >
         {messages.length === 0 && status === "ready" && (
-          <MessageTemplate setInput={setInput} />
+          <MessageTemplate />
         )}
         <div
           className={cn(
