@@ -48,11 +48,15 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
         "[&>*]:text-left",
         m.role == "user"
           ? cn(
+              "bg-black/20 backdrop-blur-sm border rounded-2xl",
+              "before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/60 before:via-transparent before:to-transparent before:opacity-70 before:pointer-events-none",
+              "after:absolute after:inset-0 after:rounded-2xl after:bg-gradient-to-tl after:from-white/30 after:via-transparent after:to-transparent after:opacity-50 after:pointer-events-none",
+              "rounded-br-none",
               "relative",
               "max-w-[80%]",
-              "bg-stone-700",
-              "after:w-0 after:h-0 after:absolute after:-bottom-2 after:right-0",
-              "after:!border-transparent  after:!border-t-stone-700 after:!border-r-stone-700 after:border-[8px]"
+
+              //"after:w-0 after:h-0 after:absolute after:-bottom-2 after:right-0",
+              //"after:!border-transparent after:!border-t-black/20 after:!border-r-black/20 after:border-[4px]"
             )
           : "rounded-bl-[0] w-full"
       )}
@@ -70,7 +74,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 className={cn(
                   "stream-section",
                   "m-2 prose text-sm",
-                  m.role === "user" ? "text-stone-300" : "text-black"
+                  m.role === "user" ? "text-stone-700" : "text-black"
                 )}
               />
             );

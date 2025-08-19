@@ -129,11 +129,11 @@ function SearchContent({ tool, draftTool }) {
                   className={cn(
                     "flex items-center justify-center rounded-full p-1 border ",
                     q.status === "pending" &&
-                      "text-stone-400 border-stone-400 bg-stone-50",
+                      "text-stone-400 border-stone-400 bg-stone-50/5",
                     q.status === "complete" &&
-                      "text-green-600 border-green-600 bg-green-50",
+                      "text-green-600 border-green-600 bg-green-50/5",
                     q.status === "error" &&
-                      "text-red-600 border-red-600 bg-red-50"
+                      "text-red-600 border-red-600 bg-red-50/5"
                   )}
                 >
                   {q.status === "pending" && (
