@@ -24,10 +24,11 @@ export const TLDR = ({ children }: { children: React.ReactNode }) => {
     <span
       className={cn(
         "flex flex-col w-full px-4 py-3 gap-2 my-2",
-        "border border-stone-300 rounded-md bg-neutral-100"
+        "border border-stone-300 rounded-md bg-neutral-100",
+        "text-stone-500"
       )}
     >
-      <span className="text-xs flex flex-row text-stone-500 items-center gap-2">
+      <span className="text-xs flex flex-row items-center gap-2">
         {isStreaming ? (
           <LoaderCircle size={16} className="!animate-spin !opacity-100" />
         ) : (

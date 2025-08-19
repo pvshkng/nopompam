@@ -5,7 +5,7 @@ export const FollowUp = ({ children }: { children: React.ReactNode }) => {
   const { setInput } = useInputStore();
 
   return (
-    <div
+    <span
       onClick={() => {
         if (children) {
           setInput(children.toString());
@@ -23,6 +23,6 @@ export const FollowUp = ({ children }: { children: React.ReactNode }) => {
         {children}
       </span>
       <ArrowRight className="min-w-4 min-h-4 size-4 text-stone-400" />
-    </div>
+    </span>
   );
 };

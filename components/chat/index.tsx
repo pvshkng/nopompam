@@ -29,6 +29,7 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 import { useInputStore } from "@/lib/stores/input-store";
+
 type PureRootProps = {
   initialMessages: any[];
   initialThreads: any[];
@@ -73,12 +74,8 @@ function PureRoot(props: PureRootProps) {
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
   let hasStartedStreaming = false;
-  const {
-    activeTab,
-    setActiveTab,
-    dossierOpen,
-    setDossierOpen,
-  } = useDossierStore();
+  const { activeTab, setActiveTab, dossierOpen, setDossierOpen } =
+    useDossierStore();
 
   const { messages, status, sendMessage, stop } = useChat({
     //maxSteps: 5,

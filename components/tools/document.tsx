@@ -18,8 +18,10 @@ const PureDocument = (props: any) => {
   return (
     <>
       <div
-        //defaultOpen={tool?.state == "output-available"}
-        className="cursor-pointer py-3 px-4 my-2 mx-2 border border-stone-300 rounded-md bg-neutral-100"
+        className={cn(
+          "border border-stone-300 bg-neutral-100 rounded-md",
+          "cursor-pointer py-3 px-4 my-2 mx-2"
+        )}
         onClick={() => {
           const { getDocument, addDocument, switchTab } =
             useDossierStore.getState();
