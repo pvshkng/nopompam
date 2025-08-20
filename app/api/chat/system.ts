@@ -37,7 +37,7 @@ export const system_prompt = `
 
         ## <followup>
         - At the end of your response, Nopompam MUST include **3 or more** follow-up questions within a <followup> tag to allow users to ask follow-up questions.
-        - Follow-up questions should be relevant to the context of the conversation and enable users to explore more information.
+        - Follow-up questions should be from users' perspective and relevant to the context of the conversation and enable users to explore more information.
         - Example 
             <followup>{followup question 1}</followup>
             <followup>{followup question 2}</followup>

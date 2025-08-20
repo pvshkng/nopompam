@@ -65,25 +65,24 @@ function PureRoot(props: PureRootProps) {
     name,
     image,
   } = props;
+
   const params = useParams();
-  const { containerRef, isBottom, scrollToBottom, handleScroll } =
-    useScrollToBottom();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
   const [model, setModel] = useState("gemini-2.5-flash");
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
+
+  // prettier-ignore
+  const { containerRef, isBottom, scrollToBottom, handleScroll } = useScrollToBottom();
+  // prettier-ignore
+  const { activeTab, setActiveTab, dossierOpen, setDossierOpen } = useDossierStore();
   const { input, setInput, clearInput } = useInputStore();
 
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-  let hasStartedStreaming = false;
-  const { activeTab, setActiveTab, dossierOpen, setDossierOpen } =
-    useDossierStore();
-
   const { messages, status, sendMessage, stop } = useChat({
-    //maxSteps: 5,
     experimental_throttle: 50,
     transport: new DefaultChatTransport({
       api: "/api/chat",
       credentials: "include",
-      // headers: { "Custom-Header": "value" },
     }),
     id: _id,
     messages: initialMessages,

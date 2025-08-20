@@ -11,37 +11,6 @@ import {
 import { Suspense, useState } from "react";
 import Image from "next/image";
 
-/* 
-https://vercel.com/blog/ai-sdk-5
-const { messages } = useChat<MyUIMessage>();
-{
-  messages.map(message => (
-    <>
-      {message.parts.map(part => {
-        switch (part.type) {
-          // Static tools with specific (`tool-${toolName}`) types
-          case 'tool-getWeather':
-            // New states for streaming and error handling
-            switch (part.state) {
-              case 'input-streaming':
-                // Automatically streamed partial inputs
-                return <div>Getting weather for {part.input.location}...</div>;
-              case 'input-available':
-                return <div>Getting weather for {part.input.location}...</div>;
-              case 'output-available':
-                return <div>The weather is: {part.output}</div>;
-              case 'output-error':
-                // Explicit error state with information
-                return <div>Error: {part.errorText}</div>;
-            }
-        }
-      })}
-    </>
-  ));
-}
-
-*/
-
 export const ToolAnnotation = (props: any) => {
   const { tool } = props;
   console.log("tool: ", tool);

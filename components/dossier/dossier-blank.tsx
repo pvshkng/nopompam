@@ -1,7 +1,7 @@
 "use client";
 import { memo, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { GridBackground } from "../background-grid";
+import { GridBackground } from "../background/background-grid";
 
 const template = [
   { kind: "text", prompt: ["prompt 1", "prompt 2"] },

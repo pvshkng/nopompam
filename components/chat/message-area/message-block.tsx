@@ -108,7 +108,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
       {m.role === "assistant" && isLast && status !== "ready" && (
         <>
           <div className="flex flex-row gap-2 items-center mx-4 my-1">
-            <div className="pulse-loader flex !size-5 max-h-5 max-w-5 bg-transparent">
+            <div className="pulse-loader flex !size-3 max-h-5 max-w-5 bg-transparent">
               <Image
                 src="/avatar/furmata.png"
                 height={20}

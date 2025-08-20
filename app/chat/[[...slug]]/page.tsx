@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
-// import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Root } from "@/components/chat";
 import { createChat, getChat } from "@/lib/ai/chat-store";
 import { getThreads, getThread } from "@/lib/mongo/chat-store";
 import { getArtifacts } from "@/lib/mongo/artifact-store";
 import { cn } from "@/lib/utils";
-import { GridBackground } from "@/components/background-grid";
+import { GridBackground } from "@/components/background/";
 import { generateId } from "ai";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";

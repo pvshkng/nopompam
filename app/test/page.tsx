@@ -24,7 +24,7 @@ export default function TestPage() {
       <BlankDocument />
       <div className="flex flex-col w-full justify-center items-center my-4 p-4">
         <div className="flex flex-row gap-2 items-center mx-4">
-          <div className="pulse-loader flex !size-5 max-h-5 max-w-5 bg-transparent">
+          <div className="pulse-loader flex !size-3 max-h-5 max-w-5 bg-transparent">
             <img
               src="/avatar/furmata.png"
               height={20}

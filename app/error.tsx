@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { GridBackground } from "@/components/background-grid";
+import { GridBackground } from "@/components/background";
 
 export default function Error({
   error,

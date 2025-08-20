@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GridBackground } from "@/components/background-grid";
+import { GridBackground } from "@/components/background";
 
 export default function NotFound({
   error,
@@ -12,7 +12,10 @@ export default function NotFound({
       <GridBackground />
 
       <h1 className="z-10 text-stone-400 text-4xl font-semibold">Not found</h1>
-      <Link href="/" className="z-10 text-stone-400 text-md font-semibold underline">
+      <Link
+        href="/"
+        className="z-10 text-stone-400 text-md font-semibold underline"
+      >
         Return home
       </Link>
     </div>
