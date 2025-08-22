@@ -4,7 +4,7 @@ import { memo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, LogOut } from "lucide-react";
 import { User } from "@/components/icons/user";
 import { EllipsisMenu } from "@/components/chat/thread-manager/ellipsis";
 import { authClient } from "@/lib/auth-client";
@@ -68,11 +68,40 @@ export function PureThreadManager(props: any) {
               <User />
             )}
           </div>
-          <div className={cn("flex flex-col max-size-full overflow-hidden")}>
+          <div className={cn("flex flex-col h-full justify-center max-size-full overflow-hidden")}>
             <div className="font-semibold truncate">
-              Hello, {session?.user?.name || "Guest"}
+              {session?.user?.name || "Guest"}
             </div>
-            <div className="text-xs text-stone-600">How can I help you?</div>
+            {/* Log out */}
+            {session && (
+              <>
+                <div
+                  className={cn(
+                    "flex flex-row items-center justify-start"
+                  )}
+                >
+                  <button
+                    className={cn(
+                      "flex flex-row items-center gap-1 py-1",
+                      "text-center text-xs text-stone-700"
+                    )}
+                    onClick={async (e) => {
+                      e.currentTarget.classList.add("animate-pulse");
+                      await authClient.signOut({
+                        fetchOptions: {
+                          onSuccess: () => {
+                            window.location.href = "/";
+                          },
+                        },
+                      });
+                    }}
+                  >
+                    <LogOut className="size-3.5 text-stone-700" />
+                    Logout
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -169,40 +198,6 @@ export function PureThreadManager(props: any) {
             </>
           )}
         </div>
-
-        {/* Log out */}
-        {session && (
-          <>
-            {" "}
-            {/* Separator */}
-            <hr className="flex items-center my-3 border-1 border-stone-200 w-[90%]" />
-            <div
-              className={cn(
-                "flex flex-row items-center justify-center",
-                "w-full"
-              )}
-            >
-              <button
-                className={cn(
-                  "flex w-full p-2 mx-5",
-                  "bg-stone-700 hover:bg-stone-900",
-                  "text-center text-xs text-stone-300"
-                )}
-                onClick={async () => {
-                  await authClient.signOut({
-                    fetchOptions: {
-                      onSuccess: () => {
-                        window.location.href = "/";
-                      },
-                    },
-                  });
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          </>
-        )}
       </div>
     </div>
   );

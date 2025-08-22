@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { memo, use } from "react";
 import { ThreadManager } from "@/components/chat/thread-manager";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -21,6 +22,7 @@ import { useDossierStore } from "@/lib/stores/dossier-store";
 export const PureNavigation = (props: any) => {
   const { _id, session, threads, setThreads } = props;
   const { setDossierOpen, dossierOpen } = useDossierStore();
+  const router = useRouter();
 
   return (
     <div
@@ -31,9 +33,12 @@ export const PureNavigation = (props: any) => {
         "transition-all duration-300 ease-in-out"
       )}
     >
-      <Link
-        href={{ pathname: "/chat" }}
-        prefetch={false}
+      <button
+        onClick={(e) => {
+          router.push("/chat");
+          router.refresh();
+          e.currentTarget.children[0].classList.add("animate-pulse");
+        }}
         className={cn(
           "[writing-mode:sideways-lr]",
           "not-italic",
@@ -48,7 +53,7 @@ export const PureNavigation = (props: any) => {
           stroke={"#44403c"}
           //className="text-stone-200"
         />
-      </Link>
+      </button>
       <Separator orientation="horizontal" className="w-full bg-stone-300" />
       <Drawer direction="left">
         <DrawerTrigger
