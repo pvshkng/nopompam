@@ -18,7 +18,7 @@ const PureStock = (props: any) => {
     <>
       <div
         className={cn(
-          "flex flex-col w-full h-full px-4 py-3 gap-2 m-2",
+          "flex flex-col w-full h-full px-4 py-3 gap-2",
           "border border-stone-300 rounded-md bg-neutral-100"
         )}
       >
