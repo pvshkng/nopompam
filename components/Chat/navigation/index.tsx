@@ -39,8 +39,8 @@ export const PureNavigation = (props: any) => {
           router.refresh();
           e.currentTarget.children[0].classList.add("animate-pulse");
         }}
+        style={{ writingMode: "sideways-lr" }}
         className={cn(
-          "[writing-mode:sideways-lr]",
           "not-italic",
           "flex flex-row items-center font-black text-xs gap-1",
           "text-stone-500"
@@ -57,8 +57,8 @@ export const PureNavigation = (props: any) => {
       <Separator orientation="horizontal" className="w-full bg-stone-300" />
       <Drawer direction="left">
         <DrawerTrigger
+          style={{ writingMode: "sideways-lr" }}
           className={cn(
-            "[writing-mode:sideways-lr]",
             "flex flex-row items-center font-black text-xs gap-1",
             "text-stone-700"
             //"border border-stone-200",
@@ -94,8 +94,8 @@ export const PureNavigation = (props: any) => {
         onClick={() => {
           setDossierOpen(!dossierOpen);
         }}
+        style={{ writingMode: "sideways-lr" }}
         className={cn(
-          "[writing-mode:sideways-lr]",
           "flex flex-row items-center font-black text-xs gap-1",
           "text-stone-700"
           //"border border-stone-200",

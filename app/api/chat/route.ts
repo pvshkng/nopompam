@@ -40,16 +40,11 @@ export async function POST(req: NextRequest) {
                         model: provider(model),
                         system: system_prompt,
                         prompt: modelMessages,
-                        experimental_transform: smoothStream({
-                            chunking: 'word',
-                            delayInMs: 10
-                        }),
                         tools: {
                             // web: web({}),
                             search: search({ writer }),
                             document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
                         },
-
                         stopWhen: stepCountIs(5),
                         onError(error) {
                             console.error("Error in chat route: ", error);
@@ -57,8 +52,11 @@ export async function POST(req: NextRequest) {
                         prepareStep: async ({ model, stepNumber, steps, messages }) => {
                             memory = messages
                             return {}
-                        }
-
+                        },
+                        experimental_transform: smoothStream({
+                            chunking: 'word',
+                            delayInMs: 10
+                        })
                     });
 
                     writer.merge(result.toUIMessageStream({

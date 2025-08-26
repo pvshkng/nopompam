@@ -19,6 +19,8 @@ import { motion } from "framer-motion";
 import { handleNewThread } from "@/lib/thread/new-thread-handler";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { toast } from "sonner";
+import { processDataEvent } from "@/lib/ai/data/";
+import type { DataHandlerContext } from "@/lib/ai/data/types";
 
 import {
   ResizableHandle,
@@ -68,10 +70,15 @@ function PureRoot(props: PureRootProps) {
 
   const params = useParams();
   const isDesktop = useMediaQuery("(min-width: 768px)");
-
   const [model, setModel] = useState("gemini-2.5-flash");
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
-
+  const dataHandlerContext: DataHandlerContext = {
+    _id,
+    email,
+    setThreads,
+    params,
+  };
+  
   // prettier-ignore
   const { containerRef, isBottom, scrollToBottom, handleScroll } = useScrollToBottom();
   // prettier-ignore
@@ -93,103 +100,7 @@ function PureRoot(props: PureRootProps) {
 
     onFinish: ({ message }) => {},
     onData: (data) => {
-      if (data.type === "data-tool-search" && data.data) {
-        const searchData = data.data;
-        const { toolCallId } = searchData;
-
-        switch (searchData.type) {
-          case "init":
-            console.log("Initializing search tool:", searchData);
-            useToolStore
-              .getState()
-              .initializeDraftTool(
-                toolCallId,
-                searchData.toolType,
-                searchData.queries
-              );
-            break;
-
-          case "query-complete":
-            console.log("Query completed:", searchData);
-            useToolStore
-              .getState()
-              .updateQueryStatus(
-                toolCallId,
-                searchData.queryId,
-                "complete",
-                searchData.result
-              );
-            break;
-
-          case "query-error":
-            console.log("Query error:", searchData);
-            useToolStore
-              .getState()
-              .updateQueryStatus(toolCallId, searchData.queryId, "error");
-            break;
-
-          case "finalize":
-            console.log("Finalizing search tool:", searchData);
-            // This will clean up the draft tool since tool.output will take over
-            useToolStore.getState().finalizeTool(toolCallId, searchData.output);
-            break;
-        }
-      }
-
-      if (data.type === "data-document" && data.data) {
-        const { id, type, content } = data.data as DataDocument;
-        const store = useDossierStore.getState();
-
-        switch (type) {
-          case "init":
-            // Create new document
-            store.addDocument({
-              id: content.id,
-              title: content.title,
-              kind: content.kind,
-              content: "",
-            });
-            break;
-
-          case "start":
-            // Start streaming for this document
-            store.startDocumentStreaming(id);
-            break;
-
-          case "text":
-            // Append content to specific document
-            if (content) {
-              store.appendDocumentContent(id, content);
-            }
-            break;
-
-          case "stop":
-            // Stop streaming for this document
-            store.stopDocumentStreaming(id);
-            break;
-
-          case "error":
-            // Handle error for this document
-            console.error(`Error in document ${id}:`, content);
-            store.stopDocumentStreaming(id);
-            break;
-        }
-      }
-
-      try {
-        if (data.type === "data-title") {
-          console.log("Creating new thread with title: ", data.data!.title);
-          handleNewThread({
-            data,
-            _id,
-            email,
-            setThreads,
-            params,
-          });
-        }
-      } catch (error) {
-        console.error("Error handling thread data:", error);
-      }
+      processDataEvent(data.type, data.data, dataHandlerContext, data);
     },
     onError: (e) => {
       console.error("Chat error:", e);
