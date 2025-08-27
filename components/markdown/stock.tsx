@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ChartCandlestick, LoaderCircle } from "lucide-react";
 import { memo, useEffect, useState } from "react";
-import { MessageSkeleton } from "@/components/chat/message-area/message-loading-skeleton";
+import { MessageSkeleton } from "@/components/chat-message-area/message-loading-skeleton";
 import { ChartAreaGradient } from "@/components/charts/chart-area-gradient";
 
 type Status = "loading" | "ready" | "error";

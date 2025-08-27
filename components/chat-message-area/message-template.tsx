@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import {
   Globe,
-  BookOpenText,
   ChartCandlestick,
   Gamepad2,
   Clapperboard,

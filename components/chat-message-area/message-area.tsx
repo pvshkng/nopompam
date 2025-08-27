@@ -4,12 +4,11 @@ import { cn } from "@/lib/utils";
 import "@/styles/message-area.css";
 import "@/styles/typewriter.css";
 import "@/styles/streaming-effect.css";
-// import "@/lib/LaTeX/katex.min.css";
+import "@/lib/LaTeX/katex.min.css";
 import { UIMessage } from "ai";
 import { MessageBlock } from "./message-block";
 import { memo } from "react";
-import { MessageSkeleton } from "./message-loading-skeleton";
-import { AnimatePresence, motion } from "framer-motion";
+
 type MessageAreaProps = {
   status: string;
   name: string;

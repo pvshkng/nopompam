@@ -4,7 +4,6 @@ import { memo, useMemo } from "react";
 import Image from "next/image";
 
 // Message renderer
-import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 // import remarkMath from "remark-math";
 // import rehypeKatex from "rehype-katex";
@@ -12,8 +11,8 @@ import rehypeRaw from "rehype-raw";
 import { components } from "@/components/markdown/markdown-component";
 
 import { MemoizedMarkdown } from "@/components/markdown/memoized-markdown";
-import { ActionPanel } from "@/components/chat/message-area/message-action-panel";
-import { GradientText } from "@/components/chat/message-area/message-gradient-text";
+import { ActionPanel } from "@/components/chat-message-area/message-action-panel";
+import { GradientText } from "@/components/chat-message-area/message-gradient-text";
 
 import "@/styles/pulse.css";
 

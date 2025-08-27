@@ -18,7 +18,7 @@ import {
   AccordionItem,
 } from "@/components/ui/accordion";
 import { Tool, ToolHeader, ToolContent } from "@/components/tools/";
-import { MessageSkeleton } from "../chat/message-area/message-loading-skeleton";
+import { MessageSkeleton } from "@/components/chat-message-area/message-loading-skeleton";
 import { ToolSkeleton } from "@/components/skeleton";
 import { UITool } from "ai";
 import { useState, useEffect, useMemo } from "react";
@@ -211,7 +211,7 @@ function SearchContent({ tool, draftTool }) {
 export function Search({
   tool,
 }: {
-  tool: UITool & { state: string; type: string };
+  tool: any;
 }) {
   const getDraftTool = useToolStore((state) => state.getDraftTool);
 

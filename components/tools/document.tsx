@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Link, LoaderCircle, NotebookPen } from "lucide-react";
-import { MessageSkeleton } from "@/components/chat/message-area/message-loading-skeleton";
+import { MessageSkeleton } from "@/components/chat-message-area/message-loading-skeleton";
 import { memo, useState } from "react";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { EllipsisVertical, LogOut } from "lucide-react";
 import { User } from "@/components/icons/user";
-import { EllipsisMenu } from "@/components/chat/thread-manager/ellipsis";
+import { EllipsisMenu } from "@/components/chat-thread-manager/ellipsis";
 import { authClient } from "@/lib/auth-client";
 import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
 import { useShallow } from "zustand/react/shallow";

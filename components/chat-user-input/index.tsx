@@ -6,7 +6,7 @@ import React from "react";
 import { useState, useRef } from "react";
 import { ArrowUp, CircleStop, LoaderCircle } from "lucide-react";
 import { UserInputOptions } from "./user-input-options";
-import { MessageTemplate } from "@/components/chat/message-area/message-template";
+import { MessageTemplate } from "@/components/chat-message-area/message-template";
 
 import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
 import { useShallow } from "zustand/react/shallow";

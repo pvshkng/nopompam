@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ModelSelector } from "@/components/chat/model-selector";
+import { ModelSelector } from "@/components/chat-model-selector";
 import { GalleryHorizontalEnd } from "@/components/icons/gallery-horizontal-end";
 import { Attachment } from "./attachment";
 

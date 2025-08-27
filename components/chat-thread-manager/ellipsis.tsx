@@ -3,23 +3,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
-import { DeleteConfirmationDialog } from "@/components/chat/thread-manager/confirmation-dialog";
+
+import { DeleteConfirmationDialog } from "@/components/chat-thread-manager/confirmation-dialog";
 import { useState } from "react";
 export function EllipsisMenu(props: any) {
   const { children, _id, targetId, setThreads } = props;

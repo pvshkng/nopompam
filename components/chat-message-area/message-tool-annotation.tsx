@@ -8,8 +8,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Suspense, useState } from "react";
-import Image from "next/image";
 
 export const ToolAnnotation = (props: any) => {
   const { tool } = props;

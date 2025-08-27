@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { memo, use } from "react";
-import { ThreadManager } from "@/components/chat/thread-manager";
+import { ThreadManager } from "@/components/chat-thread-manager";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -51,7 +51,6 @@ export const PureNavigation = (props: any) => {
           height={16}
           strokeWidth={3}
           stroke={"#44403c"}
-          //className="text-stone-200"
         />
       </button>
       <Separator orientation="horizontal" className="w-full bg-stone-300" />
@@ -61,8 +60,6 @@ export const PureNavigation = (props: any) => {
           className={cn(
             "flex flex-row items-center font-black text-xs gap-1",
             "text-stone-700"
-            //"border border-stone-200",
-            //"shadow-md"
           )}
         >
           Chat
@@ -71,11 +68,10 @@ export const PureNavigation = (props: any) => {
             height={16}
             strokeWidth={3}
             stroke={"#44403c"}
-            //className="text-stone-200"
           />
         </DrawerTrigger>
 
-        <DrawerContent /* side={"left"} */ className="p-0">
+        <DrawerContent className="p-0">
           <DrawerHeader hidden className="p-0 m-0">
             <DrawerTitle hidden></DrawerTitle>
             <DrawerDescription hidden></DrawerDescription>
@@ -98,8 +94,6 @@ export const PureNavigation = (props: any) => {
         className={cn(
           "flex flex-row items-center font-black text-xs gap-1",
           "text-stone-700"
-          //"border border-stone-200",
-          //"shadow-md"
         )}
       >
         Dossier
@@ -110,8 +104,6 @@ export const PureNavigation = (props: any) => {
           stroke={"#44403c"}
         />
       </button>
-      {/* <Separator orientation="vertical" className="h-5" /> */}
-      {/* <ModelSelector /> */}
     </div>
   );
 };

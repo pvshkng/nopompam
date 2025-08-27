@@ -14,7 +14,6 @@ function PureActionPanel(props: any) {
         className={cn(
           "action-panel",
           "flex flex-row item-center justify-start p-1 px-2 gap-2",
-          //"border-[1px] border-gray-200",
           "[&>*:hover]:-translate-y-1",
           "[&>*]:transition-all",
           "text-stone-700"
