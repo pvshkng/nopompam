@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { TestSearchStreaming } from "./test-search-streaming";
 import { BlankDocument } from "@/components/dossier/dossier-blank";
-import { GradientText } from "@/components/chat/message-area/message-gradient-text";
+import { GradientText } from "@/components/chat-message-area/message-gradient-text";
 import "@/styles/pulse.css";
 
 import { ArrowRight } from "lucide-react";
