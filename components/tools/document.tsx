@@ -4,6 +4,8 @@ import { Link, LoaderCircle, NotebookPen } from "lucide-react";
 import { MessageSkeleton } from "@/components/chat-message-area/message-loading-skeleton";
 import { memo, useState } from "react";
 import { useDossierStore } from "@/lib/stores/dossier-store";
+import { getArtifact } from "@/lib/mongo/artifact-store";
+import type { ToolUIPart } from "ai";
 
 type ToolState =
   | "input-streaming"
@@ -11,9 +13,17 @@ type ToolState =
   | "output-available"
   | "output-error";
 
+type DocumentOutput = {
+  id: string;
+  title: string;
+  content: string;
+  kind: string;
+};
+
 const PureDocument = (props: any) => {
-  const { tool }: any = props;
-  const documentId = tool?.toolCallId || tool?.id || "default";
+  const { tool }: { tool: ToolUIPart } = props;
+  const document = tool?.output as DocumentOutput;
+  const documentId = document?.id;
 
   return (
     <>
@@ -22,26 +32,21 @@ const PureDocument = (props: any) => {
           "border border-stone-300 bg-neutral-100 rounded-md",
           "cursor-pointer py-3 px-4 my-2 mx-2"
         )}
-        onClick={() => {
+        onClick={async () => {
           const { getDocument, addDocument, switchTab } =
             useDossierStore.getState();
 
-          // Check if document already exists
           const existingDoc = getDocument(documentId);
 
           if (existingDoc) {
-            // Document exists, just switch to it
             switchTab(documentId);
-          } else if (
-            tool?.state === "output-available" &&
-            tool.output?.content
-          ) {
-            // Create new document from completed tool output
+          } else if (tool?.state === "output-available" && document?.content) {
+            const artifact = await getArtifact(documentId);
             addDocument({
-              id: documentId,
-              title: tool.input?.title || "Untitled Document",
-              kind: "text",
-              content: tool.output.content,
+              id: artifact.artifactId,
+              title: artifact.title || "Untitled Document",
+              kind: artifact.kind || "text",
+              content: artifact.content,
             });
           }
         }}

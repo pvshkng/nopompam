@@ -3,13 +3,13 @@ import { create } from 'zustand';
 export interface Document {
     id: string;
     title: string;
-    kind: 'text';
+    kind: string;
     content: string;
-    isStreaming: boolean;
-    hasUnsavedChanges: boolean;
-    streamingContent: string;
-    appendStreamingContent: (content: string) => void;
-    clearStreamingContent: () => void;
+    isStreaming?: boolean;
+    hasUnsavedChanges?: boolean;
+    streamingContent?: string;
+    appendStreamingContent?: (content: string) => void;
+    clearStreamingContent?: () => void;
 }
 
 export type DossierStore = {

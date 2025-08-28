@@ -2,6 +2,7 @@ import { useDossierStore } from "@/lib/stores/dossier-store";
 import { memo } from "react";
 import { X, House, NotebookPen, Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { saveArtifact } from "@/lib/mongo/artifact-store";
 
 const PureDossierNavigation = (props: any) => {
   const {
@@ -32,17 +33,13 @@ const PureDossierNavigation = (props: any) => {
     if (activeTab && activeTab !== "home") {
       const doc = getDocument(activeTab);
       if (doc?.hasUnsavedChanges) {
-        // Here you would implement your save logic
-        // For now, just mark as saved
-        markDocumentSaved(activeTab);
-
-        // You might want to call an API to save the document
-        // try {
-        //   await saveDocument(doc);
-        //   markDocumentSaved(activeTab);
-        // } catch (error) {
-        //   console.error('Save failed:', error);
-        // }
+        // TODO handle error & toast
+        try {
+          await saveArtifact(doc.id, doc.kind, doc.title, doc.content);
+          markDocumentSaved(activeTab);
+        } catch (error) {
+          console.error("Save failed:", error);
+        }
       }
     }
   };
