@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { memo, use } from "react";
+import { memo } from "react";
 import { ThreadManager } from "@/components/chat-thread-manager";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 import {
   Drawer,
@@ -16,14 +16,15 @@ import {
 } from "@/components/ui/drawer";
 
 import { Separator } from "@/components/ui/separator";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { PanelRight, PanelBottom, Plus, MessageSquare } from "lucide-react";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 
 export const PureNavigation = (props: any) => {
   const { _id, session, threads, setThreads } = props;
   const { setDossierOpen, dossierOpen } = useDossierStore();
   const router = useRouter();
-
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const threadExists = threads.some((t: any) => t._id === _id);
   return (
     <div
       className={cn(
@@ -33,42 +34,33 @@ export const PureNavigation = (props: any) => {
         "transition-all duration-300 ease-in-out"
       )}
     >
+      {/* New Chat Button */}
       <button
+        disabled={!threadExists}
         onClick={(e) => {
           router.push("/chat");
           router.refresh();
           e.currentTarget.children[0].classList.add("animate-pulse");
         }}
-        style={{ writingMode: "sideways-lr" }}
         className={cn(
           "not-italic",
           "flex flex-row items-center font-black text-xs gap-1",
-          "text-stone-500"
+          threadExists ? "text-stone-600" : "cursor-not-allowed !text-stone-400"
         )}
       >
-        <Plus
-          width={16}
-          height={16}
-          strokeWidth={3}
-          stroke={"#44403c"}
-        />
+        <Plus width={16} height={16} strokeWidth={3} />
       </button>
       <Separator orientation="horizontal" className="w-full bg-stone-300" />
+
+      {/* Thread Manager */}
       <Drawer direction="left">
         <DrawerTrigger
-          style={{ writingMode: "sideways-lr" }}
           className={cn(
             "flex flex-row items-center font-black text-xs gap-1",
-            "text-stone-700"
+            "text-stone-600"
           )}
         >
-          Chat
-          <ChevronRight
-            width={16}
-            height={16}
-            strokeWidth={3}
-            stroke={"#44403c"}
-          />
+          <MessageSquare width={16} height={16} strokeWidth={3} />
         </DrawerTrigger>
 
         <DrawerContent className="p-0">
@@ -90,19 +82,16 @@ export const PureNavigation = (props: any) => {
         onClick={() => {
           setDossierOpen(!dossierOpen);
         }}
-        style={{ writingMode: "sideways-lr" }}
         className={cn(
           "flex flex-row items-center font-black text-xs gap-1",
-          "text-stone-700"
+          "text-stone-600"
         )}
       >
-        Dossier
-        <ChevronRight
-          width={16}
-          height={16}
-          strokeWidth={3}
-          stroke={"#44403c"}
-        />
+        {isDesktop ? (
+          <PanelRight width={16} height={16} strokeWidth={3} />
+        ) : (
+          <PanelBottom width={16} height={16} strokeWidth={3} />
+        )}
       </button>
     </div>
   );
