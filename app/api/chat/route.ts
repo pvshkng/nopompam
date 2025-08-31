@@ -12,7 +12,8 @@ import { mock } from "@/app/api/chat/mock";
 import { system_prompt } from "./system";
 import { getProvider } from "./provider";
 import { removeProviderExecuted } from "@/lib/ai/utils";
-import _ from "lodash";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export const maxDuration = 60;
 
@@ -21,9 +22,13 @@ export async function POST(req: NextRequest) {
 
     try {
         let memory = []
-        const { messages, id, user, model, session } = await req.json();
+        const { messages, id, model } = await req.json();
         const modelMessages = convertToModelMessages(removeProviderExecuted(messages))
 
+        const session = await auth.api.getSession({
+            headers: await headers(),
+        });
+        const user = session?.user?.email
 
         if (!session) {
             const result = await mock();
@@ -71,12 +76,16 @@ export async function POST(req: NextRequest) {
                                         data: { title: title }
                                     });
                                 }
-                                saveChat({
-                                    _id: id,
-                                    title: title,
-                                    user: user,
-                                    messages: [...messages, ..._messages]
-                                });
+                                if (user) {
+                                    saveChat({
+                                        _id: id,
+                                        title: title,
+                                        user: user,
+                                        messages: [...messages, ..._messages]
+                                    });
+                                } else {
+                                    console.log("No user found, skipping saveChat");
+                                }
                             } catch (error) {
                                 console.error("Error creating chat: ", error);
                             }

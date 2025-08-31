@@ -80,12 +80,13 @@ export async function saveChat({ _id, title, user, messages }: { _id: string; ti
             update.title = title;
             update.timestamp = Date.now().toString();
         }
-        await collection.updateOne(
+        const result = await collection.updateOne(
             // @ts-ignore
             { _id: _id, user },
             { $set: update },
             { upsert: true },
         );
+        console.log("result: ", result);
 
     } catch (_) {
         console.error("Error: ", _);

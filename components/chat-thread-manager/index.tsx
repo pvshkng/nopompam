@@ -90,7 +90,7 @@ export function PureThreadManager(props: any) {
                       await authClient.signOut({
                         fetchOptions: {
                           onSuccess: () => {
-                            window.location.href = "/";
+                            window.location.href = "/chat";
                           },
                         },
                       });

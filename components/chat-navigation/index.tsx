@@ -3,6 +3,7 @@ import { memo } from "react";
 import { ThreadManager } from "@/components/chat-thread-manager";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { generateId } from "ai";
 
 import {
   Drawer,
@@ -20,7 +21,7 @@ import { PanelRight, PanelBottom, Plus, MessageSquare } from "lucide-react";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 
 export const PureNavigation = (props: any) => {
-  const { _id, session, threads, setThreads } = props;
+  const { _id, session, setMessages, threads, setThreads } = props;
   const { setDossierOpen, dossierOpen } = useDossierStore();
   const router = useRouter();
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -39,7 +40,6 @@ export const PureNavigation = (props: any) => {
         disabled={!threadExists}
         onClick={(e) => {
           router.push("/chat");
-          router.refresh();
           e.currentTarget.children[0].classList.add("animate-pulse");
         }}
         className={cn(

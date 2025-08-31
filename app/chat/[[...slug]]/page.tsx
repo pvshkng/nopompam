@@ -35,7 +35,7 @@ export default async function Chat({
     }
     if (_id) {
       messages = await getThread(email, _id);
-      artifacts = await getArtifacts(_id, email);
+      //artifacts = await getArtifacts(_id, email);
       if (messages.length === 0) {
         redirect("/chat");
       }
@@ -52,7 +52,7 @@ export default async function Chat({
       <Root
         initialMessages={messages}
         initialThreads={initialThreads}
-        initialArtifacts={artifacts}
+        //initialArtifacts={artifacts}
         _id={_id || generateId()}
         session={session}
         email={email}

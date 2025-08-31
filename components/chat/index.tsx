@@ -32,7 +32,7 @@ import { useInputStore } from "@/lib/stores/input-store";
 type PureRootProps = {
   initialMessages: any[];
   initialThreads: any[];
-  initialArtifacts: any[];
+  initialArtifacts?: any[];
   _id: string | undefined;
   session: any;
   email: string | null | undefined;
@@ -57,7 +57,7 @@ function PureRoot(props: PureRootProps) {
   let {
     initialMessages,
     initialThreads,
-    initialArtifacts,
+    //initialArtifacts,
     _id,
     session,
     email,
@@ -75,14 +75,14 @@ function PureRoot(props: PureRootProps) {
     setThreads,
     params,
   };
-  
+
   // prettier-ignore
   const { containerRef, isBottom, scrollToBottom, handleScroll } = useScrollToBottom();
   // prettier-ignore
   const { activeTab, setActiveTab, dossierOpen, setDossierOpen } = useDossierStore();
   const { input, setInput, clearInput } = useInputStore();
 
-  const { messages, status, sendMessage, stop } = useChat({
+  const { messages, setMessages, status, sendMessage, stop } = useChat({
     experimental_throttle: 50,
     transport: new DefaultChatTransport({
       api: "/api/chat",
@@ -118,8 +118,6 @@ function PureRoot(props: PureRootProps) {
         { text: messageText },
         {
           body: {
-            session: session,
-            user: session?.user?.email || undefined,
             model: model,
           },
         }
@@ -137,6 +135,7 @@ function PureRoot(props: PureRootProps) {
         <Navigation
           _id={_id}
           session={session}
+          setMessages={setMessages}
           threads={threads}
           setThreads={setThreads}
         />
