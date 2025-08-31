@@ -39,7 +39,7 @@ export const PureNavigation = (props: any) => {
       <button
         disabled={!threadExists}
         onClick={(e) => {
-          router.push("/chat");
+          router.replace("/chat");
           e.currentTarget.children[0].classList.add("animate-pulse");
         }}
         className={cn(

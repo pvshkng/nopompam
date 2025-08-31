@@ -68,18 +68,18 @@ export function PureThreadManager(props: any) {
               <User />
             )}
           </div>
-          <div className={cn("flex flex-col h-full justify-center max-size-full overflow-hidden")}>
+          <div
+            className={cn(
+              "flex flex-col h-full justify-center max-size-full overflow-hidden"
+            )}
+          >
             <div className="font-semibold truncate">
               {session?.user?.name || "Guest"}
             </div>
             {/* Log out */}
             {session && (
               <>
-                <div
-                  className={cn(
-                    "flex flex-row items-center justify-start"
-                  )}
-                >
+                <div className={cn("flex flex-row items-center justify-start")}>
                   <button
                     className={cn(
                       "flex flex-row items-center gap-1 py-1",
@@ -141,11 +141,9 @@ export function PureThreadManager(props: any) {
                           )}
                         >
                           <Link
-                            replace
                             href={{
                               pathname: "/chat/" + h._id!,
                             }}
-                            prefetch={false}
                             className={cn(
                               "flex flex-row justify-between items-center",
                               "p-2 w-full",

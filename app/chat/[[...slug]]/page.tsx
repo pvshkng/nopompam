@@ -8,6 +8,8 @@ import { GridBackground } from "@/components/background/";
 import { generateId } from "ai";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+
+
 export default async function Chat({
   params,
 }: {
