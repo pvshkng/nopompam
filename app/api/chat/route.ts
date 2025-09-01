@@ -15,6 +15,9 @@ import { removeProviderExecuted } from "@/lib/ai/utils";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+import { google } from '@ai-sdk/google';
+import { langfuse } from "@/lib/langfuse";
+
 export const maxDuration = 60;
 
 
@@ -35,6 +38,7 @@ export async function POST(req: NextRequest) {
             return result
         }
         const provider = getProvider(model);
+        const instruction = (await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {
@@ -43,12 +47,17 @@ export async function POST(req: NextRequest) {
                     const result = streamText({
 
                         model: provider(model),
-                        system: system_prompt,
+                        system: instruction,
                         prompt: modelMessages,
                         tools: {
                             // web: web({}),
                             search: search({ writer }),
                             document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
+                            // code_execution: google.tools.codeExecution({}),
+                            // google_search: google.tools.googleSearch({}),
+                            // url_context: google.tools.urlContext({}),
+
+
                         },
                         stopWhen: stepCountIs(5),
                         onError(error) {

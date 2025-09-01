@@ -92,7 +92,6 @@ export async function saveChat({ _id, title, user, messages }: { _id: string; ti
             { $set: update },
             { upsert: true },
         );
-        console.log("result: ", result);
 
     } catch (_) {
         console.error("Error: ", _);
