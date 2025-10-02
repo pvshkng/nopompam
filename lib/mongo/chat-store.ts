@@ -23,7 +23,7 @@ export async function createThread(user: string, title: string = "New Chat") {
         user: user,
         messages: [],
         timestamp: Date.now().toString(),
-    });
+    }, { ignoreUndefined: true });
     return _id;
 }
 
@@ -90,7 +90,7 @@ export async function saveChat({ _id, title, user, messages }: { _id: string; ti
             // @ts-ignore
             { _id: _id, user },
             { $set: update },
-            { upsert: true },
+            { upsert: true, ignoreUndefined: true },
         );
 
     } catch (_) {

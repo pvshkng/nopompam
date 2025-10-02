@@ -64,7 +64,7 @@ function PureUserInput(props: any) {
               autoFocus
               autoComplete="off"
               rows={1}
-              placeholder="Type / for commands"
+              placeholder="Ask me anything..."
               className={cn(
                 "text-sm break-all outline-none border-none bg-transparent mx-4 my-3 w-full h-auto resize-none overflow-auto placeholder:truncate"
               )}
