@@ -1,6 +1,7 @@
 "use client";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { DossierBrowser } from "@/components/dossier/dossier-browser";
 
 const template = [
   { kind: "text", prompt: ["prompt 1", "prompt 2"] },

@@ -149,10 +149,16 @@ export function PureThreadManager(props: any) {
                               "p-2 w-full",
                               //"bg-stone-100 hover:bg-stone-300",
                               "text-xs",
-                              "overflow-hidden"
+                              "overflow-hidden",
+                              _id === h._id &&
+                                "cursor-not-allowed pointer-events-none"
                             )}
                           >
-                            <Close className="flex flex-row justify-between items-center w-full">
+                            <Close
+                              className={cn(
+                                "flex flex-row justify-between items-center w-full"
+                              )}
+                            >
                               <div className="whitespace-nowrap overflow-hidden text-ellipsis text-left">
                                 <div className="truncate w-full">
                                   {h.title || "undefined"}
