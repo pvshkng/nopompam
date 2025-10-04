@@ -36,7 +36,7 @@ export const TLDR = ({ children }: { children: React.ReactNode }) => {
         )}
         TL;DR
       </span>
-      {children}
+      <span>{children}</span>
     </span>
   );
 };

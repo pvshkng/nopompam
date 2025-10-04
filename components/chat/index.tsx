@@ -129,6 +129,12 @@ function PureRoot(props: PureRootProps) {
     }
   };
 
+  useEffect(() => {
+    if (!isBottom) {
+      scrollToBottom();
+    }
+  }, [input]);
+
   return (
     <>
       <div className="flex flex-col h-full w-full bg-transparent">
