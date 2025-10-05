@@ -8,6 +8,8 @@ import { DossierNavigation } from "./dossier-navigation";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 
 function PureDossier(props: any) {
+  const { messages = [] } = props;
+
   const {
     dossierOpen,
     documents,
@@ -31,7 +33,7 @@ function PureDossier(props: any) {
 
   const renderContent = () => {
     if (activeTab === "home" || !activeDocument) {
-      return <BlankDocument />;
+      return <BlankDocument messages={messages} />;
     }
 
     switch (activeDocument.kind) {

@@ -3,6 +3,7 @@ import { memo, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { getArtifacts } from "@/lib/mongo/artifact-store";
 import { DossierBrowser } from "@/components/dossier/dossier-browser";
+import { useDossierStore } from "@/lib/stores/dossier-store";
 
 const template = [
   { kind: "text", prompt: ["prompt 1", "prompt 2"] },
@@ -11,9 +12,14 @@ const template = [
 ];
 
 const PureBlankDocument = (props: any) => {
-  /* useEffect(() => {
-    console.log("Blank page opened");
-  }, []); */
+  const { messages = [] } = props;
+  const syncChatDocuments = useDossierStore((state) => state.syncChatDocuments);
+
+  useEffect(() => {
+    syncChatDocuments(messages);
+  }, [messages, syncChatDocuments]);
+
+  const chatDocuments = useDossierStore((state) => state.chatDocuments);
 
   return (
     <div className={cn("flex flex-col size-full items-center justify-center")}>
@@ -23,6 +29,7 @@ const PureBlankDocument = (props: any) => {
       <p className={cn("text-xs font-semibold text-stone-300")}>
         Ask nopompam to create one
       </p>
+      {/* <p>{chatDocuments.map((d) => <p>{d.title} {d.id}</p>)}</p> */}
     </div>
   );
 };

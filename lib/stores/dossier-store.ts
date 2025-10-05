@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { UIMessage } from 'ai';
 
 export interface Document {
     id: string;
@@ -16,6 +17,7 @@ export type DossierStore = {
     dossierOpen: boolean;
     documents: Document[];
     activeTab: string | null; // 'home' | document.id
+    chatDocuments: Document[];
 };
 
 export type DossierActions = {
@@ -44,11 +46,17 @@ export type DossierActions = {
     // Content editing
     updateDocumentContent: (id: string, content: string) => void;
     markDocumentSaved: (id: string) => void;
+
+    // Chat document in the active thread
+    syncChatDocuments: (messages: any[]) => void;
+    clearChatDocuments: () => void;
+
 };
 
 export const useDossierStore = create<DossierStore & DossierActions>((set, get) => ({
     dossierOpen: false,
     documents: [],
+    chatDocuments: [],
     activeTab: 'home',
 
     // Basic dossier actions
@@ -191,4 +199,28 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
             )
         }));
     },
+
+    syncChatDocuments: (messages: UIMessage[]) => {
+        const toolDocuments: Document[] = [];
+
+        messages.forEach(message => {
+            if (message.parts) {
+                message.parts.forEach(part => {
+                    if (part.type === 'tool-document' && part.output) {
+                        const output = part.output as { id: string; title: string; kind: string; content: string };
+                        toolDocuments.push({
+                            id: output.id,
+                            title: output.title,
+                            kind: output.kind,
+                            content: output.content || '',
+                        });
+                    }
+                });
+            }
+        });
+
+        set({ chatDocuments: toolDocuments });
+    },
+
+    clearChatDocuments: () => set({ chatDocuments: [] }),
 }));

@@ -221,7 +221,7 @@ function PureRoot(props: PureRootProps) {
                         "bg-stone-50"
                       )}
                     >
-                      <Dossier />
+                      <Dossier messages={messages} />
                     </ResizablePanel>
                   </>
                 )
