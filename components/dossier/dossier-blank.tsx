@@ -7,6 +7,25 @@ import { useDossierStore } from "@/lib/stores/dossier-store";
 import { X, House, NotebookPen, Save, Loader2 } from "lucide-react";
 import { EmblaCarousel } from "@/components/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+
+import {
+  Calculator,
+  Calendar,
+  CreditCard,
+  Settings,
+  Smile,
+  User,
+} from "lucide-react";
 
 const template = [
   { kind: "text", prompt: ["prompt 1", "prompt 2"] },
@@ -29,6 +48,15 @@ const PureBlankDocument = (props: any) => {
   const syncChatDocuments = useDossierStore((state) => state.syncChatDocuments);
 
   useEffect(() => {
+    /* const hasNewDocuments = messages.some((message) =>
+      message.parts?.some(
+        (part) => part.type === "tool-document" && part.output
+      )
+    );
+
+    if (hasNewDocuments) {
+      syncChatDocuments(messages);
+    } */
     syncChatDocuments(messages);
   }, [messages, syncChatDocuments]);
 
@@ -36,22 +64,48 @@ const PureBlankDocument = (props: any) => {
 
   return (
     <div className={cn("flex flex-col size-full items-center justify-center")}>
-      <p className={cn("text-sm text-stone-400")}>
-        Document in this chat
-      </p>
       {chatDocuments.length > 0 ? (
         <>
-          <div className={cn("flex flex-row", "w-full gap-1 m-1 p-4")}>
-            {/*<EmblaCarousel slides={chatDocuments} options={OPTIONS} />*/}
-            {/* {chatDocuments.map((d, i) => (
-              <div
-                key={i}
-                className="w-32 p-1 bg-neutral-50 rounded-sm shadow-md"
-              >
-                <span className="text-xs">{d.title}</span>
-              </div>
-            ))} */}
-          </div>
+          <Command className="">
+            <CommandInput placeholder="Type a command or search..." />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup heading="In this chat">
+                {chatDocuments.map((doc, i) => {
+                  return (
+                    <CommandItem className="gap-1">
+                      <iconMapping.text className="size-4 min-w-4 min-h-4 text-stone-500" />
+                      <span className="text-xs text-stone-500 truncate">
+                        {doc.title || "Untitled"}
+                      </span>
+                    </CommandItem>
+                  );
+                })}
+                {/* <CommandItem disabled>
+              <Calculator />
+              <span>Calculator</span>
+            </CommandItem> */}
+              </CommandGroup>
+              {/* <CommandSeparator />
+              <CommandGroup heading="Others">
+                <CommandItem className="gap-1">
+                  <User />
+                  <span>Profile</span>
+                  <CommandShortcut>⌘P</CommandShortcut>
+                </CommandItem>
+                <CommandItem className="gap-1">
+                  <CreditCard />
+                  <span>Billing</span>
+                  <CommandShortcut>⌘B</CommandShortcut>
+                </CommandItem>
+                <CommandItem className="gap-1">
+                  <Settings />
+                  <span>Settings</span>
+                  <CommandShortcut>⌘S</CommandShortcut>
+                </CommandItem>
+              </CommandGroup> */}
+            </CommandList>
+          </Command>
         </>
       ) : (
         <>

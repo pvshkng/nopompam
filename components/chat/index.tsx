@@ -226,7 +226,7 @@ function PureRoot(props: PureRootProps) {
                   </>
                 )
               ) : (
-                <MobileDossier />
+                <MobileDossier messages={messages} />
               )}
             </ResizablePanelGroup>
           </div>
