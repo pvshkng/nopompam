@@ -42,7 +42,7 @@ const PureBlankDocument = (props: any) => {
       {chatDocuments.length > 0 ? (
         <>
           <div className={cn("flex flex-row", "w-full gap-1 m-1 p-4")}>
-            <EmblaCarousel slides={chatDocuments} options={OPTIONS} />
+            {/*<EmblaCarousel slides={chatDocuments} options={OPTIONS} />*/}
             {/* {chatDocuments.map((d, i) => (
               <div
                 key={i}
