@@ -1,5 +1,5 @@
 "use client";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { getArtifacts } from "@/lib/mongo/artifact-store";
 import { DossierBrowser } from "@/components/dossier/dossier-browser";
@@ -46,21 +46,24 @@ const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 const PureBlankDocument = (props: any) => {
   const { messages = [] } = props;
   const syncChatDocuments = useDossierStore((state) => state.syncChatDocuments);
+  const chatDocuments = useDossierStore((state) => state.chatDocuments);
+  const { getDocument, addDocument, switchTab } = useDossierStore.getState();
 
   useEffect(() => {
-    /* const hasNewDocuments = messages.some((message) =>
-      message.parts?.some(
-        (part) => part.type === "tool-document" && part.output
-      )
-    );
-
-    if (hasNewDocuments) {
-      syncChatDocuments(messages);
-    } */
     syncChatDocuments(messages);
   }, [messages, syncChatDocuments]);
 
-  const chatDocuments = useDossierStore((state) => state.chatDocuments);
+  const handleDocumentSelect = useCallback(
+    (doc: any) => {
+      const existingDoc = getDocument(doc.id);
+      if (existingDoc) {
+        switchTab(doc.id);
+      } else {
+        addDocument(doc);
+      }
+    },
+    [addDocument]
+  );
 
   return (
     <div className={cn("flex flex-col size-full items-center justify-center")}>
@@ -73,7 +76,11 @@ const PureBlankDocument = (props: any) => {
               <CommandGroup heading="In this chat">
                 {chatDocuments.map((doc, i) => {
                   return (
-                    <CommandItem className="gap-1">
+                    <CommandItem
+                      className="gap-1"
+                      key={i}
+                      onSelect={() => handleDocumentSelect(doc)}
+                    >
                       <iconMapping.text className="size-4 min-w-4 min-h-4 text-stone-500" />
                       <span className="text-xs text-stone-500 truncate">
                         {doc.title || "Untitled"}
