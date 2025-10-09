@@ -2,7 +2,6 @@
 import { memo, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { getArtifacts } from "@/lib/mongo/artifact-store";
-import { DossierBrowser } from "@/components/dossier/dossier-browser";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 import { X, House, NotebookPen, Save, Loader2 } from "lucide-react";
 import { EmblaCarousel } from "@/components/embla-carousel";
