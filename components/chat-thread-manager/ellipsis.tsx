@@ -6,7 +6,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
 import { DeleteConfirmationDialog } from "@/components/chat-thread-manager/confirmation-dialog";
 import { useState } from "react";
 export function EllipsisMenu(props: any) {

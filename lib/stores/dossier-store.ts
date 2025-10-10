@@ -219,8 +219,15 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
             }
         });
 
-        set({ chatDocuments: toolDocuments });
+        // Only update if documents actually changed
+        const currentDocs = get().chatDocuments;
+
+        // Deep comparison to prevent unnecessary updates
+        if (JSON.stringify(toolDocuments) !== JSON.stringify(currentDocs)) {
+            set({ chatDocuments: toolDocuments });
+        }
     },
+
 
     clearChatDocuments: () => set({ chatDocuments: [] }),
 }));

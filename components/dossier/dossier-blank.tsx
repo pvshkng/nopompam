@@ -1,11 +1,9 @@
 "use client";
 import { memo, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { getArtifacts } from "@/lib/mongo/artifact-store";
 import { useDossierStore } from "@/lib/stores/dossier-store";
-import { X, House, NotebookPen, Save, Loader2 } from "lucide-react";
-import { EmblaCarousel } from "@/components/embla-carousel";
-import { EmblaOptionsType } from "embla-carousel";
+import { NotebookPen } from "lucide-react";
+
 import {
   Command,
   CommandEmpty,
@@ -17,40 +15,20 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
-
-const template = [
-  { kind: "text", prompt: ["prompt 1", "prompt 2"] },
-  { kind: "text", prompt: ["prompt 1", "prompt 2"] },
-  { kind: "text", prompt: ["prompt 1", "prompt 2"] },
-];
-
 const iconMapping: Record<string, any> = {
   text: NotebookPen,
   sheet: NotebookPen,
-  //image: House,
 };
-
-const OPTIONS: EmblaOptionsType = { slidesToScroll: "auto" };
-const SLIDE_COUNT = 10;
-const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 const PureBlankDocument = (props: any) => {
   const { messages = [] } = props;
-  const syncChatDocuments = useDossierStore((state) => state.syncChatDocuments);
   const chatDocuments = useDossierStore((state) => state.chatDocuments);
   const { getDocument, addDocument, switchTab } = useDossierStore.getState();
 
   useEffect(() => {
+    const { syncChatDocuments } = useDossierStore.getState();
     syncChatDocuments(messages);
-  }, [messages, syncChatDocuments]);
+  }, [messages]);
 
   const handleDocumentSelect = useCallback(
     (doc: any) => {
