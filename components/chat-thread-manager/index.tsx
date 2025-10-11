@@ -10,6 +10,7 @@ import { EllipsisMenu } from "@/components/chat-thread-manager/ellipsis";
 import { authClient } from "@/lib/auth-client";
 import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
 import { useShallow } from "zustand/react/shallow";
+import { DeleteConfirmationDialog } from "@/components/chat-thread-manager/confirmation-dialog";
 
 export function PureThreadManager(props: any) {
   const { _id, session, threads, setThreads, Close } = props;
@@ -172,13 +173,20 @@ export function PureThreadManager(props: any) {
                             </Close>
                           </Link>
                           <div className={cn("flex items-center p-1")}>
-                            <EllipsisMenu
+                            {/* <EllipsisMenu
                               _id={_id}
                               targetId={h._id}
                               setThreads={setThreads}
                             >
                               <EllipsisVertical className="text-stone-400" />
-                            </EllipsisMenu>
+                            </EllipsisMenu> */}
+                            <DeleteConfirmationDialog
+                              _id={_id}
+                              targetId={h._id}
+                              setThreads={setThreads}
+                            >
+                              <EllipsisVertical className="text-stone-400" />
+                            </DeleteConfirmationDialog>
                           </div>
                         </div>
                       )

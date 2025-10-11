@@ -3,16 +3,19 @@ import { cn } from "@/lib/utils";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 //import Spreadsheet from "react-spreadsheet";
 import { Spreadsheet, Worksheet } from "@jspreadsheet-ce/react";
+import Head from "next/head";
 
 // @ts-ignore
 import "jsuites/dist/jsuites.css";
 // @ts-ignore
-import "jspreadsheet-ce/dist/jspreadsheet.css";
+//import "jspreadsheet-ce/dist/jspreadsheet.css";
 
 interface SheetData {
-  columnLabels: string[];
-  rowLabels: string[];
   data: string[][];
+  columns?: Array<{ title?: string; width?: string }>;
+  mergeCells?: Record<string, [number, number]>;
+  rows?: Record<string, { height?: string }>;
+  style?: Record<string, string>;
 }
 
 const PureDossierSheet = ({
@@ -48,13 +51,9 @@ const PureDossierSheet = ({
         // Set data
         setWorksheetData(sheetData.data.length > 0 ? sheetData.data : [[]]);
 
-        // Set column configuration with headers
-        if (sheetData.columnLabels && sheetData.columnLabels.length > 0) {
-          const columnConfig = sheetData.columnLabels.map((label) => ({
-            title: label,
-            width: 120,
-          }));
-          setColumns(columnConfig);
+        // Set column configuration
+        if (sheetData.columns && sheetData.columns.length > 0) {
+          setColumns(sheetData.columns);
         } else {
           setColumns([]);
         }
@@ -82,17 +81,11 @@ const PureDossierSheet = ({
 
       if (!worksheet) return;
 
-      // Get current data
       const data = worksheet.getData();
 
-      // Get column headers
-      const headers = worksheet.getHeaders();
-      const columnLabels = headers ? headers.split(",") : [];
-
       const sheetData: SheetData = {
-        columnLabels: columnLabels,
-        rowLabels: [],
         data: data,
+        columns: columns.length > 0 ? columns : undefined,
       };
 
       handleContentChange(JSON.stringify(sheetData));
@@ -101,109 +94,38 @@ const PureDossierSheet = ({
     }
   };
 
-  const toolbar = !readOnly
-    ? [
-        {
-          type: "i",
-          content: "undo",
-          onclick: function () {
-            if (spreadsheetRef.current && spreadsheetRef.current[0]) {
-              spreadsheetRef.current[0].undo();
-            }
-          },
-        },
-        {
-          type: "i",
-          content: "redo",
-          onclick: function () {
-            if (spreadsheetRef.current && spreadsheetRef.current[0]) {
-              spreadsheetRef.current[0].redo();
-            }
-          },
-        },
-        {
-          type: "separator",
-        },
-        {
-          type: "i",
-          content: "save",
-          onclick: function () {
-            handleAfterChanges();
-          },
-        },
-        {
-          type: "separator",
-        },
-        {
-          type: "select",
-          k: "font-family",
-          v: ["Arial", "Verdana", "Courier New", "Times New Roman"],
-        },
-        {
-          type: "select",
-          k: "font-size",
-          v: ["10px", "11px", "12px", "13px", "14px", "16px", "18px", "20px"],
-        },
-        {
-          type: "i",
-          content: "format_align_left",
-          k: "text-align",
-          v: "left",
-        },
-        {
-          type: "i",
-          content: "format_align_center",
-          k: "text-align",
-          v: "center",
-        },
-        {
-          type: "i",
-          content: "format_align_right",
-          k: "text-align",
-          v: "right",
-        },
-        {
-          type: "i",
-          content: "format_bold",
-          k: "font-weight",
-          v: "bold",
-        },
-        {
-          type: "color",
-          content: "format_color_text",
-          k: "color",
-        },
-        {
-          type: "color",
-          content: "format_color_fill",
-          k: "background-color",
-        },
-      ]
-    : undefined;
-
   return (
-    <div className="w-full h-full overflow-auto">
-      <Spreadsheet
-        ref={spreadsheetRef}
-        tabs={false}
-        toolbar={toolbar}
-        onafterchanges={handleAfterChanges}
-      >
-        <Worksheet
-          data={worksheetData}
-          columns={columns}
-          minDimensions={[10, 10]}
-          allowInsertRow={!readOnly}
-          allowManualInsertRow={!readOnly}
-          allowInsertColumn={!readOnly}
-          allowManualInsertColumn={!readOnly}
-          allowDeleteRow={!readOnly}
-          allowDeleteColumn={!readOnly}
-          allowRenameColumn={!readOnly}
-          editable={!readOnly}
+    <>
+      <Head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Material+Icons"
         />
-      </Spreadsheet>
-    </div>
+      </Head>
+      <div className="size-full overflow-auto">
+        <Spreadsheet
+          ref={spreadsheetRef}
+          tabs={false}
+          toolbar
+          onafterchanges={handleAfterChanges}
+        >
+          <Worksheet
+            data={[worksheetData]}
+            columns={[columns]}
+            minDimensions={[10, 10]}
+            allowInsertRow={!readOnly}
+            allowManualInsertRow={!readOnly}
+            allowInsertColumn={!readOnly}
+            allowManualInsertColumn={!readOnly}
+            allowDeleteRow={!readOnly}
+            allowDeleteColumn={!readOnly}
+            allowRenameColumn={!readOnly}
+            editable={!readOnly}
+          />
+        </Spreadsheet>
+        <div>{content}</div>
+      </div>
+    </>
   );
 };
 

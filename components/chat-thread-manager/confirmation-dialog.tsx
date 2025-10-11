@@ -13,7 +13,7 @@ import { deleteThread } from "@/lib/mongo/chat-store";
 import { useState, useRef } from "react";
 
 export function DeleteConfirmationDialog(props: any) {
-  const { children, _id, targetId, setThreads, setOpen } = props;
+  const { children, _id, targetId, setThreads, /* setOpen */ } = props;
   const [loading, setLoading] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -24,7 +24,7 @@ export function DeleteConfirmationDialog(props: any) {
       setThreads((prev: any) => prev.filter((h: any) => h._id !== targetId));
       closeRef.current?.click();
       setLoading(false);
-      setOpen(false);
+      //setOpen(false);
 
       if (_id === targetId) {
         window.location.href = "/chat";
