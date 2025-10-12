@@ -1,22 +1,17 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
+import DataGrid, { textEditor, type Column } from "react-data-grid";
+import { parse, unparse } from "papaparse";
+import "react-data-grid/lib/styles.css";
 import { cn } from "@/lib/utils";
-import { useDossierStore } from "@/lib/stores/dossier-store";
-//import Spreadsheet from "react-spreadsheet";
-import { Spreadsheet, Worksheet } from "@jspreadsheet-ce/react";
-import Head from "next/head";
 
-// @ts-ignore
-import "jsuites/dist/jsuites.css";
-// @ts-ignore
-//import "jspreadsheet-ce/dist/jspreadsheet.css";
-
-interface SheetData {
-  data: string[][];
-  columns?: Array<{ title?: string; width?: string }>;
-  mergeCells?: Record<string, [number, number]>;
-  rows?: Record<string, { height?: string }>;
-  style?: Record<string, string>;
+interface Row {
+  id: number;
+  rowNumber: number;
+  [key: string]: string | number;
 }
+
+const MIN_ROWS = 50;
+const MIN_COLS = 26;
 
 const PureDossierSheet = ({
   content,
@@ -27,105 +22,132 @@ const PureDossierSheet = ({
   handleContentChange: (content: string) => void;
   readOnly: boolean;
 }) => {
-  const spreadsheetRef = useRef<any>(null);
-  const previousContentRef = useRef<string>("");
-  const [worksheetData, setWorksheetData] = useState<any[][]>([[]]);
-  const [columns, setColumns] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (!content || content === previousContentRef.current) {
-      return;
+  const parseData = useMemo(() => {
+    if (!content) {
+      return new Array(MIN_ROWS).fill(new Array(MIN_COLS).fill(""));
     }
 
-    try {
-      const parsedData = JSON.parse(content);
+    const result = parse<string[]>(content, { skipEmptyLines: true });
 
-      // Check if it's the structured format
-      if (
-        parsedData &&
-        typeof parsedData === "object" &&
-        "data" in parsedData
-      ) {
-        const sheetData = parsedData as SheetData;
-
-        // Set data
-        setWorksheetData(sheetData.data.length > 0 ? sheetData.data : [[]]);
-
-        // Set column configuration
-        if (sheetData.columns && sheetData.columns.length > 0) {
-          setColumns(sheetData.columns);
-        } else {
-          setColumns([]);
-        }
+    const paddedData = result.data.map((row) => {
+      const paddedRow = [...row];
+      while (paddedRow.length < MIN_COLS) {
+        paddedRow.push("");
       }
-      // Fallback: Handle legacy format (plain 2D array)
-      else if (Array.isArray(parsedData)) {
-        setWorksheetData(parsedData.length > 0 ? parsedData : [[]]);
-        setColumns([]);
-      }
+      return paddedRow;
+    });
 
-      previousContentRef.current = content;
-    } catch (error) {
-      console.warn("Failed to parse content as JSON:", error);
-      setWorksheetData([[]]);
-      setColumns([]);
+    while (paddedData.length < MIN_ROWS) {
+      paddedData.push(new Array(MIN_COLS).fill(""));
     }
+
+    return paddedData;
   }, [content]);
 
-  const handleAfterChanges = () => {
-    if (readOnly || !spreadsheetRef.current) return;
+  const columns = useMemo(() => {
+    const rowNumberColumn: Column<Row> = {
+      key: "rowNumber",
+      name: "",
+      frozen: true,
+      width: 50,
+      renderCell: ({ rowIdx }: any) => rowIdx + 1,
+      cellClass:
+        "border-t border-r bg-gray-50 dark:bg-zinc-950 dark:text-zinc-50",
+      headerCellClass:
+        "border-t border-r bg-gray-100 dark:bg-zinc-900 dark:text-zinc-50",
+    };
 
-    try {
-      const instance = spreadsheetRef.current;
-      const worksheet = instance[0];
+    const dataColumns: Column<Row>[] = Array.from(
+      { length: MIN_COLS },
+      (_, i) => ({
+        key: i.toString(),
+        name: String.fromCharCode(65 + i),
+        renderEditCell: !readOnly ? textEditor : undefined,
+        width: 120,
+        cellClass: cn("border-t dark:bg-zinc-950 dark:text-zinc-50", {
+          "border-l": i !== 0,
+        }),
+        headerCellClass: cn("border-t dark:bg-zinc-900 dark:text-zinc-50", {
+          "border-l": i !== 0,
+        }),
+      })
+    );
 
-      if (!worksheet) return;
+    return [rowNumberColumn, ...dataColumns];
+  }, [readOnly]);
 
-      const data = worksheet.getData();
-
-      const sheetData: SheetData = {
-        data: data,
-        columns: columns.length > 0 ? columns : undefined,
+  const initialRows = useMemo(() => {
+    return parseData.map((row, rowIndex) => {
+      const rowData: Row = {
+        id: rowIndex,
+        rowNumber: rowIndex + 1,
       };
+      columns.slice(1).forEach((col, colIndex) => {
+        rowData[col.key] = row[colIndex] || "";
+      });
+      return rowData;
+    });
+  }, [parseData, columns]);
 
-      handleContentChange(JSON.stringify(sheetData));
-    } catch (error) {
-      console.error("Failed to save spreadsheet data:", error);
-    }
+  const [localRows, setLocalRows] = useState(initialRows);
+
+  useEffect(() => {
+    setLocalRows(initialRows);
+  }, [initialRows]);
+
+  const generateCsv = (data: string[][]) => {
+    return unparse(data);
+  };
+
+  const handleRowsChange = (newRows: Row[]) => {
+    if (readOnly) return;
+
+    setLocalRows(newRows);
+
+    const updatedData = newRows.map((row) => {
+      return columns.slice(1).map((col) => (row[col.key] as string) || "");
+    });
+
+    const newCsvContent = generateCsv(updatedData);
+    handleContentChange(newCsvContent);
   };
 
   return (
-    <>
-      <Head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Material+Icons"
-        />
-      </Head>
-      <div className="size-full overflow-auto">
-        <Spreadsheet
-          ref={spreadsheetRef}
-          tabs={false}
-          toolbar
-          onafterchanges={handleAfterChanges}
-        >
-          <Worksheet
-            data={[worksheetData]}
-            columns={[columns]}
-            minDimensions={[10, 10]}
-            allowInsertRow={!readOnly}
-            allowManualInsertRow={!readOnly}
-            allowInsertColumn={!readOnly}
-            allowManualInsertColumn={!readOnly}
-            allowDeleteRow={!readOnly}
-            allowDeleteColumn={!readOnly}
-            allowRenameColumn={!readOnly}
-            editable={!readOnly}
-          />
-        </Spreadsheet>
-        <div>{content}</div>
-      </div>
-    </>
+    <div className="w-full h-full">
+      <DataGrid
+        className="rdg-light"
+        columns={columns}
+        rows={localRows}
+        onRowsChange={handleRowsChange}
+        defaultColumnOptions={{
+          resizable: true,
+          sortable: !readOnly,
+        }}
+        enableVirtualization
+        onCellClick={(args) => {
+          if (!readOnly && args.column.key !== "rowNumber") {
+            args.selectCell(true);
+          }
+        }}
+        style={
+          {
+            height: "100%",
+            width: "100%",
+            "--rdg-color": "#000",
+            "--rdg-border-color": "#e5e7eb",
+            "--rdg-summary-border-color": "#aaa",
+            "--rdg-background-color": "#fff",
+            "--rdg-header-background-color": "#f9fafb",
+            "--rdg-row-hover-background-color": "#f3f4f6",
+            "--rdg-row-selected-background-color": "#dbeafe",
+            "--rdg-row-selected-hover-background-color": "#bfdbfe",
+            "--rdg-checkbox-focus-color": "#3b82f6",
+            "--rdg-checkbox-disabled-border-color": "#ccc",
+            "--rdg-checkbox-disabled-background-color": "#ddd",
+          } as React.CSSProperties
+        }
+      />
+    </div>
   );
 };
 

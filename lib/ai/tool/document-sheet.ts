@@ -43,48 +43,29 @@ export const sheetHandler: DocumentHandler = async ({
     {
       role: "user",
       content: `
-  <instructions>
-  Generate a spreadsheet about the given topic.
-  Create structured data in jspreadsheet format.
-  
-  Format:
-  - data: 2D array where first column contains labels, subsequent columns contain values
-  - columns: array of column configs with optional title and width (e.g., "300px", "200px")
-  
-  Example:
-  {
-    "data": [
-      ["Metric", "Value"],
-      ["Price", "$100"],
-      ["Quantity", "50"]
-    ],
-    "columns": [
-      {"title": "Description", "width": "300px"},
-      {"title": "Amount", "width": "200px"}
-    ]
-  }
-  
-  Create meaningful data with proper column widths.
-  </instructions>
+        <instructions>
+        Generate a spreadsheet about the given topic in CSV format.
+        
+        Guidelines:
+        - First row should contain column headers
+        - Subsequent rows contain the data
+        - Use comma as delimiter
+        - Keep data concise and relevant
+        - Use realistic and accurate values
+        
+        Example:
+        Recipe Name,Cuisine,Prep Time
+        Lasagna,Italian,30
+        Tikka Masala,Indian,20
+        </instructions>
 
-  Now generate a spreadsheet about: ${title}
-`,
+        Now generate a spreadsheet about: ${title}
+        `,
     },
   ] as ModelMessage[];
 
   const spreadsheetSchema = z.object({
-    data: z
-      .array(z.array(z.string()))
-      .describe('2D array of cell values, where each inner array is a row. First column often contains labels, subsequent columns contain values.'),
-    columns: z
-      .array(
-        z.object({
-          title: z.string().optional().describe('Column header title'),
-          width: z.string().optional().describe('Column width like "300px" or "200px"'),
-        })
-      )
-      .optional()
-      .describe('Optional array of column configurations. Define width and title for each column.'),
+    csv: z.string().describe("CSV formatted data with headers in the first row"),
   });
 
   writer.write({
@@ -109,10 +90,10 @@ export const sheetHandler: DocumentHandler = async ({
     },
   });
 
-  let finalContent = "";
+  let draftContent = "";
 
   try {
-    const { partialObjectStream, object } = streamObject({
+    const { fullStream } = streamObject({
       model: client("gemini-2.5-flash"),
       schema: spreadsheetSchema,
       messages: prompt,
@@ -129,33 +110,27 @@ export const sheetHandler: DocumentHandler = async ({
       },
     });
 
-    for await (const partialObject of partialObjectStream) {
-      const streamData = {
-        data: partialObject.data || [[]],
-        columns: partialObject.columns || [],
-      };
+    for await (const delta of fullStream) {
+      const { type } = delta;
 
-      const contentString = JSON.stringify(streamData);
-
-      writer.write({
-        type: "data-document",
-        data: {
-          id: id,
-          type: "text",
-          content: contentString,
-        },
-      });
+      if (type === "object") {
+        const { object } = delta;
+        const { csv } = object;
+        
+        if (csv) {
+          writer.write({
+            type: "data-document",
+            data: {
+              id: id,
+              type: "text",
+              content: csv,
+            },
+          });
+          draftContent = csv;
+        }
+      }
     }
 
-    const finalObject = await object;
-
-    const finalData = {
-      data: finalObject.data || [[]],
-      columns: finalObject.columns || [],
-    };
-
-    finalContent = JSON.stringify(finalData);
-    
     writer.write({
       type: "data-document",
       data: {
@@ -171,14 +146,14 @@ export const sheetHandler: DocumentHandler = async ({
       user: user,
       kind: kind,
       title: title,
-      content: finalContent,
+      content: draftContent,
     });
 
     return {
       id,
       title,
       kind,
-      content: finalContent,
+      content: draftContent,
     };
   } catch (error) {
     console.error("Error during sheet creation: ", error);
