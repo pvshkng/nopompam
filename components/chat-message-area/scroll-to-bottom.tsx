@@ -13,7 +13,6 @@ export function BottomScrollButton(props: any) {
         isBottom ? "hidden" : "absolute",
         "animate-bounce",
         "shadow-md"
-        //"absolute"
       )}
       onClick={() => {
         scrollToBottom();

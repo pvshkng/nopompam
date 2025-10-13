@@ -57,7 +57,6 @@ function PureRoot(props: PureRootProps) {
   let {
     initialMessages,
     initialThreads,
-    //initialArtifacts,
     _id,
     session,
     email,

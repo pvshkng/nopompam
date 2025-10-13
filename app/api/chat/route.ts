@@ -24,8 +24,9 @@ export const maxDuration = 60;
 export async function POST(req: NextRequest) {
 
     try {
-        let memory = []
+        let memory: any[] = []
         const { messages, id, model } = await req.json();
+        // @ts-ignore
         const modelMessages = convertToModelMessages(removeProviderExecuted(messages))
 
         const session = await auth.api.getSession({
