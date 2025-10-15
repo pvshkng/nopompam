@@ -7,6 +7,7 @@ import { BlankDocument } from "./dossier-blank";
 import { DossierNavigation } from "./dossier-navigation";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 import { DossierSheet } from "@/components/dossier/dossier-sheet";
+import { DossierCode } from "@/components/dossier/dossier-code";
 
 function PureDossier(props: any) {
   const { messages = [] } = props;
@@ -49,6 +50,14 @@ function PureDossier(props: any) {
       case "sheet":
         return (
           <DossierSheet
+            content={displayContent}
+            handleContentChange={handleContentChange}
+            readOnly={activeDocument.isStreaming}
+          />
+        );
+      case "code":
+        return (
+          <DossierCode
             content={displayContent}
             handleContentChange={handleContentChange}
             readOnly={activeDocument.isStreaming}

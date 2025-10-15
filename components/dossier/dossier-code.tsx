@@ -1,16 +1,16 @@
-// components/dossier/dossier-code.tsx
 import { memo, useEffect, useRef, useState } from "react";
-import { EditorState, Transaction } from "@codemirror/state";
+import { EditorState, Transaction, StateEffect } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { basicSetup } from "codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
 import { html } from "@codemirror/lang-html";
-import { oneDark } from "@codemirror/theme-one-dark";
+import { materialLight } from "@uiw/codemirror-theme-material";
 import { Button } from "@/components/ui/button";
-import { PlayIcon, CodeIcon, EyeIcon } from "lucide-react";
+import { PlayIcon, CodeIcon, EyeIcon, Loader2 } from "lucide-react";
 import DataGrid, { type Column } from "react-data-grid";
+import { usePyodide } from "@/hooks/use-pyodide";
 import "react-data-grid/lib/styles.css";
 
 interface CodeContent {
@@ -40,6 +40,8 @@ const PureDossierCode = ({
   const [output, setOutput] = useState<string>("");
   const [sqlResults, setSqlResults] = useState<SqlResult[]>([]);
   const [showPreview, setShowPreview] = useState(false);
+  const [executing, setExecuting] = useState(false);
+  const { pyodide, loadPyodide, loading: pyodideLoading } = usePyodide();
 
   // Parse content
   useEffect(() => {
@@ -82,7 +84,7 @@ const PureDossierCode = ({
         extensions: [
           basicSetup,
           getLanguageExtension(codeContent.language),
-          oneDark,
+          materialLight,
           EditorView.editable.of(!readOnly),
         ],
       });
@@ -105,7 +107,8 @@ const PureDossierCode = ({
   useEffect(() => {
     if (editorRef.current) {
       const currentContent = editorRef.current.state.doc.toString();
-      
+
+      // Only update content if it's different AND not from user typing
       if (currentContent !== codeContent.code) {
         const transaction = editorRef.current.state.update({
           changes: {
@@ -117,87 +120,98 @@ const PureDossierCode = ({
         });
         editorRef.current.dispatch(transaction);
       }
+    }
+  }, [codeContent.code]);
 
-      // Update language extension
-      const currentSelection = editorRef.current.state.selection;
-      const newState = EditorState.create({
-        doc: editorRef.current.state.doc,
-        extensions: [
-          basicSetup,
-          getLanguageExtension(codeContent.language),
-          oneDark,
-          EditorView.editable.of(!readOnly),
-          EditorView.updateListener.of((update) => {
-            if (update.docChanged && !readOnly) {
-              const transaction = update.transactions.find(
-                (tr) => !tr.annotation(Transaction.remote)
-              );
-              if (transaction) {
-                const newCode = update.state.doc.toString();
-                const newContent = JSON.stringify({
-                  code: newCode,
-                  language: codeContent.language,
-                });
-                handleContentChange(newContent);
-              }
-            }
-          }),
-        ],
-        selection: currentSelection,
+  useEffect(() => {
+    if (editorRef.current && !readOnly) {
+      const updateListener = EditorView.updateListener.of((update) => {
+        if (update.docChanged) {
+          const transaction = update.transactions.find(
+            (tr) => !tr.annotation(Transaction.remote)
+          );
+          if (transaction) {
+            const newCode = update.state.doc.toString();
+            const newContent = JSON.stringify({
+              code: newCode,
+              language: codeContent.language,
+            });
+            handleContentChange(newContent);
+          }
+        }
       });
 
-      editorRef.current.setState(newState);
+      // Add the updateListener extension to the editor using dispatch
+      // Use StateEffect.reconfigure instead of EditorView.reconfigure
+      // Import StateEffect from @codemirror/state at the top if not already imported
+      editorRef.current.dispatch({
+        effects: StateEffect.reconfigure.of([
+          basicSetup,
+          getLanguageExtension(codeContent.language),
+          materialLight,
+          EditorView.editable.of(!readOnly),
+          updateListener,
+        ]),
+      });
     }
-  }, [codeContent, readOnly, handleContentChange]);
+  }, [readOnly, codeContent.language, handleContentChange]);
 
   // Execute code
   const executeCode = async () => {
     setOutput("");
     setSqlResults([]);
+    setExecuting(true);
 
     try {
-      if (codeContent.language === "javascript" || codeContent.language === "typescript") {
+      if (
+        codeContent.language === "javascript" ||
+        codeContent.language === "typescript"
+      ) {
         // Capture console output
         const logs: string[] = [];
         const originalLog = console.log;
         console.log = (...args) => {
-          logs.push(args.map(arg => String(arg)).join(" "));
+          logs.push(args.map((arg) => String(arg)).join(" "));
         };
 
         try {
           // Execute JavaScript/TypeScript
           // Note: This is unsafe in production, use a sandboxed environment
           eval(codeContent.code);
-          setOutput(logs.join("\n"));
+          setOutput(logs.join("\n") || "Execution completed successfully");
         } finally {
           console.log = originalLog;
         }
       } else if (codeContent.language === "python") {
-        // Load Pyodide for Python execution
-        // @ts-expect-error - loadPyodide is loaded from CDN
-        const pyodide = await globalThis.loadPyodide({
-          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/",
-        });
+        setOutput("Loading Python environment...");
+
+        // Load Pyodide if not already loaded
+        const pyodideInstance = pyodide || (await loadPyodide());
+
+        setOutput("Running Python code...");
 
         const outputLines: string[] = [];
-        pyodide.setStdout({
+        pyodideInstance.setStdout({
           batched: (output: string) => {
             outputLines.push(output);
           },
         });
 
-        await pyodide.runPythonAsync(codeContent.code);
-        setOutput(outputLines.join("\n"));
+        await pyodideInstance.runPythonAsync(codeContent.code);
+        setOutput(outputLines.join("\n") || "Execution completed successfully");
       } else if (codeContent.language === "sql") {
         // Mock SQL execution with sample data
         setOutput("SQL execution not implemented. Showing mock data.");
         setSqlResults([
           { id: 1, name: "Sample Row 1", value: 100 },
           { id: 2, name: "Sample Row 2", value: 200 },
+          { id: 3, name: "Sample Row 3", value: 300 },
         ]);
       }
     } catch (error: any) {
       setOutput(`Error: ${error.message}`);
+    } finally {
+      setExecuting(false);
     }
   };
 
@@ -212,8 +226,9 @@ const PureDossierCode = ({
       : [];
 
   const showOutput =
-    codeContent.language !== "html" &&
-    (output || sqlResults.length > 0);
+    codeContent.language !== "html" && (output || sqlResults.length > 0);
+
+  const isLoading = executing || pyodideLoading;
 
   return (
     <div className="flex flex-col h-full">
@@ -226,7 +241,11 @@ const PureDossierCode = ({
               variant="outline"
               onClick={() => setShowPreview(!showPreview)}
             >
-              {showPreview ? <CodeIcon className="w-4 h-4 mr-2" /> : <EyeIcon className="w-4 h-4 mr-2" />}
+              {showPreview ? (
+                <CodeIcon className="w-4 h-4 mr-2" />
+              ) : (
+                <EyeIcon className="w-4 h-4 mr-2" />
+              )}
               {showPreview ? "Code" : "Preview"}
             </Button>
           )}
@@ -234,10 +253,20 @@ const PureDossierCode = ({
             codeContent.language === "typescript" ||
             codeContent.language === "python" ||
             codeContent.language === "sql") && (
-            <Button size="sm" onClick={executeCode}>
-              <PlayIcon className="w-4 h-4 mr-2" />
-              Run
-            </Button>
+            <button
+              //size="sm"
+              className="rounded-none flex flex-row px-1 !py-0 !m-0"
+              //variant={"ghost"}
+              onClick={executeCode}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin text-stone-500" />
+              ) : (
+                <PlayIcon className="w-4 h-4 text-stone-500" />
+              )}
+              {/* {isLoading ? "Running..." : "Run"} */}
+            </button>
           )}
         </div>
       )}
@@ -253,6 +282,7 @@ const PureDossierCode = ({
         )}
       </div>
 
+      {/* TODO: wrap this with resizable */}
       {/* Output Panel */}
       {showOutput && (
         <div className="border-t bg-zinc-950 text-zinc-50">

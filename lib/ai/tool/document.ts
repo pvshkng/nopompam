@@ -25,7 +25,8 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
     # The "document" tool creates and updates text documents that render to the user on a space next to the conversation (referred to as the "dossier").
     # Use this tool when asked to work on writing that's long enough like article / essay.
     # Only invoke this tool once for each document you want to create.
-    # DO NOT REPEAT THE CONTENT OF THIS TOOL SINCE IT'S ALREADY IN THE UI.
+    # **DO NOT REPEAT THE GENERATED CONTENT OR RESULT OF THIS TOOL SINCE THE RESULT WILL BE VISIBLE TO THE USER.**
+    # You may let the user know that you have created a document and they can view it on the side panel.
     `,
     inputSchema: z.object({
       title: z.string().describe("The title of the artifact. If the title is not provided, it will be inferred from the prompt."),
