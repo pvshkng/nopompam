@@ -12,6 +12,12 @@ import { PlayIcon, CodeIcon, EyeIcon, Loader2 } from "lucide-react";
 import DataGrid, { type Column } from "react-data-grid";
 import { usePyodide } from "@/hooks/use-pyodide";
 import "react-data-grid/lib/styles.css";
+import { cn } from "@/lib/utils";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 interface CodeContent {
   code: string;
@@ -54,8 +60,22 @@ const PureDossierCode = ({
       const parsed = JSON.parse(content) as CodeContent;
       setCodeContent(parsed);
     } catch (error) {
-      console.error("Failed to parse code content:", error);
-      setCodeContent({ code: content, language: "javascript" });
+      // During streaming, JSON might be incomplete
+      // Try to extract partial code
+      try {
+        const partialMatch = content.match(/"code"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+        const langMatch = content.match(/"language"\s*:\s*"(\w+)"/);
+
+        if (partialMatch) {
+          setCodeContent({
+            code: partialMatch[1].replace(/\\n/g, "\n").replace(/\\"/g, '"'),
+            language: (langMatch?.[1] as any) || "javascript",
+          });
+        }
+      } catch {
+        // If all parsing fails, show raw content
+        setCodeContent({ code: content, language: "javascript" });
+      }
     }
   }, [content]);
 
@@ -105,10 +125,10 @@ const PureDossierCode = ({
 
   // Update editor content and language
   useEffect(() => {
-    if (editorRef.current) {
+    if (editorRef.current && codeContent.code) {
       const currentContent = editorRef.current.state.doc.toString();
 
-      // Only update content if it's different AND not from user typing
+      // Update if content is different (including during streaming)
       if (currentContent !== codeContent.code) {
         const transaction = editorRef.current.state.update({
           changes: {
@@ -123,6 +143,7 @@ const PureDossierCode = ({
     }
   }, [codeContent.code]);
 
+  // Add update listener only once when editor is created
   useEffect(() => {
     if (editorRef.current && !readOnly) {
       const updateListener = EditorView.updateListener.of((update) => {
@@ -141,20 +162,61 @@ const PureDossierCode = ({
         }
       });
 
-      // Add the updateListener extension to the editor using dispatch
-      // Use StateEffect.reconfigure instead of EditorView.reconfigure
-      // Import StateEffect from @codemirror/state at the top if not already imported
-      editorRef.current.dispatch({
-        effects: StateEffect.reconfigure.of([
+      // Reconfigure with the update listener included
+      const currentDoc = editorRef.current.state.doc;
+      const newState = EditorState.create({
+        doc: currentDoc,
+        extensions: [
+          basicSetup,
+          getLanguageExtension(codeContent.language),
+          materialLight,
+          EditorView.editable.of(!readOnly),
+          updateListener, // Add listener here
+        ],
+      });
+
+      editorRef.current.setState(newState);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
+
+  // Update language extension when language changes
+  useEffect(() => {
+    if (editorRef.current) {
+      const currentDoc = editorRef.current.state.doc;
+      const currentSelection = editorRef.current.state.selection;
+
+      const updateListener = EditorView.updateListener.of((update) => {
+        if (update.docChanged) {
+          const transaction = update.transactions.find(
+            (tr) => !tr.annotation(Transaction.remote)
+          );
+          if (transaction) {
+            const newCode = update.state.doc.toString();
+            const newContent = JSON.stringify({
+              code: newCode,
+              language: codeContent.language,
+            });
+            handleContentChange(newContent);
+          }
+        }
+      });
+
+      const newState = EditorState.create({
+        doc: currentDoc,
+        selection: currentSelection,
+        extensions: [
           basicSetup,
           getLanguageExtension(codeContent.language),
           materialLight,
           EditorView.editable.of(!readOnly),
           updateListener,
-        ]),
+        ],
       });
+
+      editorRef.current.setState(newState);
     }
-  }, [readOnly, codeContent.language, handleContentChange]);
+  }, [codeContent.language, readOnly, handleContentChange]);
 
   // Execute code
   const executeCode = async () => {
@@ -232,76 +294,89 @@ const PureDossierCode = ({
 
   return (
     <div className="flex flex-col h-full">
-      {/* Toolbar */}
-      {!readOnly && (
-        <div className="flex items-center gap-2 p-2 border-b">
-          {codeContent.language === "html" && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setShowPreview(!showPreview)}
-            >
-              {showPreview ? (
-                <CodeIcon className="w-4 h-4 mr-2" />
-              ) : (
-                <EyeIcon className="w-4 h-4 mr-2" />
-              )}
-              {showPreview ? "Code" : "Preview"}
-            </Button>
-          )}
-          {(codeContent.language === "javascript" ||
-            codeContent.language === "typescript" ||
-            codeContent.language === "python" ||
-            codeContent.language === "sql") && (
-            <button
-              //size="sm"
-              className="rounded-none flex flex-row px-1 !py-0 !m-0"
-              //variant={"ghost"}
-              onClick={executeCode}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin text-stone-500" />
-              ) : (
-                <PlayIcon className="w-4 h-4 text-stone-500" />
-              )}
-              {/* {isLoading ? "Running..." : "Run"} */}
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Editor or Preview */}
-      <div className="flex-1 overflow-hidden">
-        {showPreview && codeContent.language === "html" ? (
-          <div className="w-full h-full overflow-auto bg-white">
-            <div dangerouslySetInnerHTML={{ __html: codeContent.code }} />
+      <ResizablePanelGroup direction="vertical">
+        {/* Toolbar */}
+        {!readOnly && (
+          <div className="flex items-center gap-2 p-2 border-b">
+            {codeContent.language === "html" && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowPreview(!showPreview)}
+              >
+                {showPreview ? (
+                  <CodeIcon className="w-4 h-4 mr-2" />
+                ) : (
+                  <EyeIcon className="w-4 h-4 mr-2" />
+                )}
+                {showPreview ? "Code" : "Preview"}
+              </Button>
+            )}
+            {(codeContent.language === "javascript" ||
+              codeContent.language === "typescript" ||
+              codeContent.language === "python" ||
+              codeContent.language === "sql") && (
+              <button
+                //size="sm"
+                className="rounded-none flex flex-row px-1 !py-0 !m-0"
+                //variant={"ghost"}
+                onClick={executeCode}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-stone-500" />
+                ) : (
+                  <PlayIcon className="w-4 h-4 text-stone-500" />
+                )}
+                {/* {isLoading ? "Running..." : "Run"} */}
+              </button>
+            )}
           </div>
-        ) : (
-          <div ref={containerRef} className="w-full h-full" />
         )}
-      </div>
-
-      {/* TODO: wrap this with resizable */}
-      {/* Output Panel */}
-      {showOutput && (
-        <div className="border-t bg-zinc-950 text-zinc-50">
-          {codeContent.language === "sql" && sqlResults.length > 0 ? (
-            <div className="h-64">
-              <DataGrid
-                columns={sqlColumns}
-                rows={sqlResults}
-                className="rdg-dark"
-                style={{ height: "100%" }}
-              />
-            </div>
-          ) : (
-            <div className="p-4 font-mono text-sm overflow-auto max-h-64">
-              <pre>{output}</pre>
-            </div>
-          )}
-        </div>
-      )}
+        <ResizablePanel className="flex flex-col h-full w-full overflow-y-auto overflow-x-hidden">
+          {/* Editor or Preview */}
+          <div className="flex-1 overflow-hidden">
+            {showPreview && codeContent.language === "html" ? (
+              <div className="w-full h-full overflow-auto bg-white">
+                <div dangerouslySetInnerHTML={{ __html: codeContent.code }} />
+              </div>
+            ) : (
+              <div ref={containerRef} className="w-full h-full overflow-auto" />
+            )}
+          </div>
+        </ResizablePanel>
+        {/* TODO: wrap this with resizable */}
+        {/* Output Panel */}
+        {showOutput && (
+          <>
+            <ResizableHandle
+              className={cn("relative overflow-visible")}
+              withHandle={false}
+            />
+            <ResizablePanel
+              defaultSize={undefined}
+              className={cn("flex flex-col h-full w-full", "bg-stone-50")}
+            >
+              <div className="h-full border-t-2 border-stone-300 size-full bg-stone-700 text-zinc-50">
+                {codeContent.language === "sql" && sqlResults.length > 0 ? (
+                  <div className="h-64">
+                    <DataGrid
+                      columns={sqlColumns}
+                      rows={sqlResults}
+                      className="rdg-dark"
+                      style={{ height: "100%" }}
+                    />
+                  </div>
+                ) : (
+                  <div className="p-4 font-mono text-sm overflow-auto h-full">
+                    <pre>{output}</pre>
+                  </div>
+                )}
+              </div>
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
     </div>
   );
 };
