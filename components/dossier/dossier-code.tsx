@@ -1,7 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { EditorState, Transaction, StateEffect } from "@codemirror/state";
-import { EditorView } from "@codemirror/view";
-import { basicSetup } from "codemirror";
+import { EditorState, Transaction } from "@codemirror/state";
+import { EditorView, keymap } from "@codemirror/view";
+import { basicSetup, minimalSetup } from "codemirror";
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
@@ -18,6 +19,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { read } from "fs";
 
 interface CodeContent {
   code: string;
@@ -28,6 +30,52 @@ interface SqlResult {
   [key: string]: any;
 }
 
+// Simplified parser that ALWAYS returns something
+const parseStreamingJson = (content: string): CodeContent => {
+  if (!content) {
+    return { code: "", language: "javascript" };
+  }
+
+  // Try complete JSON first
+  try {
+    const parsed = JSON.parse(content);
+    return {
+      code: parsed.code || "",
+      language: parsed.language || "javascript",
+    };
+  } catch {
+    // Fallback: extract whatever we can find
+    let code = "";
+    let language = "javascript";
+
+    // Extract language
+    const langMatch = content.match(/"language"\s*:\s*"([^"]+)"/);
+    if (langMatch) {
+      language = langMatch[1];
+    }
+
+    // Extract code by finding the code field and extracting until we hit issues
+    const codeMatch = content.match(/"code"\s*:\s*"([\s\S]*)$/);
+    if (codeMatch) {
+      // Take everything after "code":"
+      let raw = codeMatch[1];
+
+      // Remove trailing incomplete JSON
+      raw = raw.replace(/[}"]*$/, "");
+
+      // Decode escape sequences
+      code = raw
+        .replace(/\\n/g, "\n")
+        .replace(/\\t/g, "\t")
+        .replace(/\\r/g, "\r")
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, "\\");
+    }
+
+    return { code, language: language as any };
+  }
+};
+
 const PureDossierCode = ({
   content,
   handleContentChange,
@@ -37,6 +85,8 @@ const PureDossierCode = ({
   handleContentChange: (content: string) => void;
   readOnly: boolean;
 }) => {
+  const lastParsedContentRef = useRef<string>("");
+  const pendingUpdateRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<EditorView | null>(null);
   const [codeContent, setCodeContent] = useState<CodeContent>({
@@ -51,32 +101,24 @@ const PureDossierCode = ({
 
   // Parse content
   useEffect(() => {
+    // Skip if content hasn't actually changed
+    if (content === lastParsedContentRef.current) return;
+    lastParsedContentRef.current = content || "";
+
     if (!content) {
       setCodeContent({ code: "", language: "javascript" });
       return;
     }
 
-    try {
-      const parsed = JSON.parse(content) as CodeContent;
-      setCodeContent(parsed);
-    } catch (error) {
-      // During streaming, JSON might be incomplete
-      // Try to extract partial code
-      try {
-        const partialMatch = content.match(/"code"\s*:\s*"((?:[^"\\]|\\.)*)"/);
-        const langMatch = content.match(/"language"\s*:\s*"(\w+)"/);
+    const parsed = parseStreamingJson(content);
 
-        if (partialMatch) {
-          setCodeContent({
-            code: partialMatch[1].replace(/\\n/g, "\n").replace(/\\"/g, '"'),
-            language: (langMatch?.[1] as any) || "javascript",
-          });
-        }
-      } catch {
-        // If all parsing fails, show raw content
-        setCodeContent({ code: content, language: "javascript" });
+    // Only update if code actually changed
+    setCodeContent((prev) => {
+      if (prev.code === parsed.code && prev.language === parsed.language) {
+        return prev;
       }
-    }
+      return parsed;
+    });
   }, [content]);
 
   // Get language extension
@@ -99,13 +141,34 @@ const PureDossierCode = ({
   // Initialize CodeMirror
   useEffect(() => {
     if (containerRef.current && !editorRef.current) {
+      const updateListener = EditorView.updateListener.of((update) => {
+        if (update.docChanged && !readOnly) {
+          const transaction = update.transactions.find(
+            (tr) => !tr.annotation(Transaction.remote)
+          );
+          if (transaction) {
+            
+            const newCode = update.state.doc.toString();
+            const newContent = JSON.stringify({
+              code: newCode,
+              language: codeContent.language,
+            });
+            handleContentChange(newContent);
+    
+          }
+        }
+      });
+
       const startState = EditorState.create({
-        doc: codeContent.code,
+        doc: "",
         extensions: [
           basicSetup,
+          history(),
+          keymap.of([...historyKeymap, ...defaultKeymap]),
           getLanguageExtension(codeContent.language),
           materialLight,
           EditorView.editable.of(!readOnly),
+          ...(readOnly ? [] : [updateListener]),
         ],
       });
 
@@ -121,101 +184,93 @@ const PureDossierCode = ({
         editorRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update editor content and language
+  // Update editor content
   useEffect(() => {
-    if (editorRef.current && codeContent.code) {
-      const currentContent = editorRef.current.state.doc.toString();
+    if (!editorRef.current) return;
 
-      // Update if content is different (including during streaming)
-      if (currentContent !== codeContent.code) {
-        const transaction = editorRef.current.state.update({
-          changes: {
-            from: 0,
-            to: currentContent.length,
-            insert: codeContent.code,
-          },
-          annotations: [Transaction.remote.of(true)],
-        });
-        editorRef.current.dispatch(transaction);
+    const currentContent = editorRef.current.state.doc.toString();
+    const newContent = codeContent.code;
+
+    // Only update if content is different
+    if (currentContent === newContent) return;
+
+    // Clear any pending updates
+    if (pendingUpdateRef.current) {
+      clearTimeout(pendingUpdateRef.current);
+    }
+
+    // Debounce updates slightly to avoid cursor jumps
+    pendingUpdateRef.current = setTimeout(() => {
+      if (!editorRef.current) return;
+
+      const current = editorRef.current.state.doc.toString();
+      if (current === newContent) return;
+
+      // Save cursor position
+      const cursorPos = editorRef.current.state.selection.main.head;
+
+      const transaction = editorRef.current.state.update({
+        changes: {
+          from: 0,
+          to: current.length,
+          insert: newContent,
+        },
+        // DON'T mark as remote to preserve undo history
+        selection: readOnly
+          ? undefined
+          : { anchor: Math.min(cursorPos, newContent.length) },
+      });
+      editorRef.current.dispatch(transaction);
+    }, 10);
+
+    return () => {
+      if (pendingUpdateRef.current) {
+        clearTimeout(pendingUpdateRef.current);
       }
-    }
-  }, [codeContent.code]);
-
-  // Add update listener only once when editor is created
-  useEffect(() => {
-    if (editorRef.current && !readOnly) {
-      const updateListener = EditorView.updateListener.of((update) => {
-        if (update.docChanged) {
-          const transaction = update.transactions.find(
-            (tr) => !tr.annotation(Transaction.remote)
-          );
-          if (transaction) {
-            const newCode = update.state.doc.toString();
-            const newContent = JSON.stringify({
-              code: newCode,
-              language: codeContent.language,
-            });
-            handleContentChange(newContent);
-          }
-        }
-      });
-
-      // Reconfigure with the update listener included
-      const currentDoc = editorRef.current.state.doc;
-      const newState = EditorState.create({
-        doc: currentDoc,
-        extensions: [
-          basicSetup,
-          getLanguageExtension(codeContent.language),
-          materialLight,
-          EditorView.editable.of(!readOnly),
-          updateListener, // Add listener here
-        ],
-      });
-
-      editorRef.current.setState(newState);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on mount
+    };
+  }, [codeContent.code, readOnly]);
 
   // Update language extension when language changes
   useEffect(() => {
-    if (editorRef.current) {
-      const currentDoc = editorRef.current.state.doc;
-      const currentSelection = editorRef.current.state.selection;
+    if (!editorRef.current) return;
 
-      const updateListener = EditorView.updateListener.of((update) => {
-        if (update.docChanged) {
-          const transaction = update.transactions.find(
-            (tr) => !tr.annotation(Transaction.remote)
-          );
-          if (transaction) {
-            const newCode = update.state.doc.toString();
-            const newContent = JSON.stringify({
-              code: newCode,
-              language: codeContent.language,
-            });
-            handleContentChange(newContent);
-          }
+    const currentDoc = editorRef.current.state.doc;
+    const currentSelection = editorRef.current.state.selection;
+
+    const updateListener = EditorView.updateListener.of((update) => {
+      if (update.docChanged && !readOnly) {
+        const transaction = update.transactions.find(
+          (tr) => !tr.annotation(Transaction.remote)
+        );
+        if (transaction) {
+          const newCode = update.state.doc.toString();
+          const newContent = JSON.stringify({
+            code: newCode,
+            language: codeContent.language,
+          });
+          handleContentChange(newContent);
         }
-      });
+      }
+    });
 
-      const newState = EditorState.create({
-        doc: currentDoc,
-        selection: currentSelection,
-        extensions: [
-          basicSetup,
-          getLanguageExtension(codeContent.language),
-          materialLight,
-          EditorView.editable.of(!readOnly),
-          updateListener,
-        ],
-      });
+    const newState = EditorState.create({
+      doc: currentDoc,
+      selection: currentSelection,
+      extensions: [
+        basicSetup,
+        history(),
+        keymap.of([...historyKeymap, ...defaultKeymap]),
+        getLanguageExtension(codeContent.language),
+        materialLight,
+        EditorView.editable.of(!readOnly),
+        ...(readOnly ? [] : [updateListener]),
+      ],
+    });
 
-      editorRef.current.setState(newState);
-    }
+    editorRef.current.setState(newState);
   }, [codeContent.language, readOnly, handleContentChange]);
 
   // Execute code
@@ -229,7 +284,6 @@ const PureDossierCode = ({
         codeContent.language === "javascript" ||
         codeContent.language === "typescript"
       ) {
-        // Capture console output
         const logs: string[] = [];
         const originalLog = console.log;
         console.log = (...args) => {
@@ -237,8 +291,6 @@ const PureDossierCode = ({
         };
 
         try {
-          // Execute JavaScript/TypeScript
-          // Note: This is unsafe in production, use a sandboxed environment
           eval(codeContent.code);
           setOutput(logs.join("\n") || "Execution completed successfully");
         } finally {
@@ -246,10 +298,7 @@ const PureDossierCode = ({
         }
       } else if (codeContent.language === "python") {
         setOutput("Loading Python environment...");
-
-        // Load Pyodide if not already loaded
         const pyodideInstance = pyodide || (await loadPyodide());
-
         setOutput("Running Python code...");
 
         const outputLines: string[] = [];
@@ -262,7 +311,6 @@ const PureDossierCode = ({
         await pyodideInstance.runPythonAsync(codeContent.code);
         setOutput(outputLines.join("\n") || "Execution completed successfully");
       } else if (codeContent.language === "sql") {
-        // Mock SQL execution with sample data
         setOutput("SQL execution not implemented. Showing mock data.");
         setSqlResults([
           { id: 1, name: "Sample Row 1", value: 100 },
@@ -277,7 +325,6 @@ const PureDossierCode = ({
     }
   };
 
-  // SQL DataGrid columns
   const sqlColumns: Column<SqlResult>[] =
     sqlResults.length > 0
       ? Object.keys(sqlResults[0]).map((key) => ({
@@ -295,7 +342,6 @@ const PureDossierCode = ({
   return (
     <div className="flex flex-col h-full">
       <ResizablePanelGroup direction="vertical">
-        {/* Toolbar */}
         {!readOnly && (
           <div className="flex items-center gap-2 p-2 border-b">
             {codeContent.language === "html" && (
@@ -317,9 +363,7 @@ const PureDossierCode = ({
               codeContent.language === "python" ||
               codeContent.language === "sql") && (
               <button
-                //size="sm"
                 className="rounded-none flex flex-row px-1 !py-0 !m-0"
-                //variant={"ghost"}
                 onClick={executeCode}
                 disabled={isLoading}
               >
@@ -328,13 +372,11 @@ const PureDossierCode = ({
                 ) : (
                   <PlayIcon className="w-4 h-4 text-stone-500" />
                 )}
-                {/* {isLoading ? "Running..." : "Run"} */}
               </button>
             )}
           </div>
         )}
         <ResizablePanel className="flex flex-col h-full w-full overflow-y-auto overflow-x-hidden">
-          {/* Editor or Preview */}
           <div className="flex-1 overflow-hidden">
             {showPreview && codeContent.language === "html" ? (
               <div className="w-full h-full overflow-auto bg-white">
@@ -345,8 +387,6 @@ const PureDossierCode = ({
             )}
           </div>
         </ResizablePanel>
-        {/* TODO: wrap this with resizable */}
-        {/* Output Panel */}
         {showOutput && (
           <>
             <ResizableHandle

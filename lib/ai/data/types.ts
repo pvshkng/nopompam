@@ -2,6 +2,7 @@ export interface DataDocument {
     id: string;
     type: "init" | "start" | "text" | "stop" | "error";
     content: any;
+    object?: any;
 }
 
 export interface SearchData {

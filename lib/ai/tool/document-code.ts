@@ -113,20 +113,18 @@ export const codeHandler: DocumentHandler = async ({
 
             if (type === "object") {
                 const { object } = delta;
-                const { code, language } = object;
 
-                if (code && language) {
-                    const content = JSON.stringify({ code, language });
-                    writer.write({
-                        type: "data-document",
-                        data: {
-                            id: id,
-                            type: "text",
-                            content,
-                        },
-                    });
-                    draftContent = content;
-                }
+                const content = JSON.stringify(object);
+                writer.write({
+                    type: "data-document",
+                    data: {
+                        id: id,
+                        type: "text",
+                        content,
+                    },
+                });
+                draftContent = content;
+
             }
         }
 

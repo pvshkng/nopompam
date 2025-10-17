@@ -131,7 +131,7 @@ function PureRoot(props: PureRootProps) {
     return () => {
       resetDossier();
     };
-  }, [messages]);
+  }, [_id]);
 
   return (
     <>
