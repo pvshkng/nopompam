@@ -24,6 +24,8 @@ const PureDocument = (props: any) => {
   const { tool }: { tool: ToolUIPart } = props;
   const document = tool?.output as DocumentOutput;
   const documentId = document?.id;
+  const { getDocument, addDocument, switchTab } = useDossierStore.getState();
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
@@ -33,21 +35,30 @@ const PureDocument = (props: any) => {
           "cursor-pointer py-3 px-4 my-2 mx-2"
         )}
         onClick={async () => {
-          const { getDocument, addDocument, switchTab } =
-            useDossierStore.getState();
+          if (isLoading) return;
 
           const existingDoc = getDocument(documentId);
-
           if (existingDoc) {
             switchTab(documentId);
-          } else if (tool?.state === "output-available" && document?.content) {
-            const artifact = await getArtifact(documentId);
-            addDocument({
-              id: artifact.artifactId,
-              title: artifact.title || "Untitled Document",
-              kind: artifact.kind || "text",
-              content: artifact.content,
-            });
+            return;
+          }
+
+          if (tool?.state === "output-available" && document?.content) {
+            try {
+              setIsLoading(true);
+              const artifact = await getArtifact(documentId);
+              addDocument({
+                id: artifact.artifactId,
+                title: artifact.title || "Untitled Document",
+                kind: artifact.kind || "text",
+                content: artifact.content,
+              });
+              switchTab(artifact.artifactId);
+            } catch (error) {
+              console.error("Error adding document:", error);
+            } finally {
+              setIsLoading(false);
+            }
           }
         }}
       >

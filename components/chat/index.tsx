@@ -54,15 +54,8 @@ interface DataDocument {
 }
 
 function PureRoot(props: PureRootProps) {
-  let {
-    initialMessages,
-    initialThreads,
-    _id,
-    session,
-    email,
-    name,
-    image,
-  } = props;
+  let { initialMessages, initialThreads, _id, session, email, name, image } =
+    props;
 
   const params = useParams();
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -78,7 +71,7 @@ function PureRoot(props: PureRootProps) {
   // prettier-ignore
   const { containerRef, isBottom, scrollToBottom, handleScroll } = useScrollToBottom();
   // prettier-ignore
-  const { activeTab, setActiveTab, dossierOpen, setDossierOpen } = useDossierStore();
+  const { activeTab, setActiveTab, dossierOpen, setDossierOpen, resetDossier } = useDossierStore();
   const { input, setInput, clearInput } = useInputStore();
 
   const { messages, setMessages, status, sendMessage, stop } = useChat({
@@ -133,6 +126,12 @@ function PureRoot(props: PureRootProps) {
       scrollToBottom();
     }
   }, [input]);
+
+  useEffect(() => {
+    return () => {
+      resetDossier();
+    };
+  }, [messages]);
 
   return (
     <>
