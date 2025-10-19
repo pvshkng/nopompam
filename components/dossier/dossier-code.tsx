@@ -8,6 +8,7 @@ import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
 import { html } from "@codemirror/lang-html";
 import { materialLight } from "@uiw/codemirror-theme-material";
+import { consoleLight } from "@uiw/codemirror-theme-console";
 import { Button } from "@/components/ui/button";
 import { PlayIcon, CodeIcon, EyeIcon, Loader2 } from "lucide-react";
 import DataGrid, { type Column } from "react-data-grid";
@@ -147,14 +148,12 @@ const PureDossierCode = ({
             (tr) => !tr.annotation(Transaction.remote)
           );
           if (transaction) {
-            
             const newCode = update.state.doc.toString();
             const newContent = JSON.stringify({
               code: newCode,
               language: codeContent.language,
             });
             handleContentChange(newContent);
-    
           }
         }
       });
@@ -166,7 +165,7 @@ const PureDossierCode = ({
           history(),
           keymap.of([...historyKeymap, ...defaultKeymap]),
           getLanguageExtension(codeContent.language),
-          materialLight,
+          consoleLight,
           EditorView.editable.of(!readOnly),
           ...(readOnly ? [] : [updateListener]),
         ],
@@ -264,7 +263,7 @@ const PureDossierCode = ({
         history(),
         keymap.of([...historyKeymap, ...defaultKeymap]),
         getLanguageExtension(codeContent.language),
-        materialLight,
+        consoleLight,
         EditorView.editable.of(!readOnly),
         ...(readOnly ? [] : [updateListener]),
       ],
