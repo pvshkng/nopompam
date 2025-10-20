@@ -14,7 +14,7 @@ import { Dossier } from ".";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 
 const PureMobileDossier = (props: any) => {
-  const { className } = props;
+  const { className, messages = [] } = props;
 
   const {
     dossierOpen,
@@ -46,7 +46,7 @@ const PureMobileDossier = (props: any) => {
           <DrawerTitle hidden></DrawerTitle>
           <DrawerDescription hidden></DrawerDescription>
         </DrawerHeader>
-        <Dossier />
+        <Dossier messages={messages} />
         {/* <DrawerFooter>
           <DrawerClose
             onClick={() => {

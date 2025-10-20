@@ -15,7 +15,7 @@ export function HandleButton(props: any) {
           <TooltipTrigger>
             <button
               className={cn(
-                "flex z-40 size-4 pointer-events-auto cursor-pointer hover:bg-stone-700"
+                "flex z-40 size-4 pointer-events-auto cursor-pointer hover:bg-violet-700"
               )}
             >
               <DragHandleDots2Icon className="size-4" />

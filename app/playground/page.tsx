@@ -1,4 +1,4 @@
-import { GridBackground } from "@/components/background-grid";
+import { GridBackground } from "@/components/background";
 import { Experiment } from "./experiment";
 import { redirect } from "next/navigation";
 

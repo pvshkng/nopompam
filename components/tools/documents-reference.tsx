@@ -8,7 +8,7 @@ export function DocumentsReference({ result }: { result: Document[] }) {
         <span
           key={i}
           className={cn(
-            "text-[10px] font-semibold px-1 border rounded-md bg-stone-100"
+            "text-[10px] font-semibold px-1 border rounded-md bg-violet-100"
           )}
         >
           {doc.title}

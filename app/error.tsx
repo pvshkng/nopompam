@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { GridBackground } from "@/components/background-grid";
+import { GridBackground } from "@/components/background";
 
 export default function Error({
   error,
@@ -17,10 +17,10 @@ export default function Error({
   return (
     <div className="flex flex-col items-center justify-center size-full ">
       <GridBackground />
-      <h1 className="z-10 text-stone-400 text-4xl font-semibold">Error</h1>
+      <h1 className="z-10 text-violet-400 text-4xl font-semibold">Error</h1>
       <button
         onClick={() => reset()}
-        className="z-10 text-stone-400 text-md font-semibold underline"
+        className="z-10 text-violet-400 text-md font-semibold underline"
       >
         Try again
       </button>

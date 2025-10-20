@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ChartCandlestick, LoaderCircle } from "lucide-react";
 import { memo, useEffect, useState } from "react";
-import { MessageSkeleton } from "@/components/chat/message-area/message-loading-skeleton";
+import { MessageSkeleton } from "@/components/chat-message-area/message-loading-skeleton";
 import { ChartAreaGradient } from "@/components/charts/chart-area-gradient";
 
 type Status = "loading" | "ready" | "error";
@@ -18,11 +18,11 @@ const PureStock = (props: any) => {
     <>
       <div
         className={cn(
-          "flex flex-col w-full h-full px-4 py-3 gap-2 m-2",
-          "border border-stone-300 rounded-md bg-neutral-100"
+          "flex flex-col w-full h-full px-4 py-3 gap-2",
+          "border border-violet-300 rounded-md bg-neutral-100"
         )}
       >
-        <span className="flex text-stone-500 items-center gap-2 overflow-hidden max-w-full">
+        <span className="flex text-violet-500 items-center gap-2 overflow-hidden max-w-full">
           {status === "loading" ? (
             <LoaderCircle size={16} className="!animate-spin !opacity-100" />
           ) : (

@@ -54,7 +54,7 @@ export const HIGHLIGHT_COLORS = [
   {
     label: "Purple background",
     value: "var(--tt-color-highlight-purple)",
-    border: "var(--tt-color-highlight-purple-contrast)",
+    border: "var(--tt-color-highlight-violet-contrast)",
   },
   {
     label: "Pink background",

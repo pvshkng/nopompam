@@ -6,8 +6,12 @@ import { DossierFloating } from "./dossier-floating";
 import { BlankDocument } from "./dossier-blank";
 import { DossierNavigation } from "./dossier-navigation";
 import { useDossierStore } from "@/lib/stores/dossier-store";
+import { DossierSheet } from "@/components/dossier/dossier-sheet";
+import { DossierCode } from "@/components/dossier/dossier-code";
 
 function PureDossier(props: any) {
+  const { messages = [] } = props;
+
   const {
     dossierOpen,
     documents,
@@ -31,13 +35,29 @@ function PureDossier(props: any) {
 
   const renderContent = () => {
     if (activeTab === "home" || !activeDocument) {
-      return <BlankDocument />;
+      return <BlankDocument messages={messages} />;
     }
 
     switch (activeDocument.kind) {
       case "text":
         return (
           <SimpleEditor
+            content={displayContent}
+            handleContentChange={handleContentChange}
+            readOnly={activeDocument.isStreaming}
+          />
+        );
+      case "sheet":
+        return (
+          <DossierSheet
+            content={displayContent}
+            handleContentChange={handleContentChange}
+            readOnly={activeDocument.isStreaming}
+          />
+        );
+      case "code":
+        return (
+          <DossierCode
             content={displayContent}
             handleContentChange={handleContentChange}
             readOnly={activeDocument.isStreaming}

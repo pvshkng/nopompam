@@ -48,3 +48,32 @@ export async function getArtifacts(threadId: string, user: string): Promise<Arti
     // @ts-ignore
     return artifacts.map(({ _id, ...artifact }) => artifact);
 }
+
+
+export async function getArtifact(artifactId: string/* , user: string */): Promise<ArtifactDocument> {
+    const { client, db } = await connectToDatabase();
+    const collection = db.collection(ARTIFACT_COLLECTION);
+    const filter = { artifactId, /* user */ };
+    const result = await collection.findOne(filter);
+    // @ts-ignore
+    return {
+        artifactId: result?.artifactId,
+        kind: result?.kind,
+        title: result?.title,
+        content: result?.content,
+    }
+}
+
+export async function saveArtifact(artifactId: string, kind: string, title: string, content: string) {
+    const { client, db } = await connectToDatabase();
+    const collection = db.collection(ARTIFACT_COLLECTION);
+    const filter = { artifactId };
+    try {
+        const result = await collection.updateOne(filter, { $set: { kind, title, content } });
+        return result
+    } catch (error) {
+        console.error("Error while saving artifact: ", error);
+    }
+    // @ts-ignore
+
+}

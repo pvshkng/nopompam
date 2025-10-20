@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Link, LoaderCircle, Globe, CodeXml } from "lucide-react";
-import { MessageSkeleton } from "@/components/chat/message-area/message-loading-skeleton";
+import { MessageSkeleton } from "@/components/chat-message-area/message-loading-skeleton";
 import { memo } from "react";
 
 type ToolState =

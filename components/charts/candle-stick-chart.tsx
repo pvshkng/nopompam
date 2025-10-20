@@ -783,7 +783,7 @@ export function CandlestickChart(props: any) {
 
   return (
     <div
-      className="relative w-full h-96 rounded-sm bg-white border border-stone-200 !p-5"
+      className="relative w-full h-96 rounded-sm bg-white border border-violet-200 !p-5"
       /* style={
         {
           "--marginTop": "20px",
@@ -948,7 +948,7 @@ export function CandlestickChart(props: any) {
 
       {/* Current Price Indicator */}
       <div
-        className="absolute right-0 bg-stone-500 text-white px-2 py-1 text-xs font-medium"
+        className="absolute right-0 bg-violet-500 text-white px-2 py-1 text-xs font-medium"
         style={{
           top: `calc(${yScale(
             data[data.length - 1].close

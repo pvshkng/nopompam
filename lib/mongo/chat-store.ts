@@ -8,8 +8,9 @@ type Chat = {
     _id: string;
     user: string;
     title?: string;
-    messages: UIMessage[];
+    messages?: UIMessage[];
     timestamp?: string;
+    updatedAt?: string;
 };
 
 export async function createThread(user: string, title: string = "New Chat") {
@@ -22,7 +23,7 @@ export async function createThread(user: string, title: string = "New Chat") {
         user: user,
         messages: [],
         timestamp: Date.now().toString(),
-    });
+    }, { ignoreUndefined: true });
     return _id;
 }
 
@@ -30,12 +31,17 @@ export async function getThreads(email: string) {
     try {
         const { client, db } = await connectToDatabase();
         const collection = db.collection(THREAD_COLLECTION);
-        const docs = await collection.find({ user: email }).toArray();
+        const docs = await collection.find(
+            { user: email },
+            {
+                sort: { timestamp: -1 },
+                projection: { messages: 0 },
+                limit: 20
+            }).toArray();
         const threads: Chat[] = docs.map((doc: any) => ({
             _id: doc._id.toString(),
             title: doc.title,
             user: doc.user,
-            messages: doc.messages,
             timestamp: doc.timestamp,
         }));
         return threads;
@@ -80,11 +86,11 @@ export async function saveChat({ _id, title, user, messages }: { _id: string; ti
             update.title = title;
             update.timestamp = Date.now().toString();
         }
-        await collection.updateOne(
+        const result = await collection.updateOne(
             // @ts-ignore
             { _id: _id, user },
             { $set: update },
-            { upsert: true },
+            { upsert: true, ignoreUndefined: true },
         );
 
     } catch (_) {

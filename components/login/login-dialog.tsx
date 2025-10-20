@@ -42,7 +42,7 @@ function PureLoginDialog(props: any) {
             "gap-7"
           )}
         >
-          <h1 className="font-bold text-stone-600 text-2xl max-lg:text-xl drop-shadow-xl">
+          <h1 className="font-bold text-violet-600 text-2xl max-lg:text-xl drop-shadow-xl">
             nopompam
           </h1>
           <div className="z-10">
@@ -51,7 +51,7 @@ function PureLoginDialog(props: any) {
 
           {/* Caution */}
           <div className="max-w-[300px]">
-            <p className="text-center text-xs text-stone-700 ">
+            <p className="text-center text-xs text-violet-700 ">
               Nopompam may occasionally provide <u>inaccurate information</u>
               .Use your own judgement and verify the information it provides.
             </p>

@@ -5,7 +5,7 @@ const PureDossierFloating = (props: any) => {
   return (
     <div
       className={cn(
-        "z-50 flex size-5 border border-stone-700 bg-neutral-50 absolute right-5 bottom-5"
+        "z-50 flex size-5 border border-violet-700 bg-neutral-50 absolute right-5 bottom-5"
       )}
     >
       H

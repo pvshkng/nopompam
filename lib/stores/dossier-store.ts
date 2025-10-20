@@ -1,21 +1,23 @@
 import { create } from 'zustand';
+import type { UIMessage } from 'ai';
 
 export interface Document {
     id: string;
     title: string;
-    kind: 'text';
+    kind: string;
     content: string;
     isStreaming: boolean;
-    hasUnsavedChanges: boolean;
-    streamingContent: string;
-    appendStreamingContent: (content: string) => void;
-    clearStreamingContent: () => void;
+    hasUnsavedChanges?: boolean;
+    streamingContent?: string;
+    appendStreamingContent?: (content: string) => void;
+    clearStreamingContent?: () => void;
 }
 
 export type DossierStore = {
     dossierOpen: boolean;
     documents: Document[];
     activeTab: string | null; // 'home' | document.id
+    chatDocuments: Document[];
 };
 
 export type DossierActions = {
@@ -44,11 +46,17 @@ export type DossierActions = {
     // Content editing
     updateDocumentContent: (id: string, content: string) => void;
     markDocumentSaved: (id: string) => void;
+
+    // Chat document in the active thread
+    syncChatDocuments: (messages: any[]) => void;
+    clearChatDocuments: () => void;
+
 };
 
 export const useDossierStore = create<DossierStore & DossierActions>((set, get) => ({
     dossierOpen: false,
     documents: [],
+    chatDocuments: [],
     activeTab: 'home',
 
     // Basic dossier actions
@@ -156,6 +164,7 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
         }));
     },
 
+
     stopDocumentStreaming: (id) => {
         set((state) => ({
             documents: state.documents.map(doc =>
@@ -191,4 +200,35 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
             )
         }));
     },
+
+    syncChatDocuments: (messages: UIMessage[]) => {
+        const toolDocuments: Document[] = [];
+
+        messages.forEach(message => {
+            if (message.parts) {
+                message.parts.forEach(part => {
+                    if (part.type === 'tool-document' && part.output) {
+                        const output = part.output as { id: string; title: string; kind: string; content: string };
+                        toolDocuments.push({
+                            id: output.id,
+                            title: output.title,
+                            kind: output.kind,
+                            content: output.content || '',
+                        });
+                    }
+                });
+            }
+        });
+
+        // Only update if documents actually changed
+        const currentDocs = get().chatDocuments;
+
+        // Deep comparison to prevent unnecessary updates
+        if (JSON.stringify(toolDocuments) !== JSON.stringify(currentDocs)) {
+            set({ chatDocuments: toolDocuments });
+        }
+    },
+
+
+    clearChatDocuments: () => set({ chatDocuments: [] }),
 }));

@@ -17,7 +17,7 @@ export function LoginComponent() {
           disabled={loading}
           className={cn(
             "flex items-center justify-center px-2 font-bold",
-            "text-sm p-2 text-stone-600 bg-stone-200"
+            "text-sm p-2 text-violet-600 bg-violet-200"
           )}
           onClick={async () => {
             //setLoading(true);

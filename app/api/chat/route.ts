@@ -12,7 +12,11 @@ import { mock } from "@/app/api/chat/mock";
 import { system_prompt } from "./system";
 import { getProvider } from "./provider";
 import { removeProviderExecuted } from "@/lib/ai/utils";
-import _ from "lodash";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+
+import { google } from '@ai-sdk/google';
+import { langfuse } from "@/lib/langfuse";
 
 export const maxDuration = 60;
 
@@ -20,16 +24,22 @@ export const maxDuration = 60;
 export async function POST(req: NextRequest) {
 
     try {
-        let memory = []
-        const { messages, id, user, model, session } = await req.json();
+        let memory: any[] = []
+        const { messages, id, model } = await req.json();
+        // @ts-ignore
         const modelMessages = convertToModelMessages(removeProviderExecuted(messages))
 
+        const session = await auth.api.getSession({
+            headers: await headers(),
+        });
+        const user = session?.user?.email
 
         if (!session) {
             const result = await mock();
             return result
         }
         const provider = getProvider(model);
+        const instruction = (await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {
@@ -38,18 +48,18 @@ export async function POST(req: NextRequest) {
                     const result = streamText({
 
                         model: provider(model),
-                        system: system_prompt,
+                        system: instruction,
                         prompt: modelMessages,
-                        experimental_transform: smoothStream({
-                            chunking: 'word',
-                            delayInMs: 10
-                        }),
                         tools: {
                             // web: web({}),
                             search: search({ writer }),
                             document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
-                        },
+                            // code_execution: google.tools.codeExecution({}),
+                            // google_search: google.tools.googleSearch({}),
+                            // url_context: google.tools.urlContext({}),
 
+
+                        },
                         stopWhen: stepCountIs(5),
                         onError(error) {
                             console.error("Error in chat route: ", error);
@@ -57,8 +67,11 @@ export async function POST(req: NextRequest) {
                         prepareStep: async ({ model, stepNumber, steps, messages }) => {
                             memory = messages
                             return {}
-                        }
-
+                        },
+                        experimental_transform: smoothStream({
+                            chunking: 'word',
+                            delayInMs: 10
+                        })
                     });
 
                     writer.merge(result.toUIMessageStream({
@@ -73,12 +86,16 @@ export async function POST(req: NextRequest) {
                                         data: { title: title }
                                     });
                                 }
-                                saveChat({
-                                    _id: id,
-                                    title: title,
-                                    user: user,
-                                    messages: [...messages, ..._messages]
-                                });
+                                if (user) {
+                                    saveChat({
+                                        _id: id,
+                                        title: title,
+                                        user: user,
+                                        messages: [...messages, ..._messages]
+                                    });
+                                } else {
+                                    console.log("No user found, skipping saveChat");
+                                }
                             } catch (error) {
                                 console.error("Error creating chat: ", error);
                             }

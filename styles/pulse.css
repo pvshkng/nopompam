@@ -1,6 +1,6 @@
 /* HTML: <div class="pulse-loader"></div> */
 .pulse-loader {
-  width: 5px;
+  width: 2px;
   aspect-ratio: 1;
   border-radius: 50%;
   background: #44403c;
@@ -22,5 +22,5 @@
   animation-delay: -1s;
 }
 @keyframes l2 {
-    100% {box-shadow: 0 0 0 15px #0000}
+    100% {box-shadow: 0 0 0 10px #0000}
 }

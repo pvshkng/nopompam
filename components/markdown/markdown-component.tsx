@@ -34,7 +34,7 @@ export const components: Partial<any> = {
         href={href}
         {...props}
         className={cn(
-          "items-center underline text-semibold text-sm text-stone-500 gap-1"
+          "items-center underline text-semibold text-sm text-violet-500 gap-1"
         )}
       >
         <img
@@ -61,7 +61,7 @@ export const components: Partial<any> = {
       src={src}
       alt={alt}
       {...props}
-      className={cn("max-h-64 my-2 mr-auto rounded-md border border-stone-300")}
+      className={cn("max-h-64 my-2 mr-auto rounded-md border border-violet-300")}
       onError={(e) => {
         (e.target as HTMLImageElement).src = "/image/placeholder-image.jpg";
       }}
@@ -201,16 +201,16 @@ const HighlightedCodeBlock = memo(
           "[&_*]:!animate-none",
           "flex flex-col mx-auto size-full mb-4",
           //"[&_div]:border",
-          //"[&_div]:border-stone-800",
+          //"[&_div]:border-violet-800",
           "!text-white"
         )}
       >
         <div
           className={cn(
             //"rounded-t-md",
-            "bg-stone-300",
+            "bg-violet-300",
             "px-3",
-            "font-black !text-stone-500",
+            "font-black !text-violet-500",
             "justify-between flex items-center"
           )}
         >
@@ -226,7 +226,7 @@ const HighlightedCodeBlock = memo(
             "[&_pre]:p-2",
             "[&_pre]:overflow-x-auto",
             "[&_pre]:text-sm",
-            "[&_pre]:!bg-stone-100",
+            "[&_pre]:!bg-violet-100",
             "[&_pre]:max-width-full",
             "[&_pre]:relative",
             "[&_pre_code_.line]:pl-8",

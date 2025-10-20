@@ -23,6 +23,7 @@ export const getProvider = (model: string) => {
         case "ministral-8b-latest":
         case "mistral-large-latest":
         case "mistral-small-latest":
+        case "mistral-medium-latest":
         case "pixtral-large-latest":
         case "pixtral-12b-2409":
         case "open-mistral-7b":

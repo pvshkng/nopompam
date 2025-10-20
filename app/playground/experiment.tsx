@@ -48,7 +48,7 @@ export const Experiment = () => {
     <section
       className={cn(
         "z-10 p-2 flex flex-col items-start justify-center",
-        "border border-stone-300",
+        "border border-violet-300",
         "bg-white rounded-md"
       )}
     >
@@ -70,7 +70,7 @@ export const Experiment = () => {
                 }}
                 className="items-start rounded pb-5 last:pb-0 cursor-default"
               >
-                <StepperIndicator className="data-[state=completed]:!bg-stone-700" />
+                <StepperIndicator className="data-[state=completed]:!bg-violet-700" />
                 <div className="mt-0.5 px-1 text-left">
                   <StepperTitle>{title}</StepperTitle>
                 </div>

@@ -2,6 +2,7 @@ import { useDossierStore } from "@/lib/stores/dossier-store";
 import { memo } from "react";
 import { X, House, NotebookPen, Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { saveArtifact } from "@/lib/mongo/artifact-store";
 
 const PureDossierNavigation = (props: any) => {
   const {
@@ -32,17 +33,13 @@ const PureDossierNavigation = (props: any) => {
     if (activeTab && activeTab !== "home") {
       const doc = getDocument(activeTab);
       if (doc?.hasUnsavedChanges) {
-        // Here you would implement your save logic
-        // For now, just mark as saved
-        markDocumentSaved(activeTab);
-
-        // You might want to call an API to save the document
-        // try {
-        //   await saveDocument(doc);
-        //   markDocumentSaved(activeTab);
-        // } catch (error) {
-        //   console.error('Save failed:', error);
-        // }
+        // TODO handle error & toast
+        try {
+          await saveArtifact(doc.id, doc.kind, doc.title, doc.content);
+          markDocumentSaved(activeTab);
+        } catch (error) {
+          console.error("Save failed:", error);
+        }
       }
     }
   };
@@ -56,7 +53,7 @@ const PureDossierNavigation = (props: any) => {
       className={cn(
         "p-0 min-w-0",
         "flex flex-row items-center justify-between",
-        "border-b border-stone-200",
+        "border-b border-violet-200",
         "bg-neutral-50"
       )}
     >
@@ -67,7 +64,7 @@ const PureDossierNavigation = (props: any) => {
           className={cn(
             "flex items-center justify-center min-w-7 border m-0 p-1 border-b-0",
             isActive("home") &&
-              "border-stone-300 max-w-full bg-white shadow-[0px_1px_0px_1px_#FFFFFF]"
+              "border-violet-300 max-w-full bg-white shadow-[0px_1px_0px_1px_#FFFFFF]"
           )}
           onClick={() => {
             setActiveTab("home");
@@ -76,7 +73,7 @@ const PureDossierNavigation = (props: any) => {
           <House
             className={cn(
               "w-4 h-4",
-              isActive("home") ? "stroke-stone-500" : "stroke-stone-200"
+              isActive("home") ? "stroke-violet-500" : "stroke-violet-200"
             )}
           />
         </button>
@@ -92,8 +89,8 @@ const PureDossierNavigation = (props: any) => {
               "min-w-0 max-w-48",
               "border m-0 border-b-0",
               isActive(doc.id) &&
-                "border-stone-300 bg-white shadow-[0px_1px_0px_0px_#FFFFFF]",
-              !isActive(doc.id) && "border-stone-200"
+                "border-violet-300 bg-white shadow-[0px_1px_0px_0px_#FFFFFF]",
+              !isActive(doc.id) && "border-violet-200"
             )}
           >
             <button
@@ -111,14 +108,14 @@ const PureDossierNavigation = (props: any) => {
                   <NotebookPen
                     className={cn(
                       "w-4 h-4 flex-shrink-0",
-                      isActive(doc.id) ? "stroke-stone-500" : "stroke-stone-200"
+                      isActive(doc.id) ? "stroke-violet-500" : "stroke-violet-200"
                     )}
                   />
                 )}
                 <span
                   className={cn(
                     "text-xs truncate",
-                    isActive(doc.id) ? "text-stone-500" : "text-stone-200"
+                    isActive(doc.id) ? "text-violet-500" : "text-violet-200"
                   )}
                 >
                   {doc.title}
@@ -141,7 +138,7 @@ const PureDossierNavigation = (props: any) => {
               )}
               onClick={(e) => handleTabClose(e, doc.id)}
             >
-              <X className="w-3 h-3 stroke-stone-400 hover:stroke-stone-600" />
+              <X className="w-3 h-3 stroke-violet-400 hover:stroke-violet-600" />
             </button>
           </div>
         ))}
@@ -154,23 +151,23 @@ const PureDossierNavigation = (props: any) => {
             "border m-0 p-1",
             canSave
               ? "bg-orange-500 hover:bg-orange-600"
-              : "bg-stone-400 cursor-not-allowed",
+              : "bg-violet-400 cursor-not-allowed",
             "transition-colors"
           )}
           onClick={handleSave}
           disabled={!canSave}
         >
-          <Save size={16} className="stroke-stone-100" />
+          <Save size={16} className="stroke-violet-100" />
         </button>
         <button
           className={cn(
-            "border m-0 p-1 bg-stone-700 hover:bg-stone-800 transition-colors"
+            "border m-0 p-1 bg-violet-700 hover:bg-violet-800 transition-colors"
           )}
           onClick={() => {
             closeDossier();
           }}
         >
-          <X size={16} className="stroke-stone-100" />
+          <X size={16} className="stroke-violet-100" />
         </button>
       </div>
     </div>
