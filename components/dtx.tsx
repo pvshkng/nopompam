@@ -1,7 +1,7 @@
 export const Dtx = () => {
   return (
     <svg
-      className="absolute top-0 left-0 px-[300px] w-full h-full opacity-5"
+      className="absolute top-0 left-0 right-0 bottom-0 mx-auto w-full max-w-[75%] h-full opacity-5"
       viewBox="0 0 166 64"
       preserveAspectRatio="xMidYMid meet"
       data-bbox="0.021 1.003 165.011 61.995"
@@ -55,14 +55,14 @@ export const Dtx = () => {
             x1="146.893"
             id="e3bfc86f-3cc7-4922-b698-a2f9bf908edb_comp-lpgcmuqd_r_comp-lpcb0f6a"
           >
-            <stop stop-color="#9C248F"></stop>
-            <stop stop-color="#98268F" offset=".18"></stop>
-            <stop stop-color="#8D2C91" offset=".34"></stop>
-            <stop stop-color="#7B3794" offset=".49"></stop>
-            <stop stop-color="#614697" offset=".64"></stop>
-            <stop stop-color="#405A9D" offset=".78"></stop>
-            <stop stop-color="#1872A3" offset=".92"></stop>
-            <stop stop-color="#0081A7" offset="1"></stop>
+            <stop stopColor="#9C248F"></stop>
+            <stop stopColor="#98268F" offset=".18"></stop>
+            <stop stopColor="#8D2C91" offset=".34"></stop>
+            <stop stopColor="#7B3794" offset=".49"></stop>
+            <stop stopColor="#614697" offset=".64"></stop>
+            <stop stopColor="#405A9D" offset=".78"></stop>
+            <stop stopColor="#1872A3" offset=".92"></stop>
+            <stop stopColor="#0081A7" offset="1"></stop>
           </linearGradient>
           <linearGradient
             gradientUnits="userSpaceOnUse"
@@ -72,14 +72,14 @@ export const Dtx = () => {
             x1="160.326"
             id="7ab00124-dd6b-461a-8666-f918f15b2cdb_comp-lpgcmuqd_r_comp-lpcb0f6a"
           >
-            <stop stop-color="#9C248F"></stop>
-            <stop stop-color="#98268F" offset=".18"></stop>
-            <stop stop-color="#8D2C91" offset=".34"></stop>
-            <stop stop-color="#7B3794" offset=".49"></stop>
-            <stop stop-color="#614697" offset=".64"></stop>
-            <stop stop-color="#405A9D" offset=".78"></stop>
-            <stop stop-color="#1872A3" offset=".92"></stop>
-            <stop stop-color="#0081A7" offset="1"></stop>
+            <stop stopColor="#9C248F"></stop>
+            <stop stopColor="#98268F" offset=".18"></stop>
+            <stop stopColor="#8D2C91" offset=".34"></stop>
+            <stop stopColor="#7B3794" offset=".49"></stop>
+            <stop stopColor="#614697" offset=".64"></stop>
+            <stop stopColor="#405A9D" offset=".78"></stop>
+            <stop stopColor="#1872A3" offset=".92"></stop>
+            <stop stopColor="#0081A7" offset="1"></stop>
           </linearGradient>
           <linearGradient
             gradientUnits="userSpaceOnUse"
@@ -89,8 +89,8 @@ export const Dtx = () => {
             x1="138.689"
             id="86dee49f-1b92-45b0-96a4-bd1798ade564_comp-lpgcmuqd_r_comp-lpcb0f6a"
           >
-            <stop stop-color="#0081A7"></stop>
-            <stop stop-color="#792B8E" offset=".84"></stop>
+            <stop stopColor="#0081A7"></stop>
+            <stop stopColor="#792B8E" offset=".84"></stop>
           </linearGradient>
           <linearGradient
             gradientUnits="userSpaceOnUse"
@@ -100,15 +100,15 @@ export const Dtx = () => {
             x1="154.132"
             id="6c10805a-3809-4fe7-8868-6688d0855434_comp-lpgcmuqd_r_comp-lpcb0f6a"
           >
-            <stop stop-color="#9C248F"></stop>
-            <stop stop-color="#99258F" offset=".36"></stop>
-            <stop stop-color="#922990" offset=".52"></stop>
-            <stop stop-color="#863092" offset=".63"></stop>
-            <stop stop-color="#743B95" offset=".72"></stop>
-            <stop stop-color="#5D4998" offset=".81"></stop>
-            <stop stop-color="#415A9C" offset=".88"></stop>
-            <stop stop-color="#206DA2" offset=".95"></stop>
-            <stop stop-color="#0081A7" offset="1"></stop>
+            <stop stopColor="#9C248F"></stop>
+            <stop stopColor="#99258F" offset=".36"></stop>
+            <stop stopColor="#922990" offset=".52"></stop>
+            <stop stopColor="#863092" offset=".63"></stop>
+            <stop stopColor="#743B95" offset=".72"></stop>
+            <stop stopColor="#5D4998" offset=".81"></stop>
+            <stop stopColor="#415A9C" offset=".88"></stop>
+            <stop stopColor="#206DA2" offset=".95"></stop>
+            <stop stopColor="#0081A7" offset="1"></stop>
           </linearGradient>
           <linearGradient
             gradientUnits="userSpaceOnUse"
@@ -118,15 +118,15 @@ export const Dtx = () => {
             x1="149.164"
             id="f099db1d-14a1-445e-8a8e-0f5d8c27a9ba_comp-lpgcmuqd_r_comp-lpcb0f6a"
           >
-            <stop stop-color="#9C248F"></stop>
-            <stop stop-color="#99258F" offset=".36"></stop>
-            <stop stop-color="#922990" offset=".52"></stop>
-            <stop stop-color="#863092" offset=".63"></stop>
-            <stop stop-color="#743B95" offset=".72"></stop>
-            <stop stop-color="#5D4998" offset=".81"></stop>
-            <stop stop-color="#415A9C" offset=".88"></stop>
-            <stop stop-color="#206DA2" offset=".95"></stop>
-            <stop stop-color="#0081A7" offset="1"></stop>
+            <stop stopColor="#9C248F"></stop>
+            <stop stopColor="#99258F" offset=".36"></stop>
+            <stop stopColor="#922990" offset=".52"></stop>
+            <stop stopColor="#863092" offset=".63"></stop>
+            <stop stopColor="#743B95" offset=".72"></stop>
+            <stop stopColor="#5D4998" offset=".81"></stop>
+            <stop stopColor="#415A9C" offset=".88"></stop>
+            <stop stopColor="#206DA2" offset=".95"></stop>
+            <stop stopColor="#0081A7" offset="1"></stop>
           </linearGradient>
           <linearGradient
             gradientUnits="userSpaceOnUse"
@@ -136,15 +136,15 @@ export const Dtx = () => {
             x1="159.894"
             id="1cc79406-6655-460d-9083-87ed996b0c81_comp-lpgcmuqd_r_comp-lpcb0f6a"
           >
-            <stop stop-color="#9C248F"></stop>
-            <stop stop-color="#99258F" offset=".36"></stop>
-            <stop stop-color="#922990" offset=".52"></stop>
-            <stop stop-color="#863092" offset=".63"></stop>
-            <stop stop-color="#743B95" offset=".72"></stop>
-            <stop stop-color="#5D4998" offset=".81"></stop>
-            <stop stop-color="#415A9C" offset=".88"></stop>
-            <stop stop-color="#206DA2" offset=".95"></stop>
-            <stop stop-color="#0081A7" offset="1"></stop>
+            <stop stopColor="#9C248F"></stop>
+            <stop stopColor="#99258F" offset=".36"></stop>
+            <stop stopColor="#922990" offset=".52"></stop>
+            <stop stopColor="#863092" offset=".63"></stop>
+            <stop stopColor="#743B95" offset=".72"></stop>
+            <stop stopColor="#5D4998" offset=".81"></stop>
+            <stop stopColor="#415A9C" offset=".88"></stop>
+            <stop stopColor="#206DA2" offset=".95"></stop>
+            <stop stopColor="#0081A7" offset="1"></stop>
           </linearGradient>
           <linearGradient
             gradientUnits="userSpaceOnUse"
@@ -154,15 +154,15 @@ export const Dtx = () => {
             x1="156.521"
             id="dc777f00-9aa3-459e-951e-7423b53e4f3e_comp-lpgcmuqd_r_comp-lpcb0f6a"
           >
-            <stop stop-color="#9C248F"></stop>
-            <stop stop-color="#99258F" offset=".36"></stop>
-            <stop stop-color="#922990" offset=".52"></stop>
-            <stop stop-color="#863092" offset=".63"></stop>
-            <stop stop-color="#743B95" offset=".72"></stop>
-            <stop stop-color="#5D4998" offset=".81"></stop>
-            <stop stop-color="#415A9C" offset=".88"></stop>
-            <stop stop-color="#206DA2" offset=".95"></stop>
-            <stop stop-color="#0081A7" offset="1"></stop>
+            <stop stopColor="#9C248F"></stop>
+            <stop stopColor="#99258F" offset=".36"></stop>
+            <stop stopColor="#922990" offset=".52"></stop>
+            <stop stopColor="#863092" offset=".63"></stop>
+            <stop stopColor="#743B95" offset=".72"></stop>
+            <stop stopColor="#5D4998" offset=".81"></stop>
+            <stop stopColor="#415A9C" offset=".88"></stop>
+            <stop stopColor="#206DA2" offset=".95"></stop>
+            <stop stopColor="#0081A7" offset="1"></stop>
           </linearGradient>
         </defs>
       </g>

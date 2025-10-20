@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-import { Dtx } from "./dtx";
 
 export function GridBackground() {
   return (
@@ -11,7 +10,6 @@ export function GridBackground() {
           pointerEvents: "none",
         }}
       >
-        <Dtx />
         {/* Purple Corner Background */}
         <div
           className="absolute inset-0 z-0"

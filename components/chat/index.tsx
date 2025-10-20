@@ -29,6 +29,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 import { useInputStore } from "@/lib/stores/input-store";
 
+import { Dtx } from "../dtx";
 type PureRootProps = {
   initialMessages: any[];
   initialThreads: any[];
@@ -154,6 +155,7 @@ function PureRoot(props: PureRootProps) {
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[350px]">
                 <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
+                  <Dtx />
                   <div
                     ref={containerRef}
                     onScroll={handleScroll}
