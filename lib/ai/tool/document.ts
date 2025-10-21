@@ -30,7 +30,9 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
     `,
     inputSchema: z.object({
       title: z.string().describe("The title of the artifact. If the title is not provided, it will be inferred from the prompt."),
-      kind: z.enum(["text", "sheet", "code"]).describe("The kind of document to create. 'text' for rich text documents, 'sheet' for spreadsheets, 'code' for code files."),
+      kind: z
+        .enum(["text", "sheet", "code", "presentation", "pdf", "form"])
+        .describe("The kind of document to create. 'text' for rich text documents, 'sheet' for spreadsheets, 'code' for code files, 'presentation' for slide decks, 'pdf' for PDF documents, and 'form' for forms."),
     }),
     execute: async ({ title, kind }, { toolCallId }) => {
 

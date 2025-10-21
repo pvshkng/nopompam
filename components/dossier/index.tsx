@@ -1,13 +1,17 @@
 "use client";
+
 import { cn } from "@/lib/utils";
 import { memo } from "react";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
-import { DossierFloating } from "./dossier-floating";
+
 import { BlankDocument } from "./dossier-blank";
 import { DossierNavigation } from "./dossier-navigation";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 import { DossierSheet } from "@/components/dossier/dossier-sheet";
 import { DossierCode } from "@/components/dossier/dossier-code";
+import { DossierPresentation } from "@/components/dossier/_dossier-presentation";
+import { DossierPdf } from "@/components/dossier/_dossier-pdf";
+import { DossierForm } from "@/components/dossier/_dossier-form";
 
 function PureDossier(props: any) {
   const { messages = [] } = props;
@@ -58,6 +62,30 @@ function PureDossier(props: any) {
       case "code":
         return (
           <DossierCode
+            content={displayContent}
+            handleContentChange={handleContentChange}
+            readOnly={activeDocument.isStreaming}
+          />
+        );
+      case "presentation":
+        return (
+          <DossierPresentation
+            content={displayContent}
+            handleContentChange={handleContentChange}
+            readOnly={activeDocument.isStreaming}
+          />
+        );
+      case "pdf":
+        return (
+          <DossierPdf
+            content={displayContent}
+            handleContentChange={handleContentChange}
+            readOnly={activeDocument.isStreaming}
+          />
+        );
+      case "form":
+        return (
+          <DossierForm
             content={displayContent}
             handleContentChange={handleContentChange}
             readOnly={activeDocument.isStreaming}
