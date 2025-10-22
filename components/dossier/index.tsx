@@ -78,9 +78,12 @@ function PureDossier(props: any) {
       case "pdf":
         return (
           <DossierPdf
-            content={displayContent}
+            content={"https://arxiv.org/pdf/1708.08021"}
             handleContentChange={handleContentChange}
-            readOnly={activeDocument.isStreaming}
+            readOnly={/* activeDocument.isStreaming */ false}
+            textHighlights={[
+              "In this paper we present the design and implementation of Flow",
+            ]}
           />
         );
       case "form":

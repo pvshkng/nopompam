@@ -1,35 +1,31 @@
-'use client';
+"use client";
 
 import { memo, useState } from "react";
-// @ts-ignore
-import { Document, Page, pdfjs } from "react-pdf";
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-
-interface Highlight {
-  page: number;
-  rect: { x: number; y: number; width: number; height: number };
-}
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  ZoomOut,
+  RotateCw,
+} from "lucide-react";
 
 interface PdfContent {
   url: string;
-  highlights: Highlight[];
 }
 
 const parsePdfContent = (content?: string): PdfContent => {
   if (!content) {
-    return { url: "", highlights: [] };
+    return { url: "" };
   }
   try {
     const parsed = JSON.parse(content);
     return {
       url: parsed.url || "",
-      highlights: parsed.highlights || [],
     };
   } catch {
-    // Fallback: treat as just URL
-    return { url: content, highlights: [] };
+    return { url: content };
   }
 };
 
@@ -37,129 +33,169 @@ const PureDossierPdf = ({
   content,
   handleContentChange,
   readOnly,
+  textHighlights = [],
 }: {
   content?: string;
   handleContentChange: (content: string) => void;
   readOnly: boolean;
+  textHighlights?: string[];
 }) => {
   const [pdfData, setPdfData] = useState<PdfContent>(parsePdfContent(content));
-  const [numPages, setNumPages] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [zoom, setZoom] = useState(100);
 
-  // Sync with external content changes (add useEffect if needed)
+  const buildPdfUrl = () => {
+    if (!pdfData.url) return "";
 
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
+    const params: string[] = [];
+
+    // Add page navigation
+    if (currentPage > 1) {
+      params.push(`page=${currentPage}`);
+    }
+
+    // Add zoom level
+    params.push(`zoom=${zoom}`);
+
+    // Add search term for highlighting (use first highlight if available)
+    if (textHighlights.length > 0) {
+      params.push(`search=${encodeURIComponent(textHighlights[0])}`);
+    }
+
+    const separator = pdfData.url.includes("?") ? "&" : "#";
+    return params.length > 0
+      ? `${pdfData.url}${separator}${params.join("&")}`
+      : pdfData.url;
   };
 
-  // Add highlight (for demo: highlight center of current page)
-  const addHighlight = () => {
-    if (readOnly) return;
-    setPdfData((prev) => {
-      const newHighlight: Highlight = {
-        page: currentPage,
-        rect: { x: 0.4, y: 0.4, width: 0.2, height: 0.1 }, // normalized coords
-      };
-      const newState = {
-        ...prev,
-        highlights: [...prev.highlights, newHighlight],
-      };
-      handleContentChange(JSON.stringify(newState));
-      return newState;
-    });
+  const handleZoomIn = () => {
+    setZoom((prev) => Math.min(prev + 25, 200));
   };
 
-  // Render highlights as absolutely positioned divs
-  const renderHighlights = () => {
-    return pdfData.highlights
-      .filter((h) => h.page === currentPage)
-      .map((h, idx) => (
-        <div
-          key={idx}
-          style={{
-            position: "absolute",
-            left: `${h.rect.x * 100}%`,
-            top: `${h.rect.y * 100}%`,
-            width: `${h.rect.width * 100}%`,
-            height: `${h.rect.height * 100}%`,
-            background: "rgba(255,255,0,0.4)",
-            pointerEvents: "none",
-          }}
-        />
-      ));
+  const handleZoomOut = () => {
+    setZoom((prev) => Math.max(prev - 25, 50));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => prev + 1);
   };
 
   return (
-    <div className="flex flex-col items-center w-full h-full">
-      <div className="flex gap-2 mb-2">
-        <button
-          disabled={currentPage <= 1}
-          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-          className="px-2 py-1 border rounded"
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} / {numPages || "?"}
-        </span>
-        <button
-          disabled={currentPage >= numPages}
-          onClick={() => setCurrentPage((p) => Math.min(numPages, p + 1))}
-          className="px-2 py-1 border rounded"
-        >
-          Next
-        </button>
-        {!readOnly && (
-          <button
-            onClick={addHighlight}
-            className="px-2 py-1 border rounded bg-yellow-100"
+    <div className="flex flex-col w-full h-screen bg-background">
+      {/* <div className="w-full border-b bg-background p-2 flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            title="Previous page"
           >
-            Highlight Center
-          </button>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              value={currentPage}
+              onChange={(e) =>
+                setCurrentPage(
+                  Math.max(1, Number.parseInt(e.target.value) || 1)
+                )
+              }
+              className="w-16 text-center"
+              min={1}
+            />
+            <span className="text-sm text-muted-foreground">Page</span>
+          </div>
+
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleNextPage}
+            title="Next page"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleZoomOut}
+            disabled={zoom <= 50}
+            title="Zoom out"
+          >
+            <ZoomOut className="h-4 w-4" />
+          </Button>
+
+          <span className="text-sm text-muted-foreground min-w-[60px] text-center">
+            {zoom}%
+          </span>
+
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleZoomIn}
+            disabled={zoom >= 200}
+            title="Zoom in"
+          >
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => {
+              setZoom(100);
+              setCurrentPage(1);
+            }}
+            title="Reset"
+          >
+            <RotateCw className="h-4 w-4" />
+          </Button>
+        </div>
+      </div> */}
+
+      <div className="flex-1 w-full overflow-hidden">
+        {pdfData.url ? (
+          <iframe
+            src={buildPdfUrl()}
+            className="w-full h-full border-0"
+            title="PDF Viewer"
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full text-muted-foreground">
+            Enter a PDF URL below to view
+          </div>
         )}
       </div>
-      <div className="relative w-[900px] h-[1200px] border bg-white">
-        <Document
-          file={pdfData.url}
-          onLoadSuccess={onDocumentLoadSuccess}
-          loading={<div>Loading PDF...</div>}
-        >
-          <Page
-            pageNumber={currentPage}
-            width={900}
-            renderAnnotationLayer={true}
-            renderTextLayer={true}
-          />
-        </Document>
-        {/* Highlights overlay */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }}
-        >
-          {renderHighlights()}
+
+      {/* URL Input */}
+      {/* {!readOnly && (
+        <div className="w-full border-t bg-background p-3">
+          <div className="max-w-7xl mx-auto">
+            <Input
+              type="text"
+              value={pdfData.url}
+              onChange={(e) => {
+                setPdfData((prev) => {
+                  const newState = { ...prev, url: e.target.value };
+                  handleContentChange(JSON.stringify(newState));
+                  return newState;
+                });
+              }}
+              placeholder="Enter PDF URL or path"
+              className="w-full"
+            />
+          </div>
         </div>
-      </div>
-      {!readOnly && (
-        <input
-          className="mt-4 w-[900px] border"
-          type="text"
-          value={pdfData.url}
-          onChange={(e) => {
-            setPdfData((prev) => {
-              const newState = { ...prev, url: e.target.value };
-              handleContentChange(JSON.stringify(newState));
-              return newState;
-            });
-          }}
-          placeholder="PDF URL or path"
-        />
-      )}
+      )} */}
     </div>
   );
 };
