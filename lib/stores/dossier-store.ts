@@ -6,7 +6,7 @@ export interface Document {
     title: string;
     kind: string;
     content: string;
-    isStreaming: boolean;
+    isStreaming?: boolean;
     hasUnsavedChanges?: boolean;
     streamingContent?: string;
     appendStreamingContent?: (content: string) => void;
