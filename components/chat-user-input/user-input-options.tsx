@@ -23,7 +23,7 @@ export const UserInputOptions = (props: any) => {
           <div className="flex flex-row h-full gap-1">
             <ModelSelector model={model} setModel={setModel} />
             <Attachment />
-            <button
+            {/* <button
               className={cn(
                 "gap-1",
                 "flex flex-row bg-stone-700 size-[16px] items-center justify-center",
@@ -34,7 +34,7 @@ export const UserInputOptions = (props: any) => {
               }}
             >
               <Cog width={16} height={16} stroke={"white"} />
-            </button>
+            </button> */}
           </div>
           <p className="text-xs text-stone-500">
             Made with ❤︎ by{" "}

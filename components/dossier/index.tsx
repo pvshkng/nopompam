@@ -45,14 +45,7 @@ function PureDossier(props: any) {
   // />;
   const renderContent = () => {
     if (activeTab === "home" || !activeDocument) {
-      return (
-        <DossierBrowser
-          content={"https://arxiv.org/pdf/1708.08021"}
-          handleContentChange={handleContentChange}
-          readOnly={/* activeDocument.isStreaming */ false}
-          textHighlights={["Precise type checking"]}
-        />
-      );
+      return <BlankDocument messages={messages} />;
     }
 
     switch (activeDocument.kind) {
