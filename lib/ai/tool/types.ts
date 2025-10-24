@@ -20,3 +20,10 @@ export interface DocumentHandlerResult {
 export type DocumentHandler = (
     params: DocumentHandlerParams
 ) => Promise<DocumentHandlerResult>;
+
+export type DocumentProps = {
+  threadId: string;
+  user: any;
+  getMemory: () => ModelMessage[];
+  writer: UIMessageStreamWriter;
+}

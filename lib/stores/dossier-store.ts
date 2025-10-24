@@ -114,18 +114,29 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
 
     // Document management
     addDocument: (document) => {
-        const newDoc: Document = {
-            ...document,
-            isStreaming: false,
-            hasUnsavedChanges: false,
-            streamingContent: ''
-        };
+        // Check if document already exists
+        const state = get();
+        const existingDoc = state.documents.find(doc => doc.id === document.id);
+        if (existingDoc) {
+            console.warn(`Document with id "${document.id}" already exists in the dossier.`);
+            //switch tab to existing document
+            set({ activeTab: existingDoc.id, dossierOpen: true });
+            return;
+        } else {
+            const newDoc: Document = {
+                ...document,
+                isStreaming: false,
+                hasUnsavedChanges: false,
+                streamingContent: ''
+            };
 
-        set((state) => ({
-            documents: [...state.documents, newDoc],
-            dossierOpen: true,
-            activeTab: newDoc.id
-        }));
+            set((state) => ({
+                documents: [...state.documents, newDoc],
+                dossierOpen: true,
+                activeTab: newDoc.id
+            }));
+        }
+
     },
 
     updateDocument: (id, updates) => set((state) => ({

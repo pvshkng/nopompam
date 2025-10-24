@@ -1,7 +1,6 @@
 "use client";
 
 import { useToolStore, SearchQuery } from "@/lib/stores/tool-store";
-
 import { cn } from "@/lib/utils";
 import {
   SearchCode,
@@ -18,14 +17,11 @@ import {
   AccordionItem,
 } from "@/components/ui/accordion";
 import { Tool, ToolHeader, ToolContent } from "@/components/tools/";
-import { MessageSkeleton } from "@/components/chat-message-area/message-loading-skeleton";
 import { ToolSkeleton } from "@/components/skeleton";
-import { UITool } from "ai";
 import { useState, useEffect, useMemo } from "react";
 import { Suspense } from "react";
 import { TavilySearchResponse } from "@tavily/core";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
 
 type TavilySearchResult = TavilySearchResponse["results"][number];
 
@@ -208,11 +204,7 @@ function SearchContent({ tool, draftTool }) {
   );
 }
 
-export function Search({
-  tool,
-}: {
-  tool: any;
-}) {
+export function Search({ tool }: { tool: any }) {
   const getDraftTool = useToolStore((state) => state.getDraftTool);
 
   const draftTool =

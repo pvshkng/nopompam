@@ -29,7 +29,7 @@ const parsePdfContent = (content?: string): PdfContent => {
   }
 };
 
-const PureDossierPdf = ({
+const PureDossierBrowser = ({
   content,
   handleContentChange,
   readOnly,
@@ -66,22 +66,6 @@ const PureDossierPdf = ({
     return params.length > 0
       ? `${pdfData.url}${separator}${params.join("&")}`
       : pdfData.url;
-  };
-
-  const handleZoomIn = () => {
-    setZoom((prev) => Math.min(prev + 25, 200));
-  };
-
-  const handleZoomOut = () => {
-    setZoom((prev) => Math.max(prev - 25, 50));
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1);
   };
 
   return (
@@ -200,4 +184,4 @@ const PureDossierPdf = ({
   );
 };
 
-export const DossierPdf = memo(PureDossierPdf);
+export const DossierBrowser = memo(PureDossierBrowser);

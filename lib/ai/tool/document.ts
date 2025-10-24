@@ -1,15 +1,7 @@
-import { UIMessageStreamWriter, tool, smoothStream, streamText, convertToModelMessages, convertToCoreMessages } from "ai";
+import { UIMessageStreamWriter, tool } from "ai";
 import { z } from "zod";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { storeArtifact } from "@/lib/mongo/artifact-store"
-import type { UIMessage, ModelMessage } from 'ai';
-import { removeProviderExecuted } from "@/lib/ai/utils";
+import type { ModelMessage } from 'ai';
 import { documentHandlers } from './document-handler';
-
-const client = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_API_KEY,
-  baseURL: process.env.GOOGLE_API_ENDPOINT,
-});
 
 interface DocumentProps {
   threadId: string;

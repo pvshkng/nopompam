@@ -46,3 +46,22 @@ export function removeProviderExecuted(messages: UIMessage[] | ModelMessage[]): 
         };
     });
 }
+
+export const stringifyToolOutputs = (messages: ModelMessage[]) => {
+    return messages.map((message) => {
+        if (message.role === 'tool') {
+            return {
+                role: 'tool',
+                content: message.content.map((content) => ({
+                    type: 'tool-result',
+                    toolCallId: content.toolCallId,
+                    toolName: content.toolName,
+                    output: {
+                        type: 'text',
+                        value: JSON.stringify(content.output.value),
+                    },
+                })),
+            };
+        }
+    });
+}

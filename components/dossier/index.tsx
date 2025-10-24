@@ -10,7 +10,7 @@ import { useDossierStore } from "@/lib/stores/dossier-store";
 import { DossierSheet } from "@/components/dossier/dossier-sheet";
 import { DossierCode } from "@/components/dossier/dossier-code";
 import { DossierPresentation } from "@/components/dossier/_dossier-presentation";
-import { DossierPdf } from "@/components/dossier/_dossier-pdf";
+import { DossierBrowser } from "@/components/dossier/dossier-browser";
 import { DossierForm } from "@/components/dossier/_dossier-form";
 
 function PureDossier(props: any) {
@@ -36,7 +36,13 @@ function PureDossier(props: any) {
       updateDocumentContent(activeDocument.id, content);
     }
   };
-
+  /* <BlankDocument messages={messages} /> */
+  // <DossierBrowser
+  //   content={"https://arxiv.org/pdf/1708.08021"}
+  //   handleContentChange={handleContentChange}
+  //   readOnly={/* activeDocument.isStreaming */ false}
+  //   textHighlights={["Precise type checking"]}
+  // />;
   const renderContent = () => {
     if (activeTab === "home" || !activeDocument) {
       return <BlankDocument messages={messages} />;
@@ -75,15 +81,13 @@ function PureDossier(props: any) {
             readOnly={activeDocument.isStreaming}
           />
         );
-      case "pdf":
+      case "web":
         return (
-          <DossierPdf
-            content={"https://arxiv.org/pdf/1708.08021"}
+          <DossierBrowser
+            content={displayContent}
             handleContentChange={handleContentChange}
             readOnly={/* activeDocument.isStreaming */ false}
-            textHighlights={[
-              "In this paper we present the design and implementation of Flow",
-            ]}
+            textHighlights={[]}
           />
         );
       case "form":

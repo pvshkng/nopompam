@@ -34,10 +34,10 @@ export async function POST(req: NextRequest) {
         });
         const user = session?.user?.email
 
-        if (!session) {
+        /* if (!session) {
             const result = await mock();
             return result
-        }
+        } */
         const provider = getProvider(model);
         const instruction = (await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
         const stream = createUIMessageStream({
