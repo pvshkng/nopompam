@@ -1,4 +1,4 @@
-import { UIMessageStreamWriter, tool } from "ai";
+import { convertToModelMessages, tool } from "ai";
 import { z } from "zod";
 import type { ModelMessage } from 'ai';
 import type { DocumentProps } from './types';
@@ -69,7 +69,6 @@ export const createText = ({ threadId, user, getMemory, writer }: DocumentProps)
             const id = toolCallId; // to change to a unique id
             const memory = getMemory();
             const cleanedMessages = stringifyToolOutputs(memory);
-
             const prompt = [
                 ...cleanedMessages,
                 {

@@ -1,4 +1,4 @@
-import { UIMessage, ModelMessage } from "ai";
+import { UIMessage, ModelMessage, convertToModelMessages } from "ai";
 
 export function convertToUIMessages(messages: any) {
     return messages.map((message: any) => ({
@@ -47,12 +47,13 @@ export function removeProviderExecuted(messages: UIMessage[] | ModelMessage[]): 
     });
 }
 
-export const stringifyToolOutputs = (messages: ModelMessage[]) => {
-    return messages.map((message) => {
+export const stringifyToolOutputs = (messages: any[]) => {
+
+    const stringifiedToolOutputs = messages.map((message) => {
         if (message.role === 'tool') {
             return {
                 role: 'tool',
-                content: message.content.map((content) => ({
+                content: message.content.map((content: any) => ({
                     type: 'tool-result',
                     toolCallId: content.toolCallId,
                     toolName: content.toolName,
@@ -63,5 +64,8 @@ export const stringifyToolOutputs = (messages: ModelMessage[]) => {
                 })),
             };
         }
+        return message;
     });
+    return stringifiedToolOutputs
+
 }

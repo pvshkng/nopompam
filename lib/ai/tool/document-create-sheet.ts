@@ -91,7 +91,7 @@ export const createSheet = ({ threadId, user, getMemory, writer }: DocumentProps
                 const { fullStream } = streamObject({
                     model: artifactWriter,
                     schema: spreadsheetSchema,
-                    messages: prompt,
+                    prompt: prompt,
                     onFinish: async ({ response }) => {
                         writer.write({
                             type: 'data-document',
