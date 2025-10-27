@@ -17,6 +17,7 @@ import { document } from "@/lib/ai/tool/document"
 import { search } from "@/lib/ai/tool/search";
 import { createText } from "@/lib/ai/tool/document-create-text";
 import { createSheet } from "@/lib/ai/tool/document-create-sheet";
+import { createPython } from "@/lib/ai/tool/document-create-python";
 
 export const maxDuration = 60;
 
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
                             // web: web({}),
                             createText: createText({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
                             createSheet: createSheet({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
+                            createPython: createPython({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
                             search: search({ writer }),
                             //web: web({ writer }),
                             document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),

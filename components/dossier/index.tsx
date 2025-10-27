@@ -65,9 +65,14 @@ function PureDossier(props: any) {
             readOnly={activeDocument.isStreaming}
           />
         );
-      case "code":
+      case "python":
+      case "sql":
+      case "javascript":
+      case "typescript":
+      case "html":
         return (
           <DossierCode
+            kind={activeDocument.kind}
             content={displayContent}
             handleContentChange={handleContentChange}
             readOnly={activeDocument.isStreaming}

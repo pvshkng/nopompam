@@ -1,4 +1,4 @@
-import { tool } from "ai";
+import { convertToModelMessages, tool } from "ai";
 import { z } from "zod";
 import type { ModelMessage } from 'ai';
 import type { DocumentProps } from './types';
@@ -7,11 +7,11 @@ import { storeArtifact } from '@/lib/mongo/artifact-store';
 import { artifactWriter } from "@/lib/ai/client";
 import { stringifyToolOutputs } from "@/lib/ai/utils";
 
-const kind = 'python';
+const kind = 'text';
 
 const toolDescription = `
-## createPython
-# The "createPython" tool creates and updates text artifact that render to the user on a space next to the conversation (referred to as the "dossier").
+## createText
+# The "createText" tool creates and updates text artifact that render to the user on a space next to the conversation (referred to as the "dossier").
 # Use this tool when asked to work on writing that's long enough like article / essay.
 # Only invoke this tool once for each document you want to create.
 # **DO NOT REPEAT THE GENERATED CONTENT OR RESULT OF THIS TOOL SINCE THE RESULT WILL BE VISIBLE TO THE USER.**
@@ -22,22 +22,35 @@ const createInstructions = (title: string, additionalInstructions?: string) => {
 
     const instructions = `
         <instructions>
-        Write Python code about the given topic. 
-        The content will be rendered in Pyodide editor, make sure to it can be executed without importing any libraries.
-        Do not include anything other than the code.
+        Write document about the given topic. 
+        The content will be rendered in Tiptap editor, so format it accordingly.
+        Do not include anything other than the content of the document.
 
-        PYTHON CODE MUST BE VALID and well-formed.
+        Use **HTML** to format the content. 
+        For example:
+        - USE tables for comparison or data presentation regardless of quality or quantity of data
+        - USE headings to define sections
+        - USE horizontal rules to split sections
+        - USE bullet points for entries, etc.
+        - INCLUDE relevant images if provided in the context, chat history or other sources.
+        - DO NOT MAKE UP IMAGES, only use images that are provided.
+        - ALWAYS include references to sources with href at the end if available.
+
+        HTML MUST BE VALID and well-formed.
 
         Prohibitions:
-        - DO NOT WRAP THE OUTPUT IN \`\`\`python \`\`\`
+        - DO NOT WRAP THE OUTPUT IN \`\`\`html \`\`\`
+        - DO NOT INCLUDE <html> tag, just output the content
+        - DO NOT LEAVE TRAILING EMPTY BULLET POINTS
+        - DO NOT INCLUDE BACKTICKS OR MARKDOWN SYNTAX.
         </instructions>
 
-        Now generate this Python code about:
+        Now write a document about the following topic:
         ${title}
 
         ${additionalInstructions ?
             `<additional_instructions>
-            Here are some additional instructions to follow while generating the code: 
+            Here are some additional instructions to follow while writing the document: 
             ${additionalInstructions}
         </additional_instructions>`
             : ''}
@@ -45,12 +58,12 @@ const createInstructions = (title: string, additionalInstructions?: string) => {
     return instructions;
 }
 
-export const createPython = ({ threadId, user, getMemory, writer }: DocumentProps) =>
+export const createText = ({ threadId, user, getMemory, writer }: DocumentProps) =>
     tool({
         description: toolDescription,
         inputSchema: z.object({
-            title: z.string().describe("The title of the Python code. Infer from the prompt if not provided."),
-            additionalInstructions: z.string().optional().describe("Additional instructions from the user to guide the code generation."),
+            title: z.string().describe("The title of the artifact. If the title is not provided, it will be inferred from the prompt."),
+            additionalInstructions: z.string().optional().describe("Additional instructions from the user to guide the content generation of the document such as tone, style, specific points to cover, etc."),
         }),
         execute: async ({ title, additionalInstructions }, { toolCallId }) => {
             const id = toolCallId; // to change to a unique id
