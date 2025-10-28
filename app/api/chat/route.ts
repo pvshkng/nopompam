@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
             return result
         } */
         const provider = getProvider(model);
-        const instruction = (await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
+        const instruction = system_prompt //(await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {
