@@ -96,6 +96,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           case "tool-createPython":
           case "tool-createJavascript":
           case "tool-createSql":
+          case "tool-createMrm":
             return (
               <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
                 <Document tool={p} />

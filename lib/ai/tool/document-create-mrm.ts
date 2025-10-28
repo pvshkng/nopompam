@@ -6,19 +6,19 @@ import { streamText } from 'ai';
 import { storeArtifact } from '@/lib/mongo/artifact-store';
 import { artifactWriter } from "@/lib/ai/client";
 import { stringifyToolOutputs } from "@/lib/ai/utils";
-
+import { sample } from "./document-create-mrm-docs"
 const kind = 'text';
 
 const toolDescription = `
-## createText
-# The "createText" tool creates and updates text artifact that render to the user on a space next to the conversation (referred to as the "dossier").
-# Use this tool when asked to work on writing that's long enough like article / essay.
+## createMrm
+# The "createMrm" tool creates and updates MRM (Model Risk Management) document artifact that render to the user on a space next to the conversation (referred to as the "dossier").
+# Use this tool when asked to work on writing Model Risk document.
 # Only invoke this tool once for each document you want to create.
 # **DO NOT REPEAT THE GENERATED CONTENT OR RESULT OF THIS TOOL SINCE THE RESULT WILL BE VISIBLE TO THE USER.**
 # You may let the user know that you have created a document and they can view it on the side panel.
 `
 
-const createInstructions = (title: string, additionalInstructions?: string) => {
+const createInstructions = (title: string, project: "hr" | "asr" | "autox", additionalInstructions?: string) => {
 
     const instructions = `
         <instructions>
@@ -45,8 +45,11 @@ const createInstructions = (title: string, additionalInstructions?: string) => {
         - DO NOT INCLUDE BACKTICKS OR MARKDOWN SYNTAX.
         </instructions>
 
-        Now write a document about the following topic:
+        Now write an MRM document about the following topic:
         ${title}
+
+        based on this raw material:
+        ${sample[project]}
 
         ${additionalInstructions ?
             `<additional_instructions>
@@ -58,14 +61,15 @@ const createInstructions = (title: string, additionalInstructions?: string) => {
     return instructions;
 }
 
-export const createText = ({ threadId, user, getMemory, writer }: DocumentProps) =>
+export const createMrm = ({ threadId, user, getMemory, writer }: DocumentProps) =>
     tool({
         description: toolDescription,
         inputSchema: z.object({
             title: z.string().describe("The title of the artifact. If the title is not provided, it will be inferred from the prompt."),
+            project: z.enum(["hr", "asr", "autox"]),
             additionalInstructions: z.string().optional().describe("Additional instructions from the user to guide the content generation of the document such as tone, style, specific points to cover, etc."),
         }),
-        execute: async ({ title, additionalInstructions }, { toolCallId }) => {
+        execute: async ({ title, project, additionalInstructions }, { toolCallId }) => {
             const id = toolCallId; // to change to a unique id
             const memory = getMemory();
             const cleanedMessages = stringifyToolOutputs(memory);
@@ -73,7 +77,7 @@ export const createText = ({ threadId, user, getMemory, writer }: DocumentProps)
                 ...cleanedMessages,
                 {
                     role: 'user',
-                    content: createInstructions(title, additionalInstructions),
+                    content: createInstructions(title, project, additionalInstructions),
                 },
             ] as ModelMessage[];
 
