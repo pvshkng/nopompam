@@ -1,14 +1,12 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { EditorState, Transaction } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
-import { basicSetup, minimalSetup } from "codemirror";
+import { basicSetup } from "codemirror";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
 import { html } from "@codemirror/lang-html";
-import { materialLight } from "@uiw/codemirror-theme-material";
-import { noctisLilac } from "thememirror";
 import { consoleLight } from "@uiw/codemirror-theme-console";
 import { Button } from "@/components/ui/button";
 import { PlayIcon, CodeIcon, EyeIcon, Loader2 } from "lucide-react";
@@ -21,114 +19,38 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { read } from "fs";
-
-interface CodeContent {
-  code: string;
-  language: "javascript" | "typescript" | "python" | "sql" | "html";
-}
 
 interface SqlResult {
   [key: string]: any;
 }
 
-// Simplified parser that ALWAYS returns something
-const parseStreamingJson = (content: string): CodeContent => {
-  if (!content) {
-    return { code: "", language: "javascript" };
-  }
-
-  // Try complete JSON first
-  try {
-    const parsed = JSON.parse(content);
-    return {
-      code: parsed.code || "",
-      language: parsed.language || "javascript",
-    };
-  } catch {
-    // Fallback: extract whatever we can find
-    let code = "";
-    let language = "javascript";
-
-    // Extract language
-    const langMatch = content.match(/"language"\s*:\s*"([^"]+)"/);
-    if (langMatch) {
-      language = langMatch[1];
-    }
-
-    // Extract code by finding the code field and extracting until we hit issues
-    const codeMatch = content.match(/"code"\s*:\s*"([\s\S]*)$/);
-    if (codeMatch) {
-      // Take everything after "code":"
-      let raw = codeMatch[1];
-
-      // Remove trailing incomplete JSON
-      raw = raw.replace(/[}"]*$/, "");
-
-      // Decode escape sequences
-      code = raw
-        .replace(/\\n/g, "\n")
-        .replace(/\\t/g, "\t")
-        .replace(/\\r/g, "\r")
-        .replace(/\\"/g, '"')
-        .replace(/\\\\/g, "\\");
-    }
-
-    return { code, language: language as any };
-  }
-};
-
 const PureDossierCode = ({
-  content,
+  kind = "python",
+  content = "",
   handleContentChange,
   readOnly,
 }: {
+  kind: "python" | "sql" | "javascript" | "typescript" | "html";
   content?: string;
   handleContentChange: (content: string) => void;
   readOnly: boolean;
 }) => {
-  const lastParsedContentRef = useRef<string>("");
-  const pendingUpdateRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<EditorView | null>(null);
-  const [codeContent, setCodeContent] = useState<CodeContent>({
-    code: "",
-    language: "javascript",
-  });
+  const isInternalUpdateRef = useRef(false);
+  
   const [output, setOutput] = useState<string>("");
   const [sqlResults, setSqlResults] = useState<SqlResult[]>([]);
   const [showPreview, setShowPreview] = useState(false);
   const [executing, setExecuting] = useState(false);
   const { pyodide, loadPyodide, loading: pyodideLoading } = usePyodide();
 
-  // Parse content
-  useEffect(() => {
-    // Skip if content hasn't actually changed
-    if (content === lastParsedContentRef.current) return;
-    lastParsedContentRef.current = content || "";
-
-    if (!content) {
-      setCodeContent({ code: "", language: "javascript" });
-      return;
-    }
-
-    const parsed = parseStreamingJson(content);
-
-    // Only update if code actually changed
-    setCodeContent((prev) => {
-      if (prev.code === parsed.code && prev.language === parsed.language) {
-        return prev;
-      }
-      return parsed;
-    });
-  }, [content]);
-
-  // Get language extension
-  const getLanguageExtension = (lang: string) => {
-    switch (lang) {
+  // Memoize language extension
+  const languageExtension = useMemo(() => {
+    switch (kind) {
       case "javascript":
       case "typescript":
-        return javascript({ typescript: lang === "typescript" });
+        return javascript({ typescript: kind === "typescript" });
       case "python":
         return python();
       case "sql":
@@ -138,38 +60,40 @@ const PureDossierCode = ({
       default:
         return javascript();
     }
-  };
+  }, [kind]);
 
-  // Initialize CodeMirror
+  // Memoize update listener
+  const updateListener = useMemo(
+    () =>
+      EditorView.updateListener.of((update) => {
+        if (update.docChanged && !readOnly && !isInternalUpdateRef.current) {
+          const newCode = update.state.doc.toString();
+          handleContentChange(newCode);
+        }
+      }),
+    [readOnly, handleContentChange]
+  );
+
+  // Memoize extensions
+  const extensions = useMemo(
+    () => [
+      basicSetup,
+      history(),
+      keymap.of([...historyKeymap, ...defaultKeymap]),
+      languageExtension,
+      consoleLight,
+      EditorView.editable.of(!readOnly),
+      ...(readOnly ? [] : [updateListener]),
+    ],
+    [languageExtension, readOnly, updateListener]
+  );
+
+  // Initialize CodeMirror once
   useEffect(() => {
     if (containerRef.current && !editorRef.current) {
-      const updateListener = EditorView.updateListener.of((update) => {
-        if (update.docChanged && !readOnly) {
-          const transaction = update.transactions.find(
-            (tr) => !tr.annotation(Transaction.remote)
-          );
-          if (transaction) {
-            const newCode = update.state.doc.toString();
-            const newContent = JSON.stringify({
-              code: newCode,
-              language: codeContent.language,
-            });
-            handleContentChange(newContent);
-          }
-        }
-      });
-
       const startState = EditorState.create({
-        doc: "",
-        extensions: [
-          basicSetup,
-          history(),
-          keymap.of([...historyKeymap, ...defaultKeymap]),
-          getLanguageExtension(codeContent.language),
-          noctisLilac,
-          EditorView.editable.of(!readOnly),
-          ...(readOnly ? [] : [updateListener]),
-        ],
+        doc: content || "",
+        extensions,
       });
 
       editorRef.current = new EditorView({
@@ -184,106 +108,77 @@ const PureDossierCode = ({
         editorRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // Only run once
 
-  // Update editor content
+  // Update editor content when content prop changes (streaming)
   useEffect(() => {
-    if (!editorRef.current) return;
+    if (!editorRef.current || content === undefined) return;
 
     const currentContent = editorRef.current.state.doc.toString();
-    const newContent = codeContent.code;
+    
+    // Skip update if content is the same
+    if (currentContent === content) return;
 
-    // Only update if content is different
-    if (currentContent === newContent) return;
+    // Mark as internal update to prevent triggering handleContentChange
+    isInternalUpdateRef.current = true;
 
-    // Clear any pending updates
-    if (pendingUpdateRef.current) {
-      clearTimeout(pendingUpdateRef.current);
-    }
+    const cursorPos = editorRef.current.state.selection.main.head;
+    const isAtEnd = cursorPos >= currentContent.length;
 
-    // Debounce updates slightly to avoid cursor jumps
-    pendingUpdateRef.current = setTimeout(() => {
-      if (!editorRef.current) return;
+    const transaction = editorRef.current.state.update({
+      changes: {
+        from: 0,
+        to: currentContent.length,
+        insert: content,
+      },
+      // Preserve cursor position, or move to end if streaming
+      selection: readOnly || isAtEnd 
+        ? { anchor: content.length } 
+        : { anchor: Math.min(cursorPos, content.length) },
+    });
 
-      const current = editorRef.current.state.doc.toString();
-      if (current === newContent) return;
+    editorRef.current.dispatch(transaction);
+    
+    // Reset flag after update
+    requestAnimationFrame(() => {
+      isInternalUpdateRef.current = false;
+    });
+  }, [content, readOnly]);
 
-      // Save cursor position
-      const cursorPos = editorRef.current.state.selection.main.head;
-
-      const transaction = editorRef.current.state.update({
-        changes: {
-          from: 0,
-          to: current.length,
-          insert: newContent,
-        },
-        // DON'T mark as remote to preserve undo history
-        selection: readOnly
-          ? undefined
-          : { anchor: Math.min(cursorPos, newContent.length) },
-      });
-      editorRef.current.dispatch(transaction);
-    }, 10);
-
-    return () => {
-      if (pendingUpdateRef.current) {
-        clearTimeout(pendingUpdateRef.current);
-      }
-    };
-  }, [codeContent.code, readOnly]);
-
-  // Update language extension when language changes
+  // Update extensions when language or readOnly changes
   useEffect(() => {
     if (!editorRef.current) return;
 
     const currentDoc = editorRef.current.state.doc;
     const currentSelection = editorRef.current.state.selection;
 
-    const updateListener = EditorView.updateListener.of((update) => {
-      if (update.docChanged && !readOnly) {
-        const transaction = update.transactions.find(
-          (tr) => !tr.annotation(Transaction.remote)
-        );
-        if (transaction) {
-          const newCode = update.state.doc.toString();
-          const newContent = JSON.stringify({
-            code: newCode,
-            language: codeContent.language,
-          });
-          handleContentChange(newContent);
-        }
-      }
-    });
+    isInternalUpdateRef.current = true;
 
     const newState = EditorState.create({
       doc: currentDoc,
       selection: currentSelection,
-      extensions: [
-        basicSetup,
-        history(),
-        keymap.of([...historyKeymap, ...defaultKeymap]),
-        getLanguageExtension(codeContent.language),
-        noctisLilac,
-        EditorView.editable.of(!readOnly),
-        ...(readOnly ? [] : [updateListener]),
-      ],
+      extensions,
     });
 
     editorRef.current.setState(newState);
-  }, [codeContent.language, readOnly, handleContentChange]);
+
+    requestAnimationFrame(() => {
+      isInternalUpdateRef.current = false;
+    });
+  }, [extensions]);
 
   // Execute code
-  const executeCode = async () => {
+  const executeCode = useCallback(async () => {
+    if (!editorRef.current) return;
+    
+    const code = editorRef.current.state.doc.toString();
+    
     setOutput("");
     setSqlResults([]);
     setExecuting(true);
 
     try {
-      if (
-        codeContent.language === "javascript" ||
-        codeContent.language === "typescript"
-      ) {
+      if (kind === "javascript" || kind === "typescript") {
         const logs: string[] = [];
         const originalLog = console.log;
         console.log = (...args) => {
@@ -291,12 +186,12 @@ const PureDossierCode = ({
         };
 
         try {
-          eval(codeContent.code);
+          eval(code);
           setOutput(logs.join("\n") || "Execution completed successfully");
         } finally {
           console.log = originalLog;
         }
-      } else if (codeContent.language === "python") {
+      } else if (kind === "python") {
         setOutput("Loading Python environment...");
         const pyodideInstance = pyodide || (await loadPyodide());
         setOutput("Running Python code...");
@@ -308,9 +203,9 @@ const PureDossierCode = ({
           },
         });
 
-        await pyodideInstance.runPythonAsync(codeContent.code);
+        await pyodideInstance.runPythonAsync(code);
         setOutput(outputLines.join("\n") || "Execution completed successfully");
-      } else if (codeContent.language === "sql") {
+      } else if (kind === "sql") {
         setOutput("SQL execution not implemented. Showing mock data.");
         setSqlResults([
           { id: 1, name: "Sample Row 1", value: 100 },
@@ -323,20 +218,22 @@ const PureDossierCode = ({
     } finally {
       setExecuting(false);
     }
-  };
+  }, [kind, pyodide, loadPyodide]);
 
-  const sqlColumns: Column<SqlResult>[] =
-    sqlResults.length > 0
-      ? Object.keys(sqlResults[0]).map((key) => ({
-          key,
-          name: key,
-          resizable: true,
-        }))
-      : [];
+  // Memoize SQL columns
+  const sqlColumns: Column<SqlResult>[] = useMemo(
+    () =>
+      sqlResults.length > 0
+        ? Object.keys(sqlResults[0]).map((key) => ({
+            key,
+            name: key,
+            resizable: true,
+          }))
+        : [],
+    [sqlResults]
+  );
 
-  const showOutput =
-    codeContent.language !== "html" && (output || sqlResults.length > 0);
-
+  const showOutput = kind !== "html" && (output || sqlResults.length > 0);
   const isLoading = executing || pyodideLoading;
 
   return (
@@ -344,7 +241,7 @@ const PureDossierCode = ({
       <ResizablePanelGroup direction="vertical">
         {!readOnly && (
           <div className="flex items-center gap-2 p-2 border-b">
-            {codeContent.language === "html" && (
+            {kind === "html" && (
               <Button
                 size="sm"
                 variant="outline"
@@ -358,10 +255,10 @@ const PureDossierCode = ({
                 {showPreview ? "Code" : "Preview"}
               </Button>
             )}
-            {(codeContent.language === "javascript" ||
-              codeContent.language === "typescript" ||
-              codeContent.language === "python" ||
-              codeContent.language === "sql") && (
+            {(kind === "javascript" ||
+              kind === "typescript" ||
+              kind === "python" ||
+              kind === "sql") && (
               <button
                 className="rounded-none flex flex-row px-1 !py-0 !m-0"
                 onClick={executeCode}
@@ -378,12 +275,12 @@ const PureDossierCode = ({
         )}
         <ResizablePanel className="flex flex-col h-full w-full overflow-y-auto overflow-x-hidden">
           <div className="flex-1 overflow-hidden">
-            {showPreview && codeContent.language === "html" ? (
+            {showPreview && kind === "html" ? (
               <div className="w-full h-full overflow-auto bg-white">
-                <div dangerouslySetInnerHTML={{ __html: codeContent.code }} />
+                <div dangerouslySetInnerHTML={{ __html: content }} />
               </div>
             ) : (
-              <div ref={containerRef} className="w-full h-full overflow-auto" />
+              <div ref={containerRef} className="w-full h-full overflow-auto [&>div]:h-full" />
             )}
           </div>
         </ResizablePanel>
@@ -397,8 +294,8 @@ const PureDossierCode = ({
               defaultSize={undefined}
               className={cn("flex flex-col h-full w-full", "bg-violet-50")}
             >
-              <div className="h-full border-t-2 border-violet-300 size-full bg-violet-700 text-zinc-50">
-                {codeContent.language === "sql" && sqlResults.length > 0 ? (
+              <div className="h-full border-t-2 border-stone-300 size-full bg-stone-700 text-zinc-50">
+                {kind === "sql" && sqlResults.length > 0 ? (
                   <div className="h-64">
                     <DataGrid
                       columns={sqlColumns}

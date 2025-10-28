@@ -1,22 +1,23 @@
 import { NextRequest } from "next/server";
-import { streamText, smoothStream, convertToModelMessages, stepCountIs, hasToolCall, createUIMessageStream, generateId, createUIMessageStreamResponse } from "ai";
-import { web } from "@/lib/ai/tool/web";
-import { document } from "@/lib/ai/tool/document"
-import { search } from "@/lib/ai/tool/search";
-import { convertToUIMessages } from "@/lib/ai/utils";
+import { streamText, smoothStream, convertToModelMessages, stepCountIs, createUIMessageStream, generateId, createUIMessageStreamResponse } from "ai";
 
 import { saveChat } from "@/lib/mongo/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
 
-import { mock } from "@/app/api/chat/mock";
 import { system_prompt } from "./system";
 import { getProvider } from "./provider";
 import { removeProviderExecuted } from "@/lib/ai/utils";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-import { google } from '@ai-sdk/google';
 import { langfuse } from "@/lib/langfuse";
+
+import { web } from "@/lib/ai/tool/web";
+import { document } from "@/lib/ai/tool/document"
+import { search } from "@/lib/ai/tool/search";
+import { createText } from "@/lib/ai/tool/document-create-text";
+import { createSheet } from "@/lib/ai/tool/document-create-sheet";
+import { createPython } from "@/lib/ai/tool/document-create-python";
 
 export const maxDuration = 60;
 
@@ -27,33 +28,37 @@ export async function POST(req: NextRequest) {
         let memory: any[] = []
         const { messages, id, model } = await req.json();
         // @ts-ignore
-        const modelMessages = convertToModelMessages(removeProviderExecuted(messages))
+        //const modelMessages = convertToModelMessages(removeProviderExecuted(messages))
+        const modelMessages = convertToModelMessages(messages)
 
         const session = await auth.api.getSession({
             headers: await headers(),
         });
         const user = session?.user?.email
 
-        if (!session) {
+        /* if (!session) {
             const result = await mock();
             return result
-        }
+        } */
         const provider = getProvider(model);
         const instruction = (await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {
-
+                const artifactProps = { threadId: id, user: user, getMemory: () => memory, writer: writer }
                 try {
                     const result = streamText({
-
                         model: provider(model),
                         system: instruction,
                         prompt: modelMessages,
                         tools: {
                             // web: web({}),
+                            createText: createText(artifactProps),
+                            createSheet: createSheet(artifactProps),
+                            createPython: createPython(artifactProps),
                             search: search({ writer }),
-                            document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
+                            // web: web({ writer }),
+                            // document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
                             // code_execution: google.tools.codeExecution({}),
                             // google_search: google.tools.googleSearch({}),
                             // url_context: google.tools.urlContext({}),
@@ -66,7 +71,7 @@ export async function POST(req: NextRequest) {
                         },
                         prepareStep: async ({ model, stepNumber, steps, messages }) => {
                             memory = messages
-                            return {}
+                            return { messages: messages }
                         },
                         experimental_transform: smoothStream({
                             chunking: 'word',

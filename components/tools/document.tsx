@@ -71,7 +71,10 @@ const PureDocument = (props: any) => {
             )}
 
             <span className="text-xs truncate">
-              {tool?.type?.replace("tool-", "").toUpperCase() || "DOCUMENT"}
+              {tool?.type
+                ?.replace("tool-", "")
+                .replace("create", "")
+                .toUpperCase() || "DOCUMENT"}
               {(tool.input?.title! &&
                 " · " + tool.input?.title?.toUpperCase()) ||
                 ""}

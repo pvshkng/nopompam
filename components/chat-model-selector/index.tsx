@@ -84,7 +84,6 @@ export const ModelSelector = (props: any) => {
           <CommandEmpty>No results found.</CommandEmpty>
           {Object.entries(models).map(([group, items]) => (
             <>
-              
               <CommandGroup
                 key={group}
                 heading={group}

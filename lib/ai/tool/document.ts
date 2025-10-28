@@ -1,15 +1,7 @@
-import { UIMessageStreamWriter, tool, smoothStream, streamText, convertToModelMessages, convertToCoreMessages } from "ai";
+import { UIMessageStreamWriter, tool } from "ai";
 import { z } from "zod";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { storeArtifact } from "@/lib/mongo/artifact-store"
-import type { UIMessage, ModelMessage } from 'ai';
-import { removeProviderExecuted } from "@/lib/ai/utils";
+import type { ModelMessage } from 'ai';
 import { documentHandlers } from './document-handler';
-
-const client = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_API_KEY,
-  baseURL: process.env.GOOGLE_API_ENDPOINT,
-});
 
 interface DocumentProps {
   threadId: string;
@@ -30,7 +22,9 @@ export const document = ({ threadId, user, getMemory, writer }: DocumentProps) =
     `,
     inputSchema: z.object({
       title: z.string().describe("The title of the artifact. If the title is not provided, it will be inferred from the prompt."),
-      kind: z.enum(["text", "sheet", "code"]).describe("The kind of document to create. 'text' for rich text documents, 'sheet' for spreadsheets, 'code' for code files."),
+      kind: z
+        .enum(["text", "sheet", "code", "presentation", "pdf", "form"])
+        .describe("The kind of document to create. 'text' for rich text documents, 'sheet' for spreadsheets, 'code' for code files, 'presentation' for slide decks, 'pdf' for PDF documents, and 'form' for forms."),
     }),
     execute: async ({ title, kind }, { toolCallId }) => {
 
