@@ -45,21 +45,20 @@ export async function POST(req: NextRequest) {
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {
-
+                const artifactProps = { threadId: id, user: user, getMemory: () => memory, writer: writer }
                 try {
                     const result = streamText({
-
                         model: provider(model),
                         system: instruction,
                         prompt: modelMessages,
                         tools: {
                             // web: web({}),
-                            createText: createText({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
-                            createSheet: createSheet({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
-                            createPython: createPython({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
+                            createText: createText(artifactProps),
+                            createSheet: createSheet(artifactProps),
+                            createPython: createPython(artifactProps),
                             search: search({ writer }),
-                            //web: web({ writer }),
-                            document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
+                            // web: web({ writer }),
+                            // document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
                             // code_execution: google.tools.codeExecution({}),
                             // google_search: google.tools.googleSearch({}),
                             // url_context: google.tools.urlContext({}),
