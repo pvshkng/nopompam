@@ -59,7 +59,8 @@ export const ModelSelector = (props: any) => {
       <button
         className={cn(
           "px-2 py-1 !m-0",
-          "bg-violet-700 text-violet-200 text-[10px]", //placeholder:text-muted-foreground/70
+          "rounded-md",
+          "bg-gradient-to-br from-violet-50 to-violet-300 text-violet-700 text-[10px]", //placeholder:text-muted-foreground/70
           "overflow-hidden w-28 h-full", //w-fit
           "border-input focus-visible:border-ring focus-visible:ring-ring/50 inline-flex shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
         )}
@@ -71,7 +72,7 @@ export const ModelSelector = (props: any) => {
             size={16}
             aria-hidden="true"
           /> */}
-          <span className="text-violet-200 font-normal truncate">{model}</span>
+          <span className="text-violet-700 font-normal truncate">{model}</span>
         </span>
         {/*         <kbd className="bg-background text-muted-foreground/70 ms-12 -me-1 inline-flex h-5 max-h-full items-center rounded-none border px-1 font-[inherit] text-[0.625rem] font-medium">
           ⌘K

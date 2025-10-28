@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
                             // createText: createText(artifactProps),
                             // createSheet: createSheet(artifactProps),
                             // createPython: createPython(artifactProps),
-                            createMem: createMrm(artifactProps),
+                            createMrm: createMrm(artifactProps),
                             createSql: createSql(artifactProps),
                             search: search({ writer }),
                             // web: web({ writer }),

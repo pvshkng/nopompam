@@ -100,12 +100,14 @@ const PureAttachment = () => {
         <button
           className={cn(
             "gap-1",
-            "flex flex-row bg-violet-700 size-[16px] items-center justify-center",
+            "rounded-md",
+            "bg-gradient-to-br from-violet-50 to-violet-300 text-violet-700 text-[10px]",
+            "flex flex-row  size-[16px] items-center justify-center",
             "text-sm text-gray-500 hover:text-gray-700 h-full w-8"
           )}
           onClick={() => fileInputRef.current?.click()}
         >
-          <Paperclip width={16} height={16} stroke={"white"} />
+          <Paperclip width={16} height={16} className="stroke-violet-700" />
           {files?.length! > 0 ? (
             <span className="text-xs text-white">{files?.length}</span>
           ) : (

@@ -1,7 +1,7 @@
 export const Dtx = () => {
   return (
     <svg
-      className="absolute top-0 left-0 right-0 bottom-0 mx-auto w-full max-w-[75%] h-full opacity-20"
+      className="absolute top-0 left-0 right-0 bottom-0 mx-auto w-full max-w-[75%] h-full opacity-10"
       viewBox="0 0 166 64"
       preserveAspectRatio="xMidYMid meet"
       data-bbox="0.021 1.003 165.011 61.995"

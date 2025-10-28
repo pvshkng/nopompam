@@ -52,7 +52,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
               "after:absolute after:inset-0 after:rounded-2xl after:bg-gradient-to-tl after:from-white/30 after:via-transparent after:to-transparent after:opacity-50 after:pointer-events-none",
               "rounded-br-none",
               "relative",
-              "max-w-[80%]",
+              "max-w-[80%]"
 
               //"after:w-0 after:h-0 after:absolute after:-bottom-2 after:right-0",
               //"after:!border-transparent after:!border-t-black/20 after:!border-r-black/20 after:border-[4px]"
@@ -97,6 +97,7 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
           case "tool-createJavascript":
           case "tool-createSql":
           case "tool-createMrm":
+          case "tool-createMem":
             return (
               <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
                 <Document tool={p} />
