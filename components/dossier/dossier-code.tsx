@@ -19,6 +19,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { mockSqlResult } from "./dossier-code-mock";
 
 interface SqlResult {
   [key: string]: any;
@@ -38,7 +39,7 @@ const PureDossierCode = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<EditorView | null>(null);
   const isInternalUpdateRef = useRef(false);
-  
+
   const [output, setOutput] = useState<string>("");
   const [sqlResults, setSqlResults] = useState<SqlResult[]>([]);
   const [showPreview, setShowPreview] = useState(false);
@@ -115,7 +116,7 @@ const PureDossierCode = ({
     if (!editorRef.current || content === undefined) return;
 
     const currentContent = editorRef.current.state.doc.toString();
-    
+
     // Skip update if content is the same
     if (currentContent === content) return;
 
@@ -132,13 +133,14 @@ const PureDossierCode = ({
         insert: content,
       },
       // Preserve cursor position, or move to end if streaming
-      selection: readOnly || isAtEnd 
-        ? { anchor: content.length } 
-        : { anchor: Math.min(cursorPos, content.length) },
+      selection:
+        readOnly || isAtEnd
+          ? { anchor: content.length }
+          : { anchor: Math.min(cursorPos, content.length) },
     });
 
     editorRef.current.dispatch(transaction);
-    
+
     // Reset flag after update
     requestAnimationFrame(() => {
       isInternalUpdateRef.current = false;
@@ -170,9 +172,9 @@ const PureDossierCode = ({
   // Execute code
   const executeCode = useCallback(async () => {
     if (!editorRef.current) return;
-    
+
     const code = editorRef.current.state.doc.toString();
-    
+
     setOutput("");
     setSqlResults([]);
     setExecuting(true);
@@ -206,12 +208,10 @@ const PureDossierCode = ({
         await pyodideInstance.runPythonAsync(code);
         setOutput(outputLines.join("\n") || "Execution completed successfully");
       } else if (kind === "sql") {
-        setOutput("SQL execution not implemented. Showing mock data.");
-        setSqlResults([
-          { id: 1, name: "Sample Row 1", value: 100 },
-          { id: 2, name: "Sample Row 2", value: 200 },
-          { id: 3, name: "Sample Row 3", value: 300 },
-        ]);
+        setTimeout(() => {
+          setOutput("SQL execution not implemented. Showing mock data.");
+          setSqlResults(mockSqlResult);
+        }, 1000);
       }
     } catch (error: any) {
       setOutput(`Error: ${error.message}`);
@@ -280,7 +280,10 @@ const PureDossierCode = ({
                 <div dangerouslySetInnerHTML={{ __html: content }} />
               </div>
             ) : (
-              <div ref={containerRef} className="w-full h-full overflow-auto [&>div]:h-full" />
+              <div
+                ref={containerRef}
+                className="w-full h-full overflow-auto [&>div]:h-full"
+              />
             )}
           </div>
         </ResizablePanel>
@@ -296,11 +299,11 @@ const PureDossierCode = ({
             >
               <div className="h-full border-t-2 border-stone-300 size-full bg-stone-700 text-zinc-50">
                 {kind === "sql" && sqlResults.length > 0 ? (
-                  <div className="h-64">
+                  <div className="h-full">
                     <DataGrid
                       columns={sqlColumns}
                       rows={sqlResults}
-                      className="rdg-dark"
+                      className="rdg-dark "
                       style={{ height: "100%" }}
                     />
                   </div>

@@ -18,6 +18,7 @@ import { search } from "@/lib/ai/tool/search";
 import { createText } from "@/lib/ai/tool/document-create-text";
 import { createSheet } from "@/lib/ai/tool/document-create-sheet";
 import { createPython } from "@/lib/ai/tool/document-create-python";
+import { createSql } from "@/lib/ai/tool/document-create-sql";
 
 export const maxDuration = 60;
 
@@ -56,6 +57,7 @@ export async function POST(req: NextRequest) {
                             createText: createText(artifactProps),
                             createSheet: createSheet(artifactProps),
                             createPython: createPython(artifactProps),
+                            createSql: createSql(artifactProps),
                             search: search({ writer }),
                             // web: web({ writer }),
                             // document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),

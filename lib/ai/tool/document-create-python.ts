@@ -12,10 +12,8 @@ const kind = 'python';
 const toolDescription = `
 ## createPython
 # The "createPython" tool creates and updates text artifact that render to the user on a space next to the conversation (referred to as the "dossier").
-# Use this tool when asked to work on writing that's long enough like article / essay.
-# Only invoke this tool once for each document you want to create.
+# Use this tool when asked to work on Python code.
 # **DO NOT REPEAT THE GENERATED CONTENT OR RESULT OF THIS TOOL SINCE THE RESULT WILL BE VISIBLE TO THE USER.**
-# You may let the user know that you have created a document and they can view it on the side panel.
 `
 
 const createInstructions = (title: string, additionalInstructions?: string) => {
