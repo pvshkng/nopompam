@@ -19,6 +19,7 @@ import { createText } from "@/lib/ai/tool/document-create-text";
 import { createSheet } from "@/lib/ai/tool/document-create-sheet";
 import { createPython } from "@/lib/ai/tool/document-create-python";
 import { createMrm } from "@/lib/ai/tool/document-create-mrm";
+import { createSql } from "@/lib/ai/tool/document-create-sql";
 
 export const maxDuration = 60;
 
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
             return result
         } */
         const provider = getProvider(model);
-        const instruction = (await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
+        const instruction = system_prompt //(await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
                             // createSheet: createSheet(artifactProps),
                             // createPython: createPython(artifactProps),
                             createMem: createMrm(artifactProps),
+                            createSql: createSql(artifactProps),
                             search: search({ writer }),
                             // web: web({ writer }),
                             // document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),

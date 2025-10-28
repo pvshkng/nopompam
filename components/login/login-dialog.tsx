@@ -51,8 +51,8 @@ function PureLoginDialog(props: any) {
 
           {/* Caution */}
           <div className="max-w-[300px]">
-            <p className="text-center text-xs text-violet-700 ">
-              nopompam may occasionally provide <u>inaccurate information</u>
+            <p className="text-center text-xs text-stone-700">
+              Nopompam may occasionally provide <u>inaccurate information</u>
               .Use your own judgement and verify the information it provides.
             </p>
           </div>

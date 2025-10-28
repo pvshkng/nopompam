@@ -196,15 +196,17 @@ export function PureThreadManager(props: any) {
           ) : (
             <>
               <div className="flex size-full items-center justify-center">
-                <p className="text-center text-xs text-violet-500">
-                  <span
-                    className="underline cursor-pointer"
-                    onClick={() => {
-                      openAuthDialog();
-                    }}
-                  >
-                    Login to store your conversations
-                  </span>
+                <p className="text-center text-xs text-stone-500">
+                  <Close>
+                    <span
+                      className="underline cursor-pointer"
+                      onClick={() => {
+                        openAuthDialog();
+                      }}
+                    >
+                      Login to store your conversations
+                    </span>{" "}
+                  </Close>
                 </p>
               </div>
             </>
