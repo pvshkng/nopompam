@@ -43,7 +43,7 @@ function PureLoginDialog(props: any) {
           )}
         >
           <h1 className="font-bold text-violet-600 text-2xl max-lg:text-xl drop-shadow-xl">
-            nopompam
+            ChatX
           </h1>
           <div className="z-10">
             <LoginComponent />
@@ -52,7 +52,7 @@ function PureLoginDialog(props: any) {
           {/* Caution */}
           <div className="max-w-[300px]">
             <p className="text-center text-xs text-stone-700">
-              Nopompam may occasionally provide <u>inaccurate information</u>
+              ChatX may occasionally provide <u>inaccurate information</u>
               .Use your own judgement and verify the information it provides.
             </p>
           </div>

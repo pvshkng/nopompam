@@ -97,7 +97,7 @@ const PureBlankDocument = (props: any) => {
             There's no documents in the dossier yet
           </p>
           <p className={cn("text-xs font-semibold text-violet-300")}>
-            Ask nopompam to create one
+            Ask ChatX to create one
           </p>
         </>
       )}

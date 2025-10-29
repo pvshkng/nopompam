@@ -152,10 +152,11 @@ function PureRoot(props: PureRootProps) {
               "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
             )}
           >
+            {!dossierOpen && <Dtx />}
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[350px]">
                 <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
-                  <Dtx />
+                  {dossierOpen && <Dtx />}
                   <div
                     ref={containerRef}
                     onScroll={handleScroll}

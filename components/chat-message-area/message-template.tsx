@@ -4,17 +4,19 @@ import {
   ChartCandlestick,
   Gamepad2,
   Clapperboard,
+  Bot,
   Brain,
+  CodeXml
 } from "lucide-react";
 import { useInputStore } from "@/lib/stores/input-store";
 
 // prettier-ignore
 const templates = [
-  { icon: ChartCandlestick, prompt: "Research Figma IPO", type: "research", },
-  { icon: Globe, prompt: "What's happening in Texas?", type: "web" },
-  { icon: Gamepad2, prompt: "When will Silksong be released?", type: "web" },
-  { icon: Clapperboard, prompt: "Does the Matrix really exist?", type: "web" },
-  { icon: Brain, prompt: "Is Gemini better than OpenAI?", type: "web" },
+  { icon: ChartCandlestick, prompt: "Research SCBx stock", type: "research", },
+  { icon: Globe, prompt: "How's SCB AI Outlook?", type: "web" },
+  { icon: Gamepad2, prompt: "Search fastest Silksong speedrun?", type: "web" },
+  { icon: CodeXml, prompt: "Write Dijkstra's Algo in Python", type: "web" },
+  { icon: Brain, prompt: "Is Typhoon better than THaLLe?", type: "web" },
 ];
 
 export function MessageTemplate(props: any) {

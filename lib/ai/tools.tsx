@@ -365,7 +365,7 @@ export const SendJobOpeningForm = ({
 
         <hr className="w-full my-3 !border-blue-800" />
 
-        <Button type="submit" variant={"nopompam"} className="w-full my-1 mt-3">
+        <Button type="submit" variant={"ChatX"} className="w-full my-1 mt-3">
           Create Job Opening
         </Button>
         <FormDescription className="text-xs">

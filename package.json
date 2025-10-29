@@ -1,5 +1,5 @@
 {
-  "name": "nopompam",
+  "name": "ChatX",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/azure": "^2.0.58",
     "@ai-sdk/google": "^2.0.24",
     "@ai-sdk/mistral": "^2.0.20",
     "@ai-sdk/openai": "^2.0.55",

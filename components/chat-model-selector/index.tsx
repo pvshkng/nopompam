@@ -22,7 +22,7 @@ const models = {
     "mistral-large-latest",
     "pixtral-large-latest",
   ],
-  openai: ["openai/gpt-oss-120b", "openai/gpt-oss-20b"],
+  //openai: ["openai/gpt-oss-120b", "openai/gpt-oss-20b"],
   deepseek: ["deepseek-r1-distill-llama-70b"],
   qwen: ["qwen/qwen3-32b"],
   moonshit: ["moonshotai/kimi-k2-instruct"],

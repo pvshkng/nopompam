@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
             return result
         } */
         const provider = getProvider(model);
-        const instruction = system_prompt //(await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
+        const instruction = system_prompt //(await langfuse.prompt.get("ChatX_system_instruction", { fallback: system_prompt })).compile()
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {
@@ -55,9 +55,9 @@ export async function POST(req: NextRequest) {
                         prompt: modelMessages,
                         tools: {
                             // web: web({}),
-                            // createText: createText(artifactProps),
-                            // createSheet: createSheet(artifactProps),
-                            // createPython: createPython(artifactProps),
+                            createText: createText(artifactProps),
+                            createSheet: createSheet(artifactProps),
+                            createPython: createPython(artifactProps),
                             createMrm: createMrm(artifactProps),
                             createSql: createSql(artifactProps),
                             search: search({ writer }),
