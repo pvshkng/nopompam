@@ -105,7 +105,7 @@ export function LoginComponent() {
             className="flex items-center justify-center w-full bg-stone-200 p-2 rounded-none text-stone-500 text-sm font-bold hover:bg-stone-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             disabled={loading}
           >
-            {loading ? <div className="auth-loader mt-2" /> : "Login"}
+            Login
           </button>
         </form>
 
@@ -131,19 +131,15 @@ export function LoginComponent() {
           }}
         >
           <div className="flex flex-row gap-2 min-h-[28px] min-w-[180px] px-2 items-center justify-center">
-            {loading ? (
-              <div className="auth-loader mt-2" />
-            ) : (
-              <div className="flex flex-row gap-2">
-                <Image
-                  src={"/icon/google.png"}
-                  alt="google logo"
-                  width={20}
-                  height={20}
-                />
-                Login with Google
-              </div>
-            )}
+            <div className="flex flex-row gap-2">
+              <Image
+                src={"/icon/google.png"}
+                alt="google logo"
+                width={20}
+                height={20}
+              />
+              Login with Google
+            </div>
           </div>
         </button>
       </div>
