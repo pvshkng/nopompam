@@ -26,7 +26,7 @@ export default function PureMessageArea(props: MessageAreaProps) {
   const { status, messages } = props;
 
   return (
-    <div id="msgArea" className={cn("text-sm py-7 mb-auto")}>
+    <div id="msgArea" className={cn("text-sm py-7")}>
       {messages.map((m, i) => (
         <div
           key={m.id}

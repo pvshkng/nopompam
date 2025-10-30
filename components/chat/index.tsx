@@ -152,8 +152,8 @@ function PureRoot(props: PureRootProps) {
             )}
           >
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[350px]">
-                <main className="relative flex-1 flex flex-col h-full min-h-0 w-full overflow-y-auto overflow-x-hidden">
+              <ResizablePanel className="relative flex flex-col h-full w-full min-w-[350px]">
+                <main className="relative flex-1 flex h-full min-h-0 w-full">
                   <div
                     ref={containerRef}
                     onScroll={handleScroll}
