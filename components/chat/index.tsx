@@ -159,6 +159,7 @@ function PureRoot(props: PureRootProps) {
                     onScroll={handleScroll}
                     id="scrollArea"
                     className="relative flex flex-col-reverse items-center h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
+                    style={{ WebkitOverflowScrolling: 'touch' }}
                   >
                     <div
                       id="wrapper"
