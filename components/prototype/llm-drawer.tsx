@@ -208,7 +208,7 @@ export function LLMDrawer({ open, onOpenChange }: LLMDrawerProps) {
     if (!newAgentName.trim()) return
 
     const newAgent: Agent = {
-      id: `custom-${Date.now()}`,
+      id: `custom`,
       name: newAgentName,
       description: newAgentDescription || "Custom agent configuration",
       model: selectedModel,

@@ -53,21 +53,21 @@ export function MCPDrawer({ open, onOpenChange, onToolsUpdate }: MCPDrawerProps)
     setTimeout(() => {
       const mockTools: MCPTool[] = [
         {
-          id: `mcp-${Date.now()}-1`,
+          id: `mcp-1`,
           name: "Custom Search",
           description: "Advanced search capabilities from MCP server",
           url: currentMcpUrl,
           connected: true,
         },
         {
-          id: `mcp-${Date.now()}-2`,
+          id: `mcp-2`,
           name: "Data Processor",
           description: "Process and analyze data via MCP",
           url: currentMcpUrl,
           connected: true,
         },
         {
-          id: `mcp-${Date.now()}-3`,
+          id: `mcp-3`,
           name: "File Handler",
           description: "Handle file operations through MCP",
           url: currentMcpUrl,
