@@ -143,7 +143,7 @@ function PureRoot(props: PureRootProps) {
           threads={threads}
           setThreads={setThreads}
         />
-        <div className="flex flex-row size-full overflow-hidden">
+        <div className="flex flex-row size-full min-h-0 overflow-hidden">
           <div
             className={cn(
               "relative flex h-full w-full min-w-[400px]",
@@ -159,7 +159,10 @@ function PureRoot(props: PureRootProps) {
                     onScroll={handleScroll}
                     id="scrollArea"
                     className="relative flex flex-col-reverse items-center h-full min-h-0 w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
-                    style={{ WebkitOverflowScrolling: 'touch' }}
+                    style={{
+                      WebkitOverflowScrolling: "touch",
+                      touchAction: "pan-y",
+                    }}
                   >
                     <div
                       id="wrapper"
