@@ -155,13 +155,12 @@ function PureRoot(props: PureRootProps) {
             {!dossierOpen && <Dtx />}
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel className="relative flex flex-col h-full w-full overflow-y-auto overflow-x-hidden min-w-[350px]">
-                <main className="relative flex-1 flex flex-col-reverse h-full w-full overflow-y-auto overflow-x-hidden">
-                  {dossierOpen && <Dtx />}
+                <main className="relative flex-1 flex flex-col-reverse h-full min-h-0 w-full overflow-y-auto overflow-x-hidden">
                   <div
                     ref={containerRef}
                     onScroll={handleScroll}
                     id="scrollArea"
-                    className="relative flex flex-col-reverse items-center h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
+                    className="relative flex flex-col-reverse items-center h-full min-h-0 w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
                     style={{ WebkitOverflowScrolling: 'touch' }}
                   >
                     <div
