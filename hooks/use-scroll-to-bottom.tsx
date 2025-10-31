@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useScrollToBottom(thresholdRatio = 0.2) {
+export function useScrollToBottom(thresholdRatio = 0.1) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const lastElementRef = useRef<HTMLDivElement | null>(null);
