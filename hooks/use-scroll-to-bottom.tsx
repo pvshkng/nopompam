@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useScrollToBottom(thresholdRatio = 0.1) {
+export function useScrollToBottom(thresholdRatio = 0.02) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const lastElementRef = useRef<HTMLDivElement | null>(null);
@@ -18,8 +18,9 @@ export function useScrollToBottom(thresholdRatio = 0.1) {
       container.scrollHeight - container.scrollTop - container.clientHeight;
     const threshold = container.clientHeight * thresholdRatio;
     const nearBottom = distanceFromBottom < threshold;
-
-    setIsBottom(nearBottom);
+    const check =
+      container.scrollHeight - container.scrollTop <= container.clientHeight;
+    setIsBottom(check);
     setAutoScrollEnabled(nearBottom);
   };
 

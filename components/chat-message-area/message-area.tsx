@@ -22,15 +22,18 @@ type MessageAreaProps = {
   setDossierOpen: boolean;
   activeTab: any;
   setActiveTab: any;
+  lastMessageRef: React.RefObject<HTMLDivElement>;
 };
 
 export default function PureMessageArea(props: MessageAreaProps) {
-  const { status, messages } = props;
+  const { status, messages, lastMessageRef } = props;
 
   return (
     <>
       {/* <div id="msgArea" className={cn("text-sm py-7")}> */}
       {messages.map((m, i) => {
+        const isLastMessage = i === messages.length - 1;
+
         return (
           <div
             key={m.id}
@@ -38,6 +41,7 @@ export default function PureMessageArea(props: MessageAreaProps) {
               "whitespace-normal break-words text-sm flex w-full",
               m.role == "user" ? "justify-end" : "justify-center"
             )}
+            ref={isLastMessage ? lastMessageRef : null}
           >
             <MessageBlock
               status={status}

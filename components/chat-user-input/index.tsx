@@ -13,7 +13,8 @@ import { useDossierStore } from "@/lib/stores/dossier-store";
 import { useInputStore } from "@/lib/stores/input-store";
 
 const PureUserInput = memo(function PureUserInput(props: any) {
-  const { stop, session, messages, status, handleSubmit, model, setModel } = props;
+  const { stop, session, messages, status, handleSubmit, model, setModel } =
+    props;
   const { dossierOpen, setDossierOpen } = useDossierStore();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { input, setInput } = useInputStore();
@@ -32,52 +33,50 @@ const PureUserInput = memo(function PureUserInput(props: any) {
   }, []);
 
   // Memoize handlers
-  const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-    adjustHeight(e.target);
-  }, [setInput, adjustHeight]);
+  const handleInput = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInput(e.target.value);
+      adjustHeight(e.target);
+    },
+    [setInput, adjustHeight]
+  );
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        if (session) {
+          handleSubmit(e);
+          if (inputRef.current) {
+            inputRef.current.style.height = "auto";
+          }
+        } else {
+          openAuthDialog();
+        }
+      }
+    },
+    [session, handleSubmit, openAuthDialog]
+  );
+
+  const handleButtonClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (status !== "ready") {
+        stop();
+      }
+      if (inputRef.current) {
+        inputRef.current.style.height = "auto";
+      }
       if (session) {
         handleSubmit(e);
-        if (inputRef.current) {
-          inputRef.current.style.height = "auto";
-        }
       } else {
         openAuthDialog();
       }
-    }
-  }, [session, handleSubmit, openAuthDialog]);
-
-  const handleButtonClick = useCallback((e: React.MouseEvent) => {
-    if (status !== "ready") {
-      stop();
-    }
-    if (inputRef.current) {
-      inputRef.current.style.height = "auto";
-    }
-    if (session) {
-      handleSubmit(e);
-    } else {
-      openAuthDialog();
-    }
-  }, [status, stop, session, handleSubmit, openAuthDialog]);
-
-  // Memoize wrapper class
-  const wrapperClass = useMemo(() => 
-    messages.length === 0
-      ? cn(
-          "size-full flex items-center justify-center",
-          messages.length > 0 ? "" : ""
-        )
-      : "",
-    [messages.length]
+    },
+    [status, stop, session, handleSubmit, openAuthDialog]
   );
 
   return (
-    <div className={wrapperClass}>
+    <div className="w-full flex items-center justify-center my-auto">
       <div
         className={cn(
           "flex flex-col items-center justify-center",
@@ -85,12 +84,14 @@ const PureUserInput = memo(function PureUserInput(props: any) {
         )}
       >
         {messages.length === 0 && status === "ready" && <MessageTemplate />}
-        
-        <div className={cn(
-          "relative",
-          "border border-stone-700 text-black",
-          "flex flex-row mx-auto w-full max-w-[800px]"
-        )}>
+
+        <div
+          className={cn(
+            "relative",
+            "border border-stone-700 text-black",
+            "flex flex-row mx-auto w-full max-w-[800px]"
+          )}
+        >
           <div className="flex flex-row w-full bg-stone-50">
             <textarea
               ref={inputRef}

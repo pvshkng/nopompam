@@ -74,6 +74,9 @@ function PureRoot(props: PureRootProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [model, setModel] = useState("gemini-2.5-flash");
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [dynamicSpacerHeight, setDynamicSpacerHeight] = useState(0);
 
   const dataHandlerContext: DataHandlerContext = {
     _id,
@@ -105,14 +108,57 @@ function PureRoot(props: PureRootProps) {
     }, []),
   });
 
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (containerRef.current) {
+  //       containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  //     }
+  //   }, 10);
+  //   return () => clearTimeout(timer);
+  // }, [messages]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (containerRef.current) {
-        containerRef.current.scrollTop = containerRef.current.scrollHeight;
-      }
-    }, 10);
+      const calculateSpacerHeight = () => {
+        if (
+          !containerRef.current ||
+          !wrapperRef.current ||
+          !lastMessageRef.current
+        ) {
+          return;
+        }
+
+        const containerHeight = containerRef.current.clientHeight;
+        const lastMessageHeight = lastMessageRef.current.offsetHeight;
+
+        // Calculate available space: container height minus last message height minus some padding
+        const newSpacerHeight = Math.max(
+          0,
+          containerHeight - lastMessageHeight - 96
+        ); // 48px for padding
+
+        setDynamicSpacerHeight(newSpacerHeight);
+      };
+
+      // Calculate on messages change
+      calculateSpacerHeight();
+
+      // Recalculate on window resize
+      window.addEventListener("resize", calculateSpacerHeight);
+
+      return () => window.removeEventListener("resize", calculateSpacerHeight);
+    }, 500);
     return () => clearTimeout(timer);
-  }, [messages]);
+
+  }, [messages, containerRef]);
+
+  /*   useEffect(() => {
+    if (dynamicSpacerHeight > 0) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 50);
+    }
+  }, [dynamicSpacerHeight, scrollToBottom]); */
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -129,7 +175,9 @@ function PureRoot(props: PureRootProps) {
             body: { model },
           }
         );
-        scrollToBottom();
+        setTimeout(() => {
+          scrollToBottom();
+        }, 2000);
       } catch (error) {
         console.error("Failed to send message:", error);
         setInput(messageText);
@@ -159,13 +207,18 @@ function PureRoot(props: PureRootProps) {
           >
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel className="relative flex flex-col h-full w-full min-w-[350px]">
-                <main className="relative flex h-full min-h-0 w-full">
+                <main
+                  className={cn(
+                    "relative flex min-h-0 w-full",
+                    messages.length !== 0 && "h-full"
+                  )}
+                >
                   <div
                     ref={containerRef}
                     onScroll={handleScroll}
                     id="scrollArea"
                     className={cn(
-                      "relative flex flex-col mx-auto h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
+                      "relative flex flex-col mx-auto w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
                     )}
                     style={{
                       WebkitOverflowScrolling: "touch",
@@ -174,10 +227,10 @@ function PureRoot(props: PureRootProps) {
                   >
                     <div
                       id="wrapper"
+                      ref={wrapperRef}
                       className={cn(
-                        "max-w-[800px]",
-                        "flex flex-col mx-auto p-6",
-                        "w-full max-w-[800px]"
+                        "max-w-[800px] w-full",
+                        "flex flex-col mx-auto p-6"
                       )}
                     >
                       {messages.length === 0 ? (
@@ -194,8 +247,16 @@ function PureRoot(props: PureRootProps) {
                           activeTab={activeTab}
                           setActiveTab={setActiveTab}
                           spacerHeight={spacerHeight}
+                          lastMessageRef={lastMessageRef}
                         />
                       )}
+                      <div
+                        id="spacer"
+                        className={cn(
+                          "flex bg-transparent transition-all ease-in-out shrink-0"
+                        )}
+                        style={{ height: `${dynamicSpacerHeight}px` }}
+                      />
                     </div>
                   </div>
                   <BottomScrollButton
