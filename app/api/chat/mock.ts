@@ -175,6 +175,7 @@ export async function mock() {
 
             const result = streamText({
                 model: new MockLanguageModelV2({
+
                     doStream: async () => ({
                         stream: simulateReadableStream({
                             chunks: [
@@ -185,12 +186,12 @@ export async function mock() {
                                     delta: char,
                                 })),
                                 //{ type: 'tool-output-available', id: 'tool-1', output: 'Hello, world!' },
-                                { type: 'text-end', id: 'text-1' },
-                                { type: 'tool-input-start', id: 'tool-1', toolName: 'document' },
-                                { type: 'tool-input-delta', id: 'tool-1', delta: 'Hello, ' },
-                                { type: 'tool-input-delta', id: 'tool-1', delta: 'world!' },
-                                { type: 'tool-input-end', id: 'tool-1' },
-                                { type: 'tool-call', toolCallId: 'tool-1', toolName: 'document', input: 'Hello, world!' },
+                                //{ type: 'text-end', id: 'text-1' },
+                                //{ type: 'tool-input-start', id: 'tool-1', toolName: 'document' },
+                                //{ type: 'tool-input-delta', id: 'tool-1', delta: 'Hello, ' },
+                                //{ type: 'tool-input-delta', id: 'tool-1', delta: 'world!' },
+                                //{ type: 'tool-input-end', id: 'tool-1' },
+                                //{ type: 'tool-call', toolCallId: 'tool-1', toolName: 'document', input: 'Hello, world!' },
                                 //{ type: 'tool-result', id: 'tool-1', toolName: 'document', result: 'Hello, world!' },
                                 /* {
                                     type: 'data-document',

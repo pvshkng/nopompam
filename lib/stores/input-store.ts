@@ -8,6 +8,12 @@ interface InputStore {
 
 export const useInputStore = create<InputStore>((set) => ({
     input: '',
-    setInput: (input: string) => set({ input }),
-    clearInput: () => set({ input: '' }),
+    setInput: (input: string) => set((state) => ({
+        ...state,
+        input
+    }), true), 
+    clearInput: () => set((state) => ({
+        ...state,
+        input: ''
+    }), true),
 }));

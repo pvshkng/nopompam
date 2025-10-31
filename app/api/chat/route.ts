@@ -20,9 +20,9 @@ import { createSheet } from "@/lib/ai/tool/document-create-sheet";
 import { createPython } from "@/lib/ai/tool/document-create-python";
 import { createMrm } from "@/lib/ai/tool/document-create-mrm";
 import { createSql } from "@/lib/ai/tool/document-create-sql";
+import { mock } from "./mock";
 
 export const maxDuration = 60;
-
 
 export async function POST(req: NextRequest) {
 
