@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 
@@ -53,6 +53,19 @@ interface DataDocument {
   content: any;
 }
 
+const defaultModel = "gemini-2.5-flash";
+const chatConfig = {
+  experimental_throttle: 50,
+  transport: new DefaultChatTransport({
+    api: "/api/chat",
+    credentials: "include",
+  }),
+  generateId: createIdGenerator({
+    prefix: "msgc",
+    size: 16,
+  }),
+};
+
 function PureRoot(props: PureRootProps) {
   let { initialMessages, initialThreads, _id, session, email, name, image } =
     props;
@@ -61,6 +74,7 @@ function PureRoot(props: PureRootProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [model, setModel] = useState("gemini-2.5-flash");
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
+
   const dataHandlerContext: DataHandlerContext = {
     _id,
     email,
@@ -69,69 +83,61 @@ function PureRoot(props: PureRootProps) {
   };
 
   // prettier-ignore
-  const { containerRef, isBottom, scrollToBottom, handleScroll } = useScrollToBottom();
+  const { containerRef, scrollToBottom, spacerHeight , handleScroll, isBottom} = useScrollToBottom();
   // prettier-ignore
   const { activeTab, setActiveTab, dossierOpen, setDossierOpen, resetDossier } = useDossierStore();
   const { input, setInput, clearInput } = useInputStore();
 
   const { messages, setMessages, status, sendMessage, stop } = useChat({
-    experimental_throttle: 50,
-    transport: new DefaultChatTransport({
-      api: "/api/chat",
-      credentials: "include",
-    }),
+    ...chatConfig,
     id: _id,
     messages: initialMessages,
-    generateId: createIdGenerator({
-      prefix: "msgc",
-      size: 16,
-    }),
-
-    onFinish: ({ message }) => {},
-    onData: (data) => {
-      processDataEvent(data.type, data.data, dataHandlerContext, data);
-    },
-    onError: (e) => {
+    onFinish: useCallback(({ message }) => {}, []),
+    onData: useCallback(
+      (data) => {
+        processDataEvent(data.type, data.data, dataHandlerContext, data);
+      },
+      [dataHandlerContext]
+    ),
+    onError: useCallback((e) => {
       console.error("Chat error:", e);
       toast(e.message);
-    },
+    }, []),
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!input.trim()) return;
-
-    const messageText = input.trim();
-    clearInput();
-
-    try {
-      sendMessage(
-        { text: messageText },
-        {
-          body: {
-            model: model,
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Failed to send message:", error);
-      setInput(messageText);
-      toast("Failed to send message");
-    }
-  };
-
   useEffect(() => {
-    if (!isBottom) {
-      scrollToBottom();
-    }
-  }, [input]);
+    const timer = setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      }
+    }, 10);
+    return () => clearTimeout(timer);
+  }, [messages]);
 
-  useEffect(() => {
-    return () => {
-      resetDossier();
-    };
-  }, [_id]);
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!input.trim()) return;
+
+      const messageText = input.trim();
+      clearInput();
+
+      try {
+        sendMessage(
+          { text: messageText },
+          {
+            body: { model },
+          }
+        );
+        scrollToBottom();
+      } catch (error) {
+        console.error("Failed to send message:", error);
+        setInput(messageText);
+        toast("Failed to send message");
+      }
+    },
+    [input, model, sendMessage, clearInput, setInput, scrollToBottom]
+  );
 
   return (
     <>
@@ -153,12 +159,14 @@ function PureRoot(props: PureRootProps) {
           >
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel className="relative flex flex-col h-full w-full min-w-[350px]">
-                <main className="relative flex-1 flex h-full min-h-0 w-full">
+                <main className="relative flex h-full min-h-0 w-full">
                   <div
                     ref={containerRef}
                     onScroll={handleScroll}
                     id="scrollArea"
-                    className="relative flex flex-col-reverse items-center h-full min-h-0 w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
+                    className={cn(
+                      "relative flex flex-col mx-auto h-full w-full overflow-y-scroll overflow-x-hidden scroll-smooth"
+                    )}
                     style={{
                       WebkitOverflowScrolling: "touch",
                       touchAction: "pan-y",
@@ -166,24 +174,27 @@ function PureRoot(props: PureRootProps) {
                   >
                     <div
                       id="wrapper"
-                      className="flex flex-col-reverse mx-auto px-6 bg-transparent h-full w-full max-w-[800px] text-black"
+                      className={cn(
+                        "max-w-[800px]",
+                        "flex flex-col mx-auto p-6",
+                        "w-full max-w-[800px]"
+                      )}
                     >
                       {messages.length === 0 ? (
                         <></>
                       ) : (
-                        <>
-                          <MessageArea
-                            status={status}
-                            name={name!}
-                            image={image!}
-                            messages={messages}
-                            dossierOpen={dossierOpen}
-                            // @ts-ignore
-                            setDossierOpen={setDossierOpen}
-                            activeTab={activeTab}
-                            setActiveTab={setActiveTab}
-                          />
-                        </>
+                        <MessageArea
+                          status={status}
+                          name={name!}
+                          image={image!}
+                          messages={messages}
+                          dossierOpen={dossierOpen}
+                          // @ts-ignore
+                          setDossierOpen={setDossierOpen}
+                          activeTab={activeTab}
+                          setActiveTab={setActiveTab}
+                          spacerHeight={spacerHeight}
+                        />
                       )}
                     </div>
                   </div>
