@@ -118,7 +118,6 @@ function PureRoot(props: PureRootProps) {
   // }, [messages]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
       const calculateSpacerHeight = () => {
         if (
           !containerRef.current ||
@@ -147,8 +146,6 @@ function PureRoot(props: PureRootProps) {
       window.addEventListener("resize", calculateSpacerHeight);
 
       return () => window.removeEventListener("resize", calculateSpacerHeight);
-    }, 500);
-    return () => clearTimeout(timer);
 
   }, [messages, containerRef]);
 
