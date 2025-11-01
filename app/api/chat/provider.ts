@@ -59,7 +59,7 @@ export const getProvider = (model: string) => {
                 headers: {
                     "Authorization": `Bearer ${process.env.TYPHOON_API_KEY}`,
                 }
-            });
+            }).chat;
             break;
 
         case "gemini-2.5-pro":
