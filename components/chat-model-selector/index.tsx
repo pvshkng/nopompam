@@ -25,11 +25,12 @@ const models = {
   openai: ["openai/gpt-oss-120b", "openai/gpt-oss-20b"],
   deepseek: ["deepseek-r1-distill-llama-70b"],
   qwen: ["qwen/qwen3-32b"],
-  moonshit: ["moonshotai/kimi-k2-instruct"],
+  moonshot: ["moonshotai/kimi-k2-instruct"],
   meta: [
     "meta-llama/llama-4-maverick-17b-128e-instruct",
     "meta-llama/llama-4-scout-17b-16e-instruct",
   ],
+  typhoon: ["typhoon-v2.5-30b-a3b-instruct", "typhoon-v2.1-12b-instruct"]
   //"pixtral-12b-2409",
 
   // "deepseek/deepseek-chat-v3-0324:free", // good
