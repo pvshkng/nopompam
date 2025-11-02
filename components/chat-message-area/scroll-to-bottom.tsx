@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ArrowDownIcon } from "@radix-ui/react-icons";
+
 export function BottomScrollButton(props: any) {
   const { scrollToBottom, isBottom } = props;
 
@@ -12,7 +13,8 @@ export function BottomScrollButton(props: any) {
         "shadow-[0_0px_20px_rgba(232,78,49,0.1)]",
         isBottom ? "hidden" : "absolute",
         "animate-bounce",
-        "shadow-md"
+        "shadow-md",
+        "opacity-70"
       )}
       onClick={() => {
         scrollToBottom();

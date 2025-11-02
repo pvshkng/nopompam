@@ -1,41 +1,54 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useScrollToBottom(thresholdRatio = 0.02) {
+export function useScrollToBottom(thresholdRatio = 0.1) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const lastElementRef = useRef<HTMLDivElement | null>(null);
+  const lastUserElementRef = useRef<HTMLDivElement | null>(null);
+  const messageRefs = useRef<Record<string, HTMLDivElement>>({});
   const spacerRef = useRef<HTMLDivElement | null>(null);
 
-  const [isBottom, setIsBottom] = useState(true);
+  const [isBottom, setIsBottom] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
   // --- measure distance from bottom ---
   const handleScroll = () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {
+      return;
+    }
     const container = containerRef.current;
-    const distanceFromBottom =
-      container.scrollHeight - container.scrollTop - container.clientHeight;
-    const threshold = container.clientHeight * thresholdRatio;
-    const nearBottom = distanceFromBottom < threshold;
-    const check =
-      container.scrollHeight - container.scrollTop <= container.clientHeight;
-    setIsBottom(check);
-    setAutoScrollEnabled(nearBottom);
+
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+
+    // Distance from bottom in pixels
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+    // 20% of container height as threshold
+    const threshold = clientHeight * 0.5;
+
+    // Check if within 20% from bottom
+    const nearBottom = distanceFromBottom <= threshold;
+    setIsBottom(nearBottom);
+    const shouldBounceBack = scrollHeight - scrollTop <= clientHeight;
+    setAutoScrollEnabled(shouldBounceBack);
   };
 
   // --- smooth scroll to bottom ---
   const scrollToBottom = () => {
-    const c = containerRef.current;
-    if (!c) return;
-    c.scrollTo({ top: c.scrollHeight, behavior: "smooth" });
+    const c = lastUserElementRef.current;
+    if (!c) {
+      return;
+    }
+    c.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
   // --- dynamically adjust spacer ---
   const adjustSpacer = () => {
-    if (!containerRef.current || !lastElementRef.current) return;
+    if (!containerRef.current || !lastUserElementRef.current) return;
     const container = containerRef.current;
-    const lastRect = lastElementRef.current.getBoundingClientRect();
+    const lastRect = lastUserElementRef.current.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     const gap = containerRect.bottom - lastRect.bottom - 12;
     setSpacerHeight(Math.max(0, gap));
@@ -55,19 +68,22 @@ export function useScrollToBottom(thresholdRatio = 0.02) {
   }, []);
 
   useEffect(() => {
+    console.log("run");
     if (autoScrollEnabled) scrollToBottom();
   }, [autoScrollEnabled]);
 
   return {
     containerRef,
     wrapperRef,
-    lastElementRef,
     spacerRef,
     spacerHeight,
     isBottom,
     scrollToBottom,
     adjustSpacer,
     handleScroll,
+
+    lastUserElementRef,
+    messageRefs,
   };
 }
 

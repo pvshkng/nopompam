@@ -1,26 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 
 export function useSpacer(threshold = 10) {
-  const lastElementRef = useRef(null);
+  const lastUserElementRef = useRef(null);
   const spacerRef = useRef(null);
   const [isBottom, setisBottom] = useState(false);
 
   const handleScroll = () => {
-    if (lastElementRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = lastElementRef.current;
+    if (lastUserElementRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = lastUserElementRef.current;
       const isAtTop = scrollTop == scrollHeight - clientHeight;
       setisBottom(isAtTop);
     }
   };
 
   const scrollToBottom = () => {
-    if (lastElementRef.current) {
-      lastElementRef.current.scrollTop = lastElementRef.current.scrollHeight;
+    if (lastUserElementRef.current) {
+      lastUserElementRef.current.scrollTop = lastUserElementRef.current.scrollHeight;
     }
   };
 
   useEffect(() => {
-    const element = lastElementRef.current;
+    const element = lastUserElementRef.current;
     if (!element) return;
 
     element.addEventListener("scroll", handleScroll);
@@ -31,7 +31,7 @@ export function useSpacer(threshold = 10) {
 
   return {
     spacerRef,
-    lastElementRef,
+    lastUserElementRef,
     isBottom,
     scrollToBottom,
     handleScroll,

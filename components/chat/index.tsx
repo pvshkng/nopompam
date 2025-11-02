@@ -86,7 +86,7 @@ function PureRoot(props: PureRootProps) {
   };
 
   // prettier-ignore
-  const { containerRef, scrollToBottom, spacerHeight , handleScroll, isBottom} = useScrollToBottom();
+  const { containerRef, scrollToBottom, spacerHeight , handleScroll, isBottom, lastUserElementRef,messageRefs } = useScrollToBottom();
   // prettier-ignore
   const { activeTab, setActiveTab, dossierOpen, setDossierOpen, resetDossier } = useDossierStore();
   const { input, setInput, clearInput } = useInputStore();
@@ -118,44 +118,32 @@ function PureRoot(props: PureRootProps) {
   // }, [messages]);
 
   useEffect(() => {
-      const calculateSpacerHeight = () => {
-        if (
-          !containerRef.current ||
-          !wrapperRef.current ||
-          !lastMessageRef.current
-        ) {
-          return;
-        }
+    const timer = setTimeout(() => {
+      if (!containerRef.current) return;
 
-        const containerHeight = containerRef.current.clientHeight;
-        const lastMessageHeight = lastMessageRef.current.offsetHeight;
+      // Find last user message ID
+      const lastUserMessage = messages.findLast((m) => m.role === "user");
+      if (!lastUserMessage) return;
 
-        // Calculate available space: container height minus last message height minus some padding
-        const newSpacerHeight = Math.max(
-          0,
-          containerHeight - lastMessageHeight - 96
-        ); // 48px for padding
+      const lastUserElement = messageRefs.current[lastUserMessage.id];
+      if (!lastUserElement) {
+        console.log("Last user message element not found yet");
+        return;
+      }
 
-        setDynamicSpacerHeight(newSpacerHeight);
-      };
+      const containerHeight = containerRef.current.clientHeight;
+      const lastMessageHeight = lastUserElement.offsetHeight;
 
-      // Calculate on messages change
-      calculateSpacerHeight();
+      const newSpacerHeight = Math.max(
+        0,
+        containerHeight - lastMessageHeight //- 1000
+      );
+      setDynamicSpacerHeight(newSpacerHeight);
+    }, 100);
 
-      // Recalculate on window resize
-      window.addEventListener("resize", calculateSpacerHeight);
+    return () => clearTimeout(timer);
+  }, [messages]);
 
-      return () => window.removeEventListener("resize", calculateSpacerHeight);
-
-  }, [messages, containerRef]);
-
-  /*   useEffect(() => {
-    if (dynamicSpacerHeight > 0) {
-      setTimeout(() => {
-        scrollToBottom();
-      }, 50);
-    }
-  }, [dynamicSpacerHeight, scrollToBottom]); */
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -174,7 +162,7 @@ function PureRoot(props: PureRootProps) {
         );
         setTimeout(() => {
           scrollToBottom();
-        }, 2000);
+        }, 1000);
       } catch (error) {
         console.error("Failed to send message:", error);
         setInput(messageText);
@@ -244,7 +232,8 @@ function PureRoot(props: PureRootProps) {
                           activeTab={activeTab}
                           setActiveTab={setActiveTab}
                           spacerHeight={spacerHeight}
-                          lastMessageRef={lastMessageRef}
+                          lastUserElementRef={lastUserElementRef}
+                          messageRefs={messageRefs}
                         />
                       )}
                       <div
