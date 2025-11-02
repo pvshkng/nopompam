@@ -51,6 +51,7 @@ export const getProvider = (model: string) => {
             });
             break;
 
+        case "typhoon-v2.5-30b-a3b-instruct":
         case "typhoon-v2.1-12b-instruct":
             provider = createOpenAI({
                 apiKey: process.env.TYPHOON_API_KEY,
@@ -58,7 +59,7 @@ export const getProvider = (model: string) => {
                 headers: {
                     "Authorization": `Bearer ${process.env.TYPHOON_API_KEY}`,
                 }
-            });
+            }).chat;
             break;
 
         case "gemini-2.5-pro":

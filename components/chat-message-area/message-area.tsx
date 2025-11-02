@@ -23,17 +23,18 @@ type MessageAreaProps = {
   activeTab: any;
   setActiveTab: any;
   lastMessageRef: React.RefObject<HTMLDivElement>;
+  messageRefs: React.RefObject<HTMLDivElement>;
+  lastUserElementRef: React.RefObject<HTMLDivElement>;
 };
 
 export default function PureMessageArea(props: MessageAreaProps) {
-  const { status, messages, lastMessageRef } = props;
+  const { status, messages, lastUserElementRef, messageRefs } = props;
+  const lastUserMessageIndex = messages.findLastIndex((m) => m.role === "user");
 
   return (
     <>
       {/* <div id="msgArea" className={cn("text-sm py-7")}> */}
       {messages.map((m, i) => {
-        const isLastMessage = i === messages.length - 1;
-
         return (
           <div
             key={m.id}
@@ -41,7 +42,15 @@ export default function PureMessageArea(props: MessageAreaProps) {
               "whitespace-normal break-words text-sm flex w-full",
               m.role == "user" ? "justify-end" : "justify-center"
             )}
-            ref={isLastMessage ? lastMessageRef : null}
+            ref={(el) => {
+              if (el) {
+                messageRefs.current[m.id] = el;
+              }
+
+              if (i === lastUserMessageIndex) {
+                lastUserElementRef.current = el;
+              }
+            }}
           >
             <MessageBlock
               status={status}
