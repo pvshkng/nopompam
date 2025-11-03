@@ -109,13 +109,13 @@ export function LoginComponent() {
           </button>
         </form>
 
-        <div className="relative w-full">
+        {/* <div className="relative w-full">
           <div className="relative flex justify-center text-xs uppercase">
             <span className="p-2 text-stone-400">Or continue with</span>
           </div>
         </div>
 
-        <button
+         <button
           disabled={loading}
           className={cn(
             "flex items-center justify-center font-bold",
@@ -141,7 +141,7 @@ export function LoginComponent() {
               Login with Google
             </div>
           </div>
-        </button>
+        </button> */}
       </div>
     </>
   );

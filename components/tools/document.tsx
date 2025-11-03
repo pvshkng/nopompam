@@ -31,7 +31,8 @@ const PureDocument = (props: any) => {
     <>
       <div
         className={cn(
-          "border border-violet-300 bg-gradient-to-br from-purple-200 to-purple-300 rounded-md",
+          "bg-gradient-to-br from-purple-200/15 to-purple-300/50 backdrop-blur-sm border border-white/50 rounded-lg shadow-[inset_0_1px_0px_rgba(255,255,255,0.75),0_0_9px_rgba(0,0,0,0.2),0_3px_8px_rgba(0,0,0,0.15)] ",
+          /* "border border-violet-300 bg-gradient-to-br from-purple-200 to-purple-300 rounded-md", */
           "cursor-pointer py-3 px-4 my-2 mx-2"
         )}
         onClick={async () => {
