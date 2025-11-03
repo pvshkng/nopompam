@@ -7,7 +7,7 @@ export function useScrollToBottom(thresholdRatio = 0.1) {
   const messageRefs = useRef<Record<string, HTMLDivElement>>({});
   const spacerRef = useRef<HTMLDivElement | null>(null);
 
-  const [isBottom, setIsBottom] = useState(false);
+  const [isBottom, setIsBottom] = useState(true);
   const [spacerHeight, setSpacerHeight] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
