@@ -10,6 +10,7 @@ type ArtifactDocument = {
     kind: string;
     title: string;
     content: string;
+    object?: Record<string, any>;
     status?: "idle" | "active" | "archived";
     isVisible?: boolean;
 
