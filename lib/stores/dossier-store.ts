@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 import type { UIMessage } from 'ai';
+import { object } from 'zod';
 
 export interface Document {
     id: string;
     title: string;
     kind: string;
     content: string;
+    object?: any;
     isStreaming?: boolean;
     hasUnsavedChanges?: boolean;
     streamingContent?: string;
@@ -41,6 +43,7 @@ export type DossierActions = {
     // Streaming management
     startDocumentStreaming: (id: string) => void;
     appendDocumentContent: (id: string, content: string) => void;
+    setDocumentObject: (id: string, object: any) => void;
     stopDocumentStreaming: (id: string) => void;
 
     // Content editing
@@ -170,6 +173,16 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
             documents: state.documents.map(doc =>
                 doc.id === id
                     ? { ...doc, streamingContent: doc.streamingContent + content }
+                    : doc
+            )
+        }));
+    },
+
+    setDocumentObject: (id, content) => {
+        set((state) => ({
+            documents: state.documents.map(doc =>
+                doc.id === id
+                    ? { ...doc, object: doc.object }
                     : doc
             )
         }));
