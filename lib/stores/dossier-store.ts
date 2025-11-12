@@ -56,6 +56,16 @@ export type DossierActions = {
 
 };
 
+const validTypes = [
+    'tool-document',
+    'tool-createText',
+    'tool-createSheet',
+    'tool-createPython',
+    'tool-createJavascript',
+    'tool-createSql',
+]
+
+
 export const useDossierStore = create<DossierStore & DossierActions>((set, get) => ({
     dossierOpen: false,
     documents: [],
@@ -231,7 +241,7 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
         messages.forEach(message => {
             if (message.parts) {
                 message.parts.forEach(part => {
-                    if (part.type === 'tool-document' && part.output) {
+                    if (validTypes.includes(part.type) && part.output) {
                         const output = part.output as { id: string; title: string; kind: string; content: string };
                         toolDocuments.push({
                             id: output.id,
