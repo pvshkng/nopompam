@@ -14,7 +14,7 @@ import { useInputStore } from "@/lib/stores/input-store";
 
 import { FilePreview } from "./attachment-preview";
 
-import { uploadMultipleFiles } from "@/lib/actions/blob";
+import { uploadMultipleFiles } from "@/lib/blob";
 import { toast } from "sonner";
 
 const PureUserInput = memo(function PureUserInput(props: any) {
