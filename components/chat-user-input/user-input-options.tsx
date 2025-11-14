@@ -22,7 +22,7 @@ export const UserInputOptions = (props: any) => {
         <div className="flex flex-row gap-1 my-0 w-full items-center justify-between">
           <div className="flex flex-row h-full gap-1">
             <ModelSelector model={model} setModel={setModel} />
-            <Attachment />
+            {/* <Attachment /> */}
             {/* <button
               className={cn(
                 "gap-1",

@@ -28,8 +28,6 @@ export async function POST(req: NextRequest) {
     try {
         let memory: any[] = []
         const { messages, id, model } = await req.json();
-        // @ts-ignore
-        //const modelMessages = convertToModelMessages(removeProviderExecuted(messages))
         const modelMessages = convertToModelMessages(messages)
 
         const session = await auth.api.getSession({
@@ -42,7 +40,7 @@ export async function POST(req: NextRequest) {
             return result
         } */
         const provider = getProvider(model);
-        const instruction = system_prompt //(await langfuse.prompt.get("nopompam_system_instruction", { fallback: system_prompt })).compile()
+        const instruction = system_prompt
         const stream = createUIMessageStream({
             // originalMessages: messages,
             execute: ({ writer }) => {

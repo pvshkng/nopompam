@@ -15,6 +15,7 @@ import { ActionPanel } from "@/components/chat-message-area/message-action-panel
 import { GradientText } from "@/components/chat-message-area/message-gradient-text";
 
 import "@/styles/pulse.css";
+import { File } from "lucide-react";
 
 // Tool components
 import { Web } from "@/components/tools/web";
@@ -73,7 +74,30 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 )}
               />
             );
-
+          case "file":
+            if (p.mediaType?.startsWith("image/")) {
+              return (
+                <img
+                  key={j}
+                  src={p.url}
+                  alt={p.filename}
+                  className="max-w-full object-cover rounded-lg p-2"
+                />
+              );
+            } else {
+              return (
+                <a
+                  key={j}
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2 m-2 bg-secondary rounded my-2 hover:bg-secondary/80"
+                >
+                  <File className="w-4 h-4" />
+                  <span className="text-sm">{p.filename}</span>
+                </a>
+              );
+            }
           case "tool-web":
             return (
               <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">

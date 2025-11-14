@@ -1,23 +1,34 @@
 "use client";
 
-import { memo, useCallback, useMemo } from "react";
 import { cn } from "@/lib/utils";
-import React from "react";
-import { useRef } from "react";
-import { ArrowUp, CircleStop } from "lucide-react";
+import { memo, useCallback, useMemo, useState, useRef } from "react";
+
+import { ArrowUp, CircleStop, Paperclip, Loader2 } from "lucide-react";
 import { UserInputOptions } from "./user-input-options";
+
 import { MessageTemplate } from "@/components/chat-message-area/message-template";
 import { useAuthDialogStore } from "@/lib/stores/auth-dialog-store";
 import { useShallow } from "zustand/react/shallow";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 import { useInputStore } from "@/lib/stores/input-store";
 
+import { FilePreview } from "./attachment-preview";
+
+import { uploadMultipleFiles } from "@/lib/actions/blob";
+import { toast } from "sonner";
+
 const PureUserInput = memo(function PureUserInput(props: any) {
   const { stop, session, messages, status, handleSubmit, model, setModel } =
     props;
   const { dossierOpen, setDossierOpen } = useDossierStore();
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { input, setInput } = useInputStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const { input, setInput, files, addFiles, removeFile, clearFiles } =
+    useInputStore();
   const { openAuthDialog } = useAuthDialogStore(
     useShallow((state) => ({
       openAuthDialog: state.open,
@@ -39,6 +50,29 @@ const PureUserInput = memo(function PureUserInput(props: any) {
       adjustHeight(e.target);
     },
     [setInput, adjustHeight]
+  );
+
+  const handleFileSelect = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFiles = e.target.files;
+      if (!selectedFiles || selectedFiles.length === 0) return;
+
+      setIsUploading(true);
+      try {
+        const uploadedFiles = await uploadMultipleFiles(selectedFiles);
+        addFiles(uploadedFiles);
+        toast.success(`${uploadedFiles.length} file(s) attached`);
+      } catch (error) {
+        console.error("File upload error:", error);
+        toast.error("Failed to upload files");
+      } finally {
+        setIsUploading(false);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    },
+    [addFiles]
   );
 
   const handleKeyDown = useCallback(
@@ -75,8 +109,20 @@ const PureUserInput = memo(function PureUserInput(props: any) {
     [status, stop, session, handleSubmit, openAuthDialog]
   );
 
+  const handleAttachClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
   return (
     <div className="w-full flex items-center justify-center my-auto">
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx,.xls"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
       <div
         className={cn(
           "flex flex-col items-center justify-center",
@@ -89,10 +135,12 @@ const PureUserInput = memo(function PureUserInput(props: any) {
           className={cn(
             "relative",
             "border border-stone-700 text-black",
-            "flex flex-row mx-auto w-full max-w-[800px]"
+            "flex flex-row mx-auto w-full max-w-[800px]",
+            "bg-stone-50"
           )}
         >
-          <div className="flex flex-row w-full bg-stone-50">
+          <div className="flex flex-col w-full">
+            <FilePreview files={files} onRemove={removeFile} />
             <textarea
               ref={inputRef}
               autoFocus
@@ -111,7 +159,21 @@ const PureUserInput = memo(function PureUserInput(props: any) {
           </div>
 
           <button
+            type="button"
+            onClick={handleAttachClick}
+            disabled={isUploading || status !== "ready"}
+            className="text-stone-700 mx-1 flex items-center justify-center ml-2 my-auto hover:text-stone-500 rounded p-2 transition-colors disabled:opacity-50"
+            title="Attach files"
+          >
+            {isUploading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Paperclip className="w-5 h-5" />
+            )}
+          </button>
+          <button
             onClick={handleButtonClick}
+            disabled={isUploading || status !== "ready"}
             className="flex items-center justify-center bg-stone-700 p-1 px-2"
           >
             {status === "ready" ? (

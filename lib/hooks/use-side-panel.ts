@@ -1,3 +1,0 @@
-const toggleSidePanel = (props: any) => {
-    
-}

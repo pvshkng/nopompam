@@ -89,7 +89,7 @@ function PureRoot(props: PureRootProps) {
   const { containerRef, scrollToBottom, spacerHeight , handleScroll, isBottom, lastUserElementRef,messageRefs } = useScrollToBottom();
   // prettier-ignore
   const { activeTab, setActiveTab, dossierOpen, setDossierOpen, resetDossier } = useDossierStore();
-  const { input, setInput, clearInput } = useInputStore();
+  const { input, setInput, clearInput, files, clearFiles, setFiles } = useInputStore();
 
   const { messages, setMessages, status, sendMessage, stop } = useChat({
     ...chatConfig,
@@ -107,15 +107,6 @@ function PureRoot(props: PureRootProps) {
       toast(e.message);
     }, []),
   });
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if (containerRef.current) {
-  //       containerRef.current.scrollTop = containerRef.current.scrollHeight;
-  //     }
-  //   }, 10);
-  //   return () => clearTimeout(timer);
-  // }, [messages]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -144,18 +135,20 @@ function PureRoot(props: PureRootProps) {
     return () => clearTimeout(timer);
   }, [messages]);
 
-
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!input.trim()) return;
 
       const messageText = input.trim();
+      const messageFiles = [...files];
+      if (!messageText && messageFiles.length === 0) return;
       clearInput();
+      clearFiles();
 
       try {
         sendMessage(
-          { text: messageText },
+          { text: messageText, files: messageFiles },
           {
             body: { model },
           }
@@ -166,10 +159,21 @@ function PureRoot(props: PureRootProps) {
       } catch (error) {
         console.error("Failed to send message:", error);
         setInput(messageText);
+        setFiles(messageFiles);
         toast("Failed to send message");
       }
     },
-    [input, model, sendMessage, clearInput, setInput, scrollToBottom]
+    [
+      input,
+      files,
+      model,
+      sendMessage,
+      clearInput,
+      clearFiles,
+      setInput,
+      setFiles,
+      scrollToBottom,
+    ]
   );
 
   return (

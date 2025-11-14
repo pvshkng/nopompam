@@ -1,4 +1,4 @@
-import { Paperclip } from "lucide-react";
+import { Paperclip, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -88,7 +88,7 @@ const PureAttachment = () => {
 
   return (
     <>
-      <div className="h-full">
+      <div className="flex h-full">
         <input
           type="file"
           multiple
@@ -112,6 +112,11 @@ const PureAttachment = () => {
             <></>
           )}
         </button>
+        {files?.length! > 0 && (
+          <>
+            <X />
+          </>
+        )}
       </div>
     </>
   );
