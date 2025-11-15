@@ -21,6 +21,7 @@ import { File } from "lucide-react";
 import { Web } from "@/components/tools/web";
 import { Document } from "@/components/tools/document";
 import { Search } from "@/components/tools/search";
+import { Chart } from "@/components/tools/chart";
 
 type MessageBlockProps = {
   status: string;
@@ -108,6 +109,12 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
             return (
               <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
                 <Search tool={p} />
+              </div>
+            );
+          case "tool-chart":
+            return (
+              <div key={`tool-${m.id}-${j}`} className="flex flex-col w-full">
+                <Chart tool={p} />
               </div>
             );
           case "tool-document":

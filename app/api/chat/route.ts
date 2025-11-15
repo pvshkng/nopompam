@@ -11,6 +11,7 @@ import { headers } from "next/headers";
 import { web } from "@/lib/ai/tool/web";
 import { document } from "@/lib/ai/tool/document"
 import { search } from "@/lib/ai/tool/search";
+import { chart } from "@/lib/ai/tool/chart";
 import { createText } from "@/lib/ai/tool/document-create-text";
 import { createSheet } from "@/lib/ai/tool/document-create-sheet";
 import { createPython } from "@/lib/ai/tool/document-create-python";
@@ -75,6 +76,7 @@ export async function POST(req: NextRequest) {
                             createPython: createPython(artifactProps),
                             createSql: createSql(artifactProps),
                             search: search({ writer }),
+                            chart: chart(),
                             ...(memoryTools || {})
 
                             // web: web({ writer }),
