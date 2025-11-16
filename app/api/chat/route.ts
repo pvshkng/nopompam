@@ -4,7 +4,7 @@ import { saveChat } from "@/lib/mongo/chat-store";
 import { generateTitle } from "@/lib/actions/ai/generate-title";
 
 import { contructSystemPrompt } from "@/lib/prompt/system";
-import { getProvider } from "./provider";
+import { getProvider } from "@/lib/ai/provider"
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 

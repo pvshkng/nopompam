@@ -37,18 +37,15 @@ import {
 } from "@/components/ui/chart";
 import { MessageSkeleton } from "@/components/chat-message-area/message-loading-skeleton";
 
-// Helper function to extract numeric keys and category key from data
 const analyzeData = (data: any[]) => {
   if (!data || data.length === 0) return { categoryKey: "", numericKeys: [] };
 
   const firstItem = data[0];
   const keys = Object.keys(firstItem);
 
-  // Find the first string value key as category
   const categoryKey =
     keys.find((key) => typeof firstItem[key] === "string") || keys[0];
 
-  // Find all numeric keys
   const numericKeys = keys.filter(
     (key) => key !== categoryKey && typeof firstItem[key] === "number"
   );
@@ -56,7 +53,6 @@ const analyzeData = (data: any[]) => {
   return { categoryKey, numericKeys };
 };
 
-// Generate colors for multiple series
 const COLORS = [
   "#d6d3d1",
   "#a8a29e",
@@ -79,7 +75,6 @@ const COLORS = [
 const PureChart = (props: any) => {
   const { tool }: { tool: ToolUIPart } = props;
 
-  // Analyze data structure
   const { categoryKey, numericKeys } = useMemo(() => {
     if (tool.input?.data) {
       return analyzeData(tool.input.data);
@@ -87,7 +82,6 @@ const PureChart = (props: any) => {
     return { categoryKey: "", numericKeys: [] };
   }, [tool.input?.data]);
 
-  // Generate dynamic chart config
   const chartConfig = useMemo(() => {
     const config: ChartConfig = {};
     numericKeys.forEach((key, index) => {
@@ -140,7 +134,7 @@ const PureChart = (props: any) => {
                   )}
                   <div
                     className={cn(
-                      "flex flex-col overflow-hidden transition-all w-full min-h-[300px]"
+                      "flex flex-col justify-center overflow-hidden transition-all w-full h-full" //min-h-[300px]
                     )}
                   >
                     <ChartContainer
@@ -275,7 +269,7 @@ const PureChart = (props: any) => {
                             nameKey={categoryKey}
                             cx="50%"
                             cy="50%"
-                            outerRadius={80}
+                            //outerRadius={80}
                             label={(entry) => entry[categoryKey]}
                           >
                             {tool.input?.data?.map(
