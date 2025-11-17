@@ -6,6 +6,10 @@ export const getProvider = (model: string) => {
     let provider
     switch (model) {
 
+        // case "openai/gpt-5-mini":
+        //     provider = "openai/gpt-5-mini";
+        //     break;
+
         case "openai/gpt-oss-120b":
         case "openai/gpt-oss-20b":
         case "moonshotai/kimi-k2-instruct":

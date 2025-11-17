@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
                 const artifactProps = { threadId: id, user: user, getMemory: () => memory, writer: writer }
                 try {
                     const result = streamText({
-                        model: provider(model),
+                        model: typeof provider === "string" ? provider : provider(model),
                         system: instruction,
                         prompt: modelMessages,
                         tools: {
