@@ -28,7 +28,7 @@ export const TLDR = ({ children }: { children: React.ReactNode }) => {
         //"after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-tl after:from-white/30 after:via-transparent after:to-transparent after:opacity-50 after:pointer-events-none",
         "p-6 relative",
         "flex flex-col w-full px-4 py-3 gap-2 my-2",
-        "text-violet-700"
+        "text-blue-700"
       )}
     >
       <span className="text-xs flex flex-row items-center gap-2">

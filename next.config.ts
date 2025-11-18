@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+    experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
+  },
   transpilePackages: ['@mdxeditor/editor'],
   // webpack: (config) => {
   //   // this will override the experiments

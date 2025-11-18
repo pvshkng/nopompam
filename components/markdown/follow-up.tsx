@@ -22,10 +22,10 @@ export const FollowUp = ({ children }: { children: React.ReactNode }) => {
         "cursor-pointer",
       )}
     >
-      <span className={cn("font-medium text-violet-700 text-[10px] truncate")}>
+      <span className={cn("font-medium text-blue-700 text-[10px] truncate")}>
         {children}
       </span>
-      <ArrowRight className="min-w-4 min-h-4 size-4 text-violet-700" />
+      <ArrowRight className="min-w-4 min-h-4 size-4 text-blue-700" />
     </span>
   );
 };

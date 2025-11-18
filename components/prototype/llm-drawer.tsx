@@ -274,7 +274,7 @@ export function LLMDrawer({ open, onOpenChange }: LLMDrawerProps) {
                   <Card
                     key={model.id}
                     className={`p-3 cursor-pointer transition-colors ${
-                      selectedModel === model.id ? "border-violet-400 bg-violet-50" : "hover:bg-violet-50"
+                      selectedModel === model.id ? "border-blue-400 bg-blue-50" : "hover:bg-blue-50"
                     }`}
                     onClick={() => setSelectedModel(model.id)}
                   >
@@ -405,7 +405,7 @@ export function LLMDrawer({ open, onOpenChange }: LLMDrawerProps) {
               </div>
 
               {isCreatingAgent && (
-                <Card className="p-3 border-2 border-violet-300 bg-violet-50">
+                <Card className="p-3 border-2 border-blue-300 bg-blue-50">
                   <div className="space-y-2">
                     <h4 className="text-sm font-medium">Save Current Configuration</h4>
                     <Input

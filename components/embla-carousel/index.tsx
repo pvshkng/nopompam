@@ -33,7 +33,7 @@ export const EmblaCarousel: React.FC<PropType> = (props) => {
           {slides.map((doc, index) => (
             <div
               className={cn(
-                "embla__slide rounded-md border border-violet-300 h-32 w-4 max-w-80 p-3",
+                "embla__slide rounded-md border border-blue-300 h-32 w-4 max-w-80 p-3",
                 "flex flex-col"
               )}
               key={index}

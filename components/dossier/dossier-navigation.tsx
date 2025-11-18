@@ -53,7 +53,7 @@ const PureDossierNavigation = (props: any) => {
       className={cn(
         "p-0 min-w-0",
         "flex flex-row items-center justify-between",
-        "border-b border-violet-200",
+        "border-b border-blue-200",
         "bg-neutral-50"
       )}
     >
@@ -64,7 +64,7 @@ const PureDossierNavigation = (props: any) => {
           className={cn(
             "flex items-center justify-center min-w-7 border m-0 p-1 border-b-0",
             isActive("home") &&
-              "border-violet-300 max-w-full bg-white shadow-[0px_1px_0px_1px_#FFFFFF]"
+              "border-blue-300 max-w-full bg-white shadow-[0px_1px_0px_1px_#FFFFFF]"
           )}
           onClick={() => {
             setActiveTab("home");
@@ -73,7 +73,7 @@ const PureDossierNavigation = (props: any) => {
           <House
             className={cn(
               "w-4 h-4",
-              isActive("home") ? "stroke-violet-500" : "stroke-violet-200"
+              isActive("home") ? "stroke-blue-500" : "stroke-blue-200"
             )}
           />
         </button>
@@ -89,8 +89,8 @@ const PureDossierNavigation = (props: any) => {
               "min-w-0 max-w-48",
               "border m-0 border-b-0",
               isActive(doc.id) &&
-                "border-violet-300 bg-white shadow-[0px_1px_0px_0px_#FFFFFF]",
-              !isActive(doc.id) && "border-violet-200"
+                "border-blue-300 bg-white shadow-[0px_1px_0px_0px_#FFFFFF]",
+              !isActive(doc.id) && "border-blue-200"
             )}
           >
             <button
@@ -108,14 +108,14 @@ const PureDossierNavigation = (props: any) => {
                   <NotebookPen
                     className={cn(
                       "w-4 h-4 flex-shrink-0",
-                      isActive(doc.id) ? "stroke-violet-500" : "stroke-violet-200"
+                      isActive(doc.id) ? "stroke-blue-500" : "stroke-blue-200"
                     )}
                   />
                 )}
                 <span
                   className={cn(
                     "text-xs truncate",
-                    isActive(doc.id) ? "text-violet-500" : "text-violet-200"
+                    isActive(doc.id) ? "text-blue-500" : "text-blue-200"
                   )}
                 >
                   {doc.title}
@@ -138,7 +138,7 @@ const PureDossierNavigation = (props: any) => {
               )}
               onClick={(e) => handleTabClose(e, doc.id)}
             >
-              <X className="w-3 h-3 stroke-violet-400 hover:stroke-violet-600" />
+              <X className="w-3 h-3 stroke-blue-400 hover:stroke-blue-600" />
             </button>
           </div>
         ))}
@@ -151,23 +151,23 @@ const PureDossierNavigation = (props: any) => {
             "border m-0 p-1",
             canSave
               ? "bg-orange-500 hover:bg-orange-600"
-              : "bg-violet-400 cursor-not-allowed",
+              : "bg-blue-400 cursor-not-allowed",
             "transition-colors"
           )}
           onClick={handleSave}
           disabled={!canSave}
         >
-          <Save size={16} className="stroke-violet-100" />
+          <Save size={16} className="stroke-blue-100" />
         </button>
         <button
           className={cn(
-            "border m-0 p-1 bg-violet-700 hover:bg-violet-800 transition-colors"
+            "border m-0 p-1 bg-blue-700 hover:bg-blue-800 transition-colors"
           )}
           onClick={() => {
             closeDossier();
           }}
         >
-          <X size={16} className="stroke-violet-100" />
+          <X size={16} className="stroke-blue-100" />
         </button>
       </div>
     </div>

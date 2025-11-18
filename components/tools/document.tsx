@@ -31,8 +31,8 @@ const PureDocument = (props: any) => {
     <>
       <div
         className={cn(
-          "bg-gradient-to-br from-purple-200/15 to-purple-300/50 backdrop-blur-sm border border-white/50 rounded-lg shadow-[inset_0_1px_0px_rgba(255,255,255,0.75),0_0_9px_rgba(0,0,0,0.2),0_3px_8px_rgba(0,0,0,0.15)] ",
-          /* "border border-violet-300 bg-gradient-to-br from-purple-200 to-purple-300 rounded-md", */
+          "bg-gradient-to-br from-sky-200/15 to-sky-300/50 backdrop-blur-sm border border-white/50 rounded-lg shadow-[inset_0_1px_0px_rgba(255,255,255,0.75),0_0_9px_rgba(0,0,0,0.2),0_3px_8px_rgba(0,0,0,0.15)] ",
+          /* "border border-blue-300 bg-gradient-to-br from-sky-200 to-sky-300 rounded-md", */
           "cursor-pointer py-3 px-4 my-2 mx-2"
         )}
         onClick={async () => {
@@ -64,7 +64,7 @@ const PureDocument = (props: any) => {
         }}
       >
         <div className="justify-between w-full flex flex-row items-center gap-2 text-[15px] leading-6 font-semibold">
-          <span className="flex text-violet-500 items-center gap-2 overflow-hidden max-w-full">
+          <span className="flex text-blue-500 items-center gap-2 overflow-hidden max-w-full">
             {tool?.state !== "output-available" ? (
               <LoaderCircle size={16} className="!animate-spin !opacity-100 " />
             ) : (

@@ -6,17 +6,26 @@ import {
   Clapperboard,
   Bot,
   Brain,
-  CodeXml
+  CodeXml,
+  HandHelping,
 } from "lucide-react";
 import { useInputStore } from "@/lib/stores/input-store";
 
 // prettier-ignore
 const templates = [
-  { icon: ChartCandlestick, prompt: "Research SCBx stock", type: "research", },
-  { icon: Globe, prompt: "How's SCB AI Outlook?", type: "web" },
-  { icon: Gamepad2, prompt: "Search fastest Silksong speedrun?", type: "web" },
-  { icon: CodeXml, prompt: "Write Dijkstra's Algo in Python", type: "web" },
-  { icon: Brain, prompt: "Is Typhoon better than THaLLe?", type: "web" },
+  { icon: ChartCandlestick, prompt: "What is the current price of BKNG", type: "research", },
+  { icon: Globe, prompt: "Find me best deals on Agoda?", type: "web" },
+  { icon: Bot, prompt: "Does Agoda use AI in hiring?", type: "web" },
+  { icon: CodeXml, prompt: "What's the most popular FE framework?", type: "web" },
+  { icon: HandHelping, prompt: "Agoda CSR Activity", type: "web" },
+];
+
+const colorMap = [
+  "text-red-500",
+  "text-yellow-500",
+  "text-green-500",
+  "text-purple-600",
+  "text-blue-700",
 ];
 
 export function MessageTemplate(props: any) {
@@ -46,8 +55,13 @@ export function MessageTemplate(props: any) {
                 "cursor-pointer"
               )}
             >
-              <t.icon width={24} height={24} className="text-violet-500" />
-              <p className="text-violet-700 text-xs max-sm:text-[10px] m-0 p-0">
+              <t.icon width={24} height={24} className={cn(colorMap[i])} />
+              <p
+                className={cn(
+                  "text-xs max-sm:text-[10px] m-0 p-0",
+                  colorMap[i]
+                )}
+              >
                 {t.prompt}
               </p>
             </div>

@@ -12,6 +12,24 @@ import {
   QuestionMarkIcon,
 } from "@radix-ui/react-icons";
 
+import { Chart } from "@/components/tools/chart";
+
+const chartProps = {
+  type: "tool-chart",
+  state: "output-available",
+  input: {
+    type: "bar",
+    data: [
+      { month: "January", desktop: 186, mobile: 80 },
+      { month: "February", desktop: 305, mobile: 200 },
+      { month: "March", desktop: 237, mobile: 120 },
+      { month: "April", desktop: 73, mobile: 190 },
+      { month: "May", desktop: 209, mobile: 130 },
+      { month: "June", desktop: 214, mobile: 140 },
+    ],
+  },
+};
+
 export default function TestPage() {
   if (!process.env.THIS_IS_ONLY_FOR_TEST_ENVIRONMENT_YO) {
     redirect("/chat");
@@ -19,6 +37,7 @@ export default function TestPage() {
 
   return (
     <>
+      <Chart tool={chartProps} />
       <TestSearchStreaming />
       <hr className="w-full my-3" />
       <BlankDocument />
@@ -51,16 +70,16 @@ export default function TestPage() {
           className={cn(
             "flex flex-row w-full justify-between items-center",
             "rounded-lg p-2 my-1",
-            "bg-violet-200",
+            "bg-blue-200",
             "cursor-pointer",
             "transition-all hover:-translate-y-1 hover:shadow-md"
           )}
         >
-          <span className={cn("font-medium text-violet-500 text-xs truncate")}>
+          <span className={cn("font-medium text-blue-500 text-xs truncate")}>
             Follow up questionFo questionFollow up questionFollow up
             questionFollow up question
           </span>
-          <ArrowRight className="min-w-4 min-h-4 size-4 text-violet-500" />
+          <ArrowRight className="min-w-4 min-h-4 size-4 text-blue-500" />
         </div>
       </div>
     </>

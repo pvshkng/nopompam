@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 const noto_serif = Noto_Serif({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ChatX",
+  title: "Agochat",
   description: "chat.ai",
 };
 

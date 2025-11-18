@@ -61,7 +61,7 @@ export function BarChartHorizontal(props) {
                 height: `${barHeight}%`,
                 borderRadius: "0 0 0 0", // Rounded right corners
               }}
-              className={`absolute bg-violet-400`}
+              className={`absolute bg-blue-400`}
             />
           );
         })}

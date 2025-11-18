@@ -17,16 +17,16 @@ export function EllipsisMenu(props: any) {
       <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
         <DropdownMenuContent
-          className={cn("rounded-none bg-violet-700 text-violet-200 border-none")}
+          className={cn("rounded-none bg-blue-700 text-blue-200 border-none")}
         >
           {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator /> */}
-          <DropdownMenuItem className={cn("rounded-none hover:bg-violet-900")}>
+          <DropdownMenuItem className={cn("rounded-none hover:bg-blue-900")}>
             Rename
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            className={cn("rounded-none hover:bg-violet-900")}
+            className={cn("rounded-none hover:bg-blue-900")}
             onClick={(e) => {
               e.preventDefault();
               

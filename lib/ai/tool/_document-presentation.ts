@@ -89,7 +89,7 @@ export const presentationHandler: DocumentHandler = async ({
     },
   });
 
-  let draftContent = "";
+  let draftContent = {};
 
   try {
     const { fullStream } = streamObject({
@@ -117,11 +117,11 @@ export const presentationHandler: DocumentHandler = async ({
           type: "data-document",
           data: {
             id: id,
-            type: "text",
-            content,
+            type: "object",
+            object: object,
           },
         });
-        draftContent = content;
+        draftContent = object;
       }
     }
 
@@ -140,7 +140,7 @@ export const presentationHandler: DocumentHandler = async ({
       user: user,
       kind: kind,
       title: title,
-      content: draftContent,
+      object: draftContent,
     });
 
     return {

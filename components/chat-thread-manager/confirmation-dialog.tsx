@@ -41,18 +41,18 @@ export function DeleteConfirmationDialog(props: any) {
         className={cn(
           "!animate-none rounded-none",
           "border-none",
-          "bg-violet-300 text-violet-900"
+          "bg-blue-300 text-blue-900"
         )}
       >
         <DialogHeader>
           <DialogTitle>Delete this thread?</DialogTitle>
           <DialogDescription>This action cannot be undone.</DialogDescription>
           <Button
-            className="rounded-none bg-violet-700 hover:bg-violet-800"
+            className="rounded-none bg-blue-700 hover:bg-blue-800"
             onClick={handleConfirm}
           >
             {loading ? (
-              <div className="w-[30px] h-[30px] border-4 border-violet-300 border-t-violet-800 rounded-full animate-spin" />
+              <div className="w-[30px] h-[30px] border-4 border-blue-300 border-t-blue-800 rounded-full animate-spin" />
             ) : (
               "Delete"
             )}

@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 import type { UIMessage } from 'ai';
+import { object } from 'zod';
 
 export interface Document {
     id: string;
     title: string;
     kind: string;
     content: string;
+    object?: any;
     isStreaming?: boolean;
     hasUnsavedChanges?: boolean;
     streamingContent?: string;
@@ -41,6 +43,7 @@ export type DossierActions = {
     // Streaming management
     startDocumentStreaming: (id: string) => void;
     appendDocumentContent: (id: string, content: string) => void;
+    setDocumentObject: (id: string, object: any) => void;
     stopDocumentStreaming: (id: string) => void;
 
     // Content editing
@@ -52,6 +55,16 @@ export type DossierActions = {
     clearChatDocuments: () => void;
 
 };
+
+const validTypes = [
+    'tool-document',
+    'tool-createText',
+    'tool-createSheet',
+    'tool-createPython',
+    'tool-createJavascript',
+    'tool-createSql',
+]
+
 
 export const useDossierStore = create<DossierStore & DossierActions>((set, get) => ({
     dossierOpen: false,
@@ -175,6 +188,16 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
         }));
     },
 
+    setDocumentObject: (id, content) => {
+        set((state) => ({
+            documents: state.documents.map(doc =>
+                doc.id === id
+                    ? { ...doc, object: doc.object }
+                    : doc
+            )
+        }));
+    },
+
 
     stopDocumentStreaming: (id) => {
         set((state) => ({
@@ -218,7 +241,7 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
         messages.forEach(message => {
             if (message.parts) {
                 message.parts.forEach(part => {
-                    if (part.type === 'tool-document' && part.output) {
+                    if (validTypes.includes(part.type) && part.output) {
                         const output = part.output as { id: string; title: string; kind: string; content: string };
                         toolDocuments.push({
                             id: output.id,

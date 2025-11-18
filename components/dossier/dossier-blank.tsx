@@ -58,8 +58,8 @@ const PureBlankDocument = (props: any) => {
                       key={i}
                       onSelect={() => handleDocumentSelect(doc)}
                     >
-                      <iconMapping.text className="size-4 min-w-4 min-h-4 text-violet-500" />
-                      <span className="text-xs text-violet-500 truncate">
+                      <iconMapping.text className="size-4 min-w-4 min-h-4 text-blue-500" />
+                      <span className="text-xs text-blue-500 truncate">
                         {doc.title || "Untitled"}
                       </span>
                     </CommandItem>
@@ -93,11 +93,11 @@ const PureBlankDocument = (props: any) => {
         </>
       ) : (
         <>
-          <p className={cn("text-xs font-semibold text-violet-400")}>
+          <p className={cn("text-xs font-semibold text-blue-400")}>
             There's no documents in the dossier yet
           </p>
-          <p className={cn("text-xs font-semibold text-violet-300")}>
-            Ask ChatX to create one
+          <p className={cn("text-xs font-semibold text-blue-300")}>
+            Ask Agochat to create one
           </p>
         </>
       )}

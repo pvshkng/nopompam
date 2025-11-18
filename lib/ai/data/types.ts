@@ -1,9 +1,13 @@
-export interface DataDocument {
+export type DataDocument = {
     id: string;
-    type: "init" | "start" | "text" | "stop" | "error";
+    type: "init" | "start" | "text" | "object" | "stop" | "error";
+} & ({
     content: any;
-    object?: any;
-}
+    object?: never;
+} | {
+    content?: never;
+    object: any;
+})
 
 export interface SearchData {
     toolCallId: string;

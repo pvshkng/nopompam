@@ -265,9 +265,9 @@ const PureDossierCode = ({
                 disabled={isLoading}
               >
                 {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-violet-500" />
+                  <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
                 ) : (
-                  <PlayIcon className="w-4 h-4 text-violet-500" />
+                  <PlayIcon className="w-4 h-4 text-blue-500" />
                 )}
               </button>
             )}
@@ -295,7 +295,7 @@ const PureDossierCode = ({
             />
             <ResizablePanel
               defaultSize={undefined}
-              className={cn("flex flex-col h-full w-full", "bg-violet-50")}
+              className={cn("flex flex-col h-full w-full", "bg-blue-50")}
             >
               <div className="h-full border-t-2 border-stone-300 size-full bg-stone-700 text-zinc-50">
                 {kind === "sql" && sqlResults.length > 0 ? (

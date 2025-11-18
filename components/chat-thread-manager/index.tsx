@@ -54,7 +54,7 @@ export function PureThreadManager(props: any) {
           <div
             className={cn(
               "flex flex-row items-center justify-center",
-              "text-xs font-semibold bg-violet-300 p-0",
+              "text-xs font-semibold bg-blue-300 p-0",
               "min-h-12 min-w-12"
             )}
           >
@@ -84,7 +84,7 @@ export function PureThreadManager(props: any) {
                   <button
                     className={cn(
                       "flex flex-row items-center gap-1 py-1",
-                      "text-center text-xs text-violet-700"
+                      "text-center text-xs text-blue-700"
                     )}
                     onClick={async (e) => {
                       e.currentTarget.classList.add("animate-pulse");
@@ -97,7 +97,7 @@ export function PureThreadManager(props: any) {
                       });
                     }}
                   >
-                    <LogOut className="size-3.5 text-violet-700" />
+                    <LogOut className="size-3.5 text-blue-700" />
                     Logout
                   </button>
                 </div>
@@ -107,7 +107,7 @@ export function PureThreadManager(props: any) {
         </div>
 
         {/* Separator */}
-        <hr className="flex items-center my-3 border-1 border-violet-300 w-[90%]" />
+        <hr className="flex items-center my-3 border-1 border-blue-300 w-[90%]" />
 
         {/* History */}
         <div
@@ -118,7 +118,7 @@ export function PureThreadManager(props: any) {
         >
           {session ? (
             <>
-              <div className="text-violet-500 text-xs">History</div>
+              <div className="text-blue-500 text-xs">History</div>
               <div
                 className={cn(
                   "flex flex-col w-full max-h-full overflow-y-scroll",
@@ -138,7 +138,7 @@ export function PureThreadManager(props: any) {
                           key={i}
                           className={cn(
                             "flex flex-row w-full",
-                            _id === h._id && "bg-violet-200 hover:bg-violet-300"
+                            _id === h._id && "bg-blue-200 hover:bg-blue-300"
                           )}
                         >
                           <Link
@@ -148,7 +148,7 @@ export function PureThreadManager(props: any) {
                             className={cn(
                               "flex flex-row justify-between items-center",
                               "p-2 w-full",
-                              //"bg-violet-100 hover:bg-violet-300",
+                              //"bg-blue-100 hover:bg-blue-300",
                               "text-xs",
                               "overflow-hidden",
                               _id === h._id &&
@@ -164,7 +164,7 @@ export function PureThreadManager(props: any) {
                                 <div className="truncate w-full">
                                   {h.title || "undefined"}
                                 </div>
-                                <div className="text-violet-600 text-[9px]">
+                                <div className="text-blue-600 text-[9px]">
                                   {new Date(
                                     Number(h.timestamp)
                                   ).toLocaleString() || h.timestamp}
@@ -178,14 +178,14 @@ export function PureThreadManager(props: any) {
                               targetId={h._id}
                               setThreads={setThreads}
                             >
-                              <EllipsisVertical className="text-violet-400" />
+                              <EllipsisVertical className="text-blue-400" />
                             </EllipsisMenu> */}
                             <DeleteConfirmationDialog
                               _id={_id}
                               targetId={h._id}
                               setThreads={setThreads}
                             >
-                              <EllipsisVertical className="text-violet-400" />
+                              <EllipsisVertical className="text-blue-400" />
                             </DeleteConfirmationDialog>
                           </div>
                         </div>

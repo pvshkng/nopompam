@@ -16,7 +16,7 @@ export const ToolAnnotation = (props: any) => {
     <>
       <Collapsible
         defaultOpen={tool?.state == "output-available"}
-        className="py-3 px-4 my-2 mx-2 border border-violet-300 rounded-md bg-neutral-100"
+        className="py-3 px-4 my-2 mx-2 border border-blue-300 rounded-md bg-neutral-100"
       >
         <CollapsibleTrigger
           disabled={tool?.state !== "output-available"}
@@ -26,17 +26,17 @@ export const ToolAnnotation = (props: any) => {
             {tool?.state !== "output-available" ? (
               <LoaderCircle
                 size={16}
-                className="!animate-spin !opacity-100 text-violet-500"
+                className="!animate-spin !opacity-100 text-blue-500"
               />
             ) : (
               <Globe
                 size={16}
-                className="shrink-0 text-violet-500"
+                className="shrink-0 text-blue-500"
                 aria-hidden="true"
               />
             )}
 
-            <span className="text-violet-500 text-sm">
+            <span className="text-blue-500 text-sm">
               {tool?.type?.replace("tool-", "").toUpperCase() || "TOOL"}
             </span>
           </span>
@@ -66,7 +66,7 @@ export const ToolAnnotation = (props: any) => {
                         loading="eager"
                       />
                     ) : (
-                      <Link className="text-violet-500 size-3" />
+                      <Link className="text-blue-500 size-3" />
                     )}
 
                     <span className="truncate">{item.title}</span>

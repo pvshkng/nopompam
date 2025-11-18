@@ -22,7 +22,7 @@ export function BottomScrollButton(props: any) {
         scrollToBottom();
       }}
     >
-      <ArrowDownIcon className="text-violet-700" height={24} width={24} />
+      <ArrowDownIcon className="text-blue-700" height={24} width={24} />
     </div>
   );
 }

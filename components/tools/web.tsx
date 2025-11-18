@@ -17,12 +17,12 @@ const PureWeb = (props: any) => {
     <>
       <div
         //defaultOpen={tool?.state == "output-available"}
-        className="py-3 px-4 my-2 mx-2 border border-violet-300 rounded-md bg-neutral-100"
+        className="py-3 px-4 my-2 mx-2 border border-blue-300 rounded-md bg-neutral-100"
       >
         <div
           className="justify-between w-full flex flex-row items-center gap-2 text-[15px] leading-6 font-semibold"
         >
-          <span className="flex text-violet-500 items-center gap-2 overflow-hidden max-w-full">
+          <span className="flex text-blue-500 items-center gap-2 overflow-hidden max-w-full">
             {tool?.state !== "output-available" ? (
               <LoaderCircle
                 size={16}
@@ -76,7 +76,7 @@ const PureWeb = (props: any) => {
                                     loading="eager"
                                   />
                                 ) : (
-                                  <Link className="text-violet-500 size-3" />
+                                  <Link className="text-blue-500 size-3" />
                                 )}
 
                                 <span className="text-[10px] truncate">

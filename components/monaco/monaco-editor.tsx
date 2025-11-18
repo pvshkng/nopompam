@@ -35,7 +35,7 @@ export function MonacoWithShiki() {
   return (
     <Editor
       className={cn(
-        //"[&_*]:!bg-violet-800",
+        //"[&_*]:!bg-blue-800",
         "size-full",
         "[&_*]:!border-none",
         "[&_pre_.line]:relative",

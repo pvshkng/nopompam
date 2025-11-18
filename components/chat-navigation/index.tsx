@@ -46,20 +46,20 @@ export const PureNavigation = (props: any) => {
           "not-italic",
           "flex flex-row items-center font-black text-xs gap-1",
           threadExists
-            ? "text-violet-600"
-            : "cursor-not-allowed !text-violet-400"
+            ? "text-yellow-500"
+            : "cursor-not-allowed !text-yellow-500"
         )}
       >
         <Plus width={16} height={16} strokeWidth={3} />
       </button>
-      <Separator orientation="horizontal" className="w-full bg-violet-300" />
+      <Separator orientation="horizontal" className="w-full bg-blue-300" />
 
       {/* Thread Manager */}
       <Drawer direction="left">
         <DrawerTrigger
           className={cn(
             "flex flex-row items-center font-black text-xs gap-1",
-            "text-violet-600"
+            "text-green-600"
           )}
         >
           <MessageSquare width={16} height={16} strokeWidth={3} />
@@ -79,7 +79,7 @@ export const PureNavigation = (props: any) => {
           />
         </DrawerContent>
       </Drawer>
-      <Separator orientation="horizontal" className="w-full bg-violet-300" />
+      <Separator orientation="horizontal" className="w-full bg-blue-300" />
       <button
         onClick={() => {
           setDossierOpen(!dossierOpen);

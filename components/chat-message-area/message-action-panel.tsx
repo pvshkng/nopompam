@@ -16,7 +16,7 @@ function PureActionPanel(props: any) {
           "flex flex-row item-center justify-start p-1 px-2 gap-2",
           "[&>*:hover]:-translate-y-1",
           "[&>*]:transition-all",
-          "text-violet-700"
+          "text-blue-700"
         )}
       >
         <button
@@ -25,7 +25,7 @@ function PureActionPanel(props: any) {
             toast("Feedback sent!", {
               classNames: {
                 toast:
-                  "!rounded-none border !border-violet-600 !bg-violet-700 !text-violet-200 !p-2",
+                  "!rounded-none border !border-blue-600 !bg-blue-700 !text-blue-200 !p-2",
               },
             });
           }}
@@ -38,7 +38,7 @@ function PureActionPanel(props: any) {
             toast("Feedback sent!", {
               classNames: {
                 toast:
-                  "!rounded-none border !border-violet-600 !bg-violet-700 !text-violet-200 !p-2",
+                  "!rounded-none border !border-blue-600 !bg-blue-700 !text-blue-200 !p-2",
               },
             });
           }}
@@ -53,7 +53,7 @@ function PureActionPanel(props: any) {
             toast("Message copied to clipboard!", {
               classNames: {
                 toast:
-                  "!rounded-none border !border-violet-600 !bg-violet-700 !text-violet-200 !p-2",
+                  "!rounded-none border !border-blue-600 !bg-blue-700 !text-blue-200 !p-2",
               },
             });
           }}

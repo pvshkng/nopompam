@@ -1,4 +1,4 @@
-import { Paperclip } from "lucide-react";
+import { Paperclip, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DragEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -88,7 +88,7 @@ const PureAttachment = () => {
 
   return (
     <>
-      <div className="h-full">
+      <div className="flex h-full">
         <input
           type="file"
           multiple
@@ -101,19 +101,24 @@ const PureAttachment = () => {
           className={cn(
             "gap-1",
             "rounded-md",
-            "bg-gradient-to-br from-violet-50 to-violet-300 text-violet-700 text-[10px]",
+            "bg-gradient-to-br from-blue-50 to-blue-300 text-blue-700 text-[10px]",
             "flex flex-row  size-[16px] items-center justify-center",
             "text-sm text-gray-500 hover:text-gray-700 h-full w-8"
           )}
           onClick={() => fileInputRef.current?.click()}
         >
-          <Paperclip width={16} height={16} className="stroke-violet-700" />
+          <Paperclip width={16} height={16} className="stroke-blue-700" />
           {files?.length! > 0 ? (
             <span className="text-xs text-white">{files?.length}</span>
           ) : (
             <></>
           )}
         </button>
+        {files?.length! > 0 && (
+          <>
+            <X />
+          </>
+        )}
       </div>
     </>
   );

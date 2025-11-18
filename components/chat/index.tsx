@@ -29,7 +29,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { useDossierStore } from "@/lib/stores/dossier-store";
 import { useInputStore } from "@/lib/stores/input-store";
 
-import { Dtx } from "../dtx";
+
 type PureRootProps = {
   initialMessages: any[];
   initialThreads: any[];
@@ -90,7 +90,7 @@ function PureRoot(props: PureRootProps) {
   const { containerRef, scrollToBottom, spacerHeight , handleScroll, isBottom, lastUserElementRef,messageRefs } = useScrollToBottom();
   // prettier-ignore
   const { activeTab, setActiveTab, dossierOpen, setDossierOpen, resetDossier } = useDossierStore();
-  const { input, setInput, clearInput } = useInputStore();
+  const { input, setInput, clearInput, files, clearFiles, setFiles } = useInputStore();
 
   const { messages, setMessages, status, sendMessage, stop } = useChat({
     ...chatConfig,
@@ -108,15 +108,6 @@ function PureRoot(props: PureRootProps) {
       toast(e.message);
     }, []),
   });
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if (containerRef.current) {
-  //       containerRef.current.scrollTop = containerRef.current.scrollHeight;
-  //     }
-  //   }, 10);
-  //   return () => clearTimeout(timer);
-  // }, [messages]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -145,18 +136,20 @@ function PureRoot(props: PureRootProps) {
     return () => clearTimeout(timer);
   }, [messages]);
 
-
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!input.trim()) return;
 
       const messageText = input.trim();
+      const messageFiles = [...files];
+      if (!messageText && messageFiles.length === 0) return;
       clearInput();
+      clearFiles();
 
       try {
         sendMessage(
-          { text: messageText },
+          { text: messageText, files: messageFiles },
           {
             body: { model },
           }
@@ -167,10 +160,21 @@ function PureRoot(props: PureRootProps) {
       } catch (error) {
         console.error("Failed to send message:", error);
         setInput(messageText);
+        setFiles(messageFiles);
         toast("Failed to send message");
       }
     },
-    [input, model, sendMessage, clearInput, setInput, scrollToBottom]
+    [
+      input,
+      files,
+      model,
+      sendMessage,
+      clearInput,
+      clearFiles,
+      setInput,
+      setFiles,
+      scrollToBottom,
+    ]
   );
 
   return (
@@ -191,7 +195,7 @@ function PureRoot(props: PureRootProps) {
               "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
             )}
           >
-            {!dossierOpen && <Dtx />}
+
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel className="relative flex flex-col h-full w-full min-w-[350px]">
                 <main
@@ -280,7 +284,7 @@ function PureRoot(props: PureRootProps) {
                         !dossierOpen && "hidden",
                         "flex flex-col h-full w-full min-w-[300px]",
                         "max-md:hidden",
-                        "bg-violet-50"
+                        "bg-blue-50"
                       )}
                     >
                       <Dossier messages={messages} />

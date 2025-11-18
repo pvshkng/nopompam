@@ -36,7 +36,7 @@ function SearchResult({ results }: { results: TavilySearchResult[] }) {
             <SearchIcon
               width={32}
               height={32}
-              className="size-8 text-violet-700"
+              className="size-8 text-blue-700"
             />
           }
         >
@@ -55,7 +55,7 @@ function SearchResult({ results }: { results: TavilySearchResult[] }) {
         </Suspense>
         <span className="text-[10px] truncate">{result.title}</span>
       </span>
-      <span className="text-[10px] line-clamp-2 text-violet-600">
+      <span className="text-[10px] line-clamp-2 text-blue-600">
         {result.content}
       </span>
     </a>
@@ -125,7 +125,7 @@ function SearchContent({ tool, draftTool }) {
                   className={cn(
                     "flex items-center justify-center rounded-full p-1 border ",
                     q.status === "pending" &&
-                      "text-violet-400 border-violet-400 bg-violet-50/5",
+                      "text-blue-400 border-blue-400 bg-blue-50/5",
                     q.status === "complete" &&
                       "text-green-600 border-green-600 bg-green-50/5",
                     q.status === "error" &&
@@ -138,7 +138,7 @@ function SearchContent({ tool, draftTool }) {
                   {q.status === "complete" && <CircleCheckBig size={12} />}
                   {q.status === "error" && <Circle size={12} />}
                 </div>
-                <span className="underline text-violet-500 truncate">
+                <span className="underline text-blue-500 truncate">
                   {q.content?.toUpperCase() || `QUERY ${q.index + 1}`}
                 </span>
               </span>
@@ -148,16 +148,16 @@ function SearchContent({ tool, draftTool }) {
             {/* Pseudo dotted line */}
             <div
               className={cn(
-                "absolute left-[10px] top-0 -bottom-0 w-px border-l border-dotted border-violet-400"
+                "absolute left-[10px] top-0 -bottom-0 w-px border-l border-dotted border-blue-400"
                 // q.status === "pending" &&
-                //   "text-violet-400 border-violet-400 bg-violet-50",
+                //   "text-blue-400 border-blue-400 bg-blue-50",
                 // q.status === "complete" &&
                 //   "text-green-600 border-green-600 bg-green-50"
                 //q.index === queries.length - 1 && "hidden"
               )}
             />
 
-            <div className="text-[10px] ml-6 max-w-full text-violet-400 overflow-hidden">
+            <div className="text-[10px] ml-6 max-w-full text-blue-400 overflow-hidden">
               {/* {q.status === "pending" && <ToolSkeleton />}
               {q.status === "complete" && q.results.length > 0 && (
                 <SearchResult results={q.results} />
@@ -188,7 +188,7 @@ function SearchContent({ tool, draftTool }) {
                   </motion.div>
                 )}
                 {q.status === "complete" && q.results.length === 0 && (
-                  <div className="text-violet-500 text-xs">No results found</div>
+                  <div className="text-blue-500 text-xs">No results found</div>
                 )}
                 {q.status === "error" && (
                   <div className="text-red-500 text-xs">
@@ -217,7 +217,7 @@ export function Search({ tool }: { tool: any }) {
   return (
     <Tool>
       <ToolHeader>
-        <span className="flex text-violet-500 items-center gap-2 overflow-hidden max-w-full">
+        <span className="flex text-blue-500 items-center gap-2 overflow-hidden max-w-full">
           <SearchCode size={16} className="shrink-0" />
           <span className="text-xs truncate">SEARCH</span>
         </span>

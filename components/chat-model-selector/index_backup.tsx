@@ -85,7 +85,7 @@ export const ModelSelector = (props: any) => {
   return (
     <div
       className={cn(
-        "px-2 p-1 m-0 flex bg-violet-700 text-violet-200 overflow-hidden w-24 h-full"
+        "px-2 p-1 m-0 flex bg-blue-700 text-blue-200 overflow-hidden w-24 h-full"
         //"border border-dashed border-sky-300/60 bg-sky-400/10 group-hover:bg-sky-400/15 dark:border-sky-300/30"
       )}
     >
@@ -99,7 +99,7 @@ export const ModelSelector = (props: any) => {
             key={provider}
             className={cn(
               "!max-h-[200px] overflow-auto rounded-none",
-              "border-violet-700 shadow-none",
+              "border-blue-700 shadow-none",
               "m-0 p-0"
             )}
           >

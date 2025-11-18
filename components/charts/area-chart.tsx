@@ -80,12 +80,12 @@ function PureAreaChartGradient(/* props: any */) {
             >
               <stop
                 offset="0%"
-                className="text-violet-500/50 dark:text-violet-500/20"
+                className="text-blue-500/50 dark:text-blue-500/20"
                 stopColor="currentColor"
               />
               <stop
                 offset="100%"
-                className="text-violet-50/5 dark:text-violet-900/5"
+                className="text-blue-50/5 dark:text-blue-900/5"
                 stopColor="currentColor"
               />
             </linearGradient>
@@ -94,7 +94,7 @@ function PureAreaChartGradient(/* props: any */) {
           <path
             d={d}
             fill="none"
-            className="text-violet-400 dark:text-violet-600"
+            className="text-blue-400 dark:text-blue-600"
             stroke="currentColor"
             strokeWidth="1.5"
             vectorEffect="non-scaling-stroke"

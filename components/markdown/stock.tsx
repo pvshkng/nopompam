@@ -19,10 +19,10 @@ const PureStock = (props: any) => {
       <div
         className={cn(
           "flex flex-col w-full h-full px-4 py-3 gap-2",
-          "border border-violet-300 rounded-md bg-neutral-100"
+          "border border-blue-300 rounded-md bg-neutral-100"
         )}
       >
-        <span className="flex text-violet-500 items-center gap-2 overflow-hidden max-w-full">
+        <span className="flex text-blue-500 items-center gap-2 overflow-hidden max-w-full">
           {status === "loading" ? (
             <LoaderCircle size={16} className="!animate-spin !opacity-100" />
           ) : (

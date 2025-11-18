@@ -2,7 +2,7 @@ import { useDossierStore } from "@/lib/stores/dossier-store";
 import type { DataDocument } from "./types";
 
 export const handleDocumentData = (documentData: DataDocument): void => {
-    const { id, type, content } = documentData;
+    const { id, type, content, object = null } = documentData;
     const store = useDossierStore.getState();
 
     switch (type) {
@@ -22,6 +22,12 @@ export const handleDocumentData = (documentData: DataDocument): void => {
         case "text":
             if (content) {
                 store.appendDocumentContent(id, content);
+            }
+            break;
+
+        case "object":
+            if (content) {
+                store.setDocumentObject(id, object);
             }
             break;
 

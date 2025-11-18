@@ -11,10 +11,10 @@ export default function NotFound({
     <div className="flex flex-col items-center justify-center size-full">
       <GridBackground />
 
-      <h1 className="z-10 text-violet-400 text-4xl font-semibold">Not found</h1>
+      <h1 className="z-10 text-blue-400 text-4xl font-semibold">Not found</h1>
       <Link
         href="/"
-        className="z-10 text-violet-400 text-md font-semibold underline"
+        className="z-10 text-blue-400 text-md font-semibold underline"
       >
         Return home
       </Link>
