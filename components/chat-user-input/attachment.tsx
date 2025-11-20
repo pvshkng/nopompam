@@ -15,7 +15,8 @@ const PureAttachment = () => {
     if (selectedFiles) {
       const validFiles = Array.from(selectedFiles).filter(
         (file) =>
-          file.type.startsWith("image/") || file.type.startsWith("text/")
+          file.type.startsWith("image/") ||
+          (file.type.startsWith("text/") && file.size <= 2 * 1024 * 1024)
       );
 
       if (validFiles.length === selectedFiles.length) {
@@ -49,7 +50,8 @@ const PureAttachment = () => {
       if (files.length > 0) {
         const validFiles = files.filter(
           (file) =>
-            file.type.startsWith("image/") || file.type.startsWith("text/")
+            file.type.startsWith("image/") ||
+            (file.type.startsWith("text/") && file.size <= 2 * 1024 * 1024)
         );
 
         if (validFiles.length === files.length) {
@@ -70,7 +72,8 @@ const PureAttachment = () => {
     if (droppedFilesArray.length > 0) {
       const validFiles = droppedFilesArray.filter(
         (file) =>
-          file.type.startsWith("image/") || file.type.startsWith("text/")
+          file.type.startsWith("image/") ||
+          (file.type.startsWith("text/") && file.size <= 2 * 1024 * 1024)
       );
 
       if (validFiles.length === droppedFilesArray.length) {
@@ -96,6 +99,8 @@ const PureAttachment = () => {
           ref={fileInputRef}
           className="hidden"
           onChange={handleFileChange}
+          onPaste={handlePaste}
+          onDrop={handleDrop}
         />
         <button
           className={cn(
