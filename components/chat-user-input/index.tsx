@@ -57,6 +57,21 @@ const PureUserInput = memo(function PureUserInput(props: any) {
       const selectedFiles = e.target.files;
       if (!selectedFiles || selectedFiles.length === 0) return;
 
+      const MAX_FILE_SIZE = 2 * 1024 * 1024;
+      const oversizedFiles = Array.from(selectedFiles).filter(
+        (file) => file.size > MAX_FILE_SIZE
+      );
+
+      if (oversizedFiles.length > 0) {
+        toast.error(
+          `${oversizedFiles.length} file(s) exceed 2MB limit and cannot be uploaded`
+        );
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
       setIsUploading(true);
       try {
         const uploadedFiles = await uploadMultipleFiles(selectedFiles);

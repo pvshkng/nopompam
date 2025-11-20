@@ -68,7 +68,6 @@ export function useScrollToBottom(thresholdRatio = 0.1) {
   }, []);
 
   useEffect(() => {
-    console.log("run");
     if (autoScrollEnabled) scrollToBottom();
   }, [autoScrollEnabled]);
 

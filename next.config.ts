@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   transpilePackages: ['@mdxeditor/editor'],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
+  },
+
   // webpack: (config) => {
   //   // this will override the experiments
   //   config.experiments = { ...config.experiments, topLevelAwait: true }
