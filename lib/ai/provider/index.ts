@@ -66,6 +66,7 @@ export const getProvider = (model: string) => {
             }).chat;
             break;
 
+        case "gemini-3-pro-preview":
         case "gemini-2.5-pro":
         case "gemini-2.5-pro-preview-05-06":
         case "gemini-2.5-flash":
