@@ -7,7 +7,7 @@ export function useScrollToBottom(thresholdRatio = 0.1) {
   const messageRefs = useRef<Record<string, HTMLDivElement>>({});
   const spacerRef = useRef<HTMLDivElement | null>(null);
 
-  const [isBottom, setIsBottom] = useState(true);
+  const [isBottom, setIsBottom] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
@@ -27,10 +27,11 @@ export function useScrollToBottom(thresholdRatio = 0.1) {
 
     // 20% of container height as threshold
     const threshold = clientHeight * 0.5;
-
+    if (!containerRef.current || !lastUserElementRef.current) return;
+    const lastRect = lastUserElementRef.current.getBoundingClientRect();
     // Check if within 20% from bottom
-    const nearBottom = distanceFromBottom <= threshold;
-    setIsBottom(nearBottom);
+    const atBottom = lastRect.top <= 0;
+    setIsBottom(atBottom);
     const shouldBounceBack = scrollHeight - scrollTop <= clientHeight;
     setAutoScrollEnabled(shouldBounceBack);
   };

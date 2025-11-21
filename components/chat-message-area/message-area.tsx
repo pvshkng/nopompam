@@ -7,24 +7,14 @@ import "@/styles/streaming-effect.css";
 import "@/lib/LaTeX/katex.min.css";
 import { UIMessage } from "ai";
 import { MessageBlock } from "./message-block";
-import { memo, useEffect } from "react";
-import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
-import { min } from "d3";
+import { memo } from "react";
 
 type MessageAreaProps = {
   status: string;
-  name: string;
-  image: string;
   messages: UIMessage[];
-  artifacts: any[];
-  setArtifacts: Dispatch<SetStateAction<any[]>>;
-  dossierOpen: boolean;
-  setDossierOpen: boolean;
-  activeTab: any;
-  setActiveTab: any;
-  lastMessageRef: React.RefObject<HTMLDivElement>;
-  messageRefs: React.RefObject<HTMLDivElement>;
-  lastUserElementRef: React.RefObject<HTMLDivElement>;
+  lastUserElementRef: React.RefObject<HTMLDivElement | null> | null;
+  messageRefs: React.RefObject<Record<string, HTMLDivElement>> | null;
+  
 };
 
 export default function PureMessageArea(props: MessageAreaProps) {

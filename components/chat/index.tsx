@@ -89,7 +89,8 @@ function PureRoot(props: PureRootProps) {
   const { containerRef, scrollToBottom, spacerHeight , handleScroll, isBottom, lastUserElementRef,messageRefs } = useScrollToBottom();
   // prettier-ignore
   const { activeTab, setActiveTab, dossierOpen, setDossierOpen, resetDossier } = useDossierStore();
-  const { input, setInput, clearInput, files, clearFiles, setFiles } = useInputStore();
+  const { input, setInput, clearInput, files, clearFiles, setFiles } =
+    useInputStore();
 
   const { messages, setMessages, status, sendMessage, stop } = useChat({
     ...chatConfig,
@@ -118,7 +119,6 @@ function PureRoot(props: PureRootProps) {
 
       const lastUserElement = messageRefs.current[lastUserMessage.id];
       if (!lastUserElement) {
-        console.log("Last user message element not found yet");
         return;
       }
 
@@ -227,15 +227,7 @@ function PureRoot(props: PureRootProps) {
                       ) : (
                         <MessageArea
                           status={status}
-                          name={name!}
-                          image={image!}
                           messages={messages}
-                          dossierOpen={dossierOpen}
-                          // @ts-ignore
-                          setDossierOpen={setDossierOpen}
-                          activeTab={activeTab}
-                          setActiveTab={setActiveTab}
-                          spacerHeight={spacerHeight}
                           lastUserElementRef={lastUserElementRef}
                           messageRefs={messageRefs}
                         />
