@@ -3,9 +3,8 @@ import { experimental_createMCPClient as createMCPClient } from '@ai-sdk/mcp';
 export const getMemoryBankMCPClient = async (email: string) => {
 
     const endpoint = process.env.MEMORY_BANK_MCP_URL!
-    const api_key = process.env.MEMORY_BANK_MCP_API_KEY!
 
-    if (!endpoint || !api_key) {
+    if (!endpoint) {
         throw new Error("Memory Bank MCP endpoint or API key is not defined in environment variables.");
     }
 
@@ -17,7 +16,6 @@ export const getMemoryBankMCPClient = async (email: string) => {
                 type: 'http',
                 url: endpoint,
                 headers: {
-                    "Authorization": `Bearer ${api_key}`,
                     "x-user-email": email,
                 }
             }
