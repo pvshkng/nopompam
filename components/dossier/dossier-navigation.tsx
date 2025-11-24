@@ -24,7 +24,6 @@ const PureDossierNavigation = (props: any) => {
     e.stopPropagation();
     const closed = closeTab(docId);
     if (closed) {
-      // placeholder
       removeDocument(docId);
     }
   };

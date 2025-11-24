@@ -22,16 +22,15 @@ export function useScrollToBottom(thresholdRatio = 0.1) {
     const scrollHeight = container.scrollHeight;
     const clientHeight = container.clientHeight;
 
-    // Distance from bottom in pixels
-    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-
-    // 20% of container height as threshold
-    const threshold = clientHeight * 0.5;
-
+    if (!containerRef.current || !lastUserElementRef.current) return;
+    const lastRect = lastUserElementRef.current.getBoundingClientRect();
     // Check if within 20% from bottom
-    const nearBottom = distanceFromBottom <= threshold;
-    setIsBottom(nearBottom);
+    const atBottom = lastRect.top <= 0;
+
+    setIsBottom(atBottom);
+
     const shouldBounceBack = scrollHeight - scrollTop <= clientHeight;
+
     setAutoScrollEnabled(shouldBounceBack);
   };
 
@@ -41,7 +40,9 @@ export function useScrollToBottom(thresholdRatio = 0.1) {
     if (!c) {
       return;
     }
-    c.scrollIntoView({ block: "start", behavior: "smooth" });
+    setTimeout(() => {
+      c.scrollIntoView({ block: "start", behavior: "smooth" });
+    }, 500);
   };
 
   // --- dynamically adjust spacer ---

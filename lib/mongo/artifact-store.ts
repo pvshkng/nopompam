@@ -38,7 +38,6 @@ export async function storeArtifact(artifact: ArtifactDocument,
     }
 
 
-    // return _id;
 }
 
 export async function getArtifacts(threadId: string, user: string): Promise<ArtifactDocument[]> {

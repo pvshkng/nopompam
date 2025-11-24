@@ -42,7 +42,6 @@ export const search = ({ writer }: SearchProps) =>
     execute: async ({ queries }, { toolCallId }) => {
       let results: { [key: string]: any } = {};
 
-      // Initialize draft tool in store
       writer.write({
         type: 'data-tool-search',
         data: {
@@ -91,7 +90,6 @@ export const search = ({ writer }: SearchProps) =>
           }
         }
 
-        // Finalize tool
         writer.write({
           type: 'data-tool-search',
           data: {

@@ -35,7 +35,6 @@ const PureUserInput = memo(function PureUserInput(props: any) {
     }))
   );
 
-  // Debounced height adjustment
   const adjustHeight = useCallback((element: HTMLTextAreaElement) => {
     requestAnimationFrame(() => {
       element.style.height = "auto";
@@ -43,7 +42,6 @@ const PureUserInput = memo(function PureUserInput(props: any) {
     });
   }, []);
 
-  // Memoize handlers
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setInput(e.target.value);

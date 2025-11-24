@@ -1,6 +1,5 @@
 import { codeToHtml } from "shiki";
 import { cn } from "@/lib/utils";
-// import { CopyButton } from "./CodeBlockCopy";
 
 export async function CodeBlock(props: any) {
   const html = await codeToHtml(props.children, {
@@ -30,7 +29,6 @@ export async function CodeBlock(props: any) {
       >
         <div
           className={cn(
-            //"rounded-t-xl",
             "bg-zinc-900",
             "p-2 px-3",
             "font-black !text-zinc-200",
@@ -39,17 +37,14 @@ export async function CodeBlock(props: any) {
         >
           {props.lang}
           copy
-          {/* <CopyButton code={props.children} /> */}
         </div>
         <div
           className={cn(
-            //"rounded-b-xl",
             "!border-t-0",
 
             //Code Span
             "[&_pre]:py-2",
             "[&_pre]:overflow-x-auto",
-            //"[&_pre]:rounded-b-xl",
             "[&_pre]:text-sm",
             "[&_pre]:!bg-zinc-900",
             "[&_pre]:max-width-full",

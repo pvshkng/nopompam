@@ -7,12 +7,10 @@ export const TLDR = ({ children }: { children: React.ReactNode }) => {
   const [isStreaming, setIsStreaming] = useState(true);
 
   useEffect(() => {
-    // If children exists and is not empty, streaming is complete
     if (children && children.toString().trim().length > 0) {
       setIsStreaming(false);
     }
 
-    // Optional: Add a timeout to ensure we catch the end of streaming
     const timeoutId = setTimeout(() => {
       setIsStreaming(false);
     }, 500);

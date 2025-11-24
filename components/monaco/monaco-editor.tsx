@@ -17,8 +17,8 @@ export function MonacoWithShiki() {
     async function setupShiki() {
       // Create a Shiki highlighter
       const highlighter = await createHighlighter({
-        themes: ["github-light"], // Add your preferred themes
-        langs: ["javascript", "typescript", "html", "css"], // Add your preferred languages
+        themes: ["github-light"], 
+        langs: ["javascript", "typescript", "html", "css"],
       });
 
       // Register Shiki themes and languages with Monaco
@@ -35,7 +35,6 @@ export function MonacoWithShiki() {
   return (
     <Editor
       className={cn(
-        //"[&_*]:!bg-blue-800",
         "size-full",
         "[&_*]:!border-none",
         "[&_pre_.line]:relative",
@@ -45,7 +44,6 @@ export function MonacoWithShiki() {
         "[&_pre_.line]:before:text-zinc-400",
         "[&_pre_.line]:before:w-4",
         "[&_pre_.line]:before:text-right",
-        //"[&_pre_.line]:before:mr-4",
         "[&_pre_.line]:before:select-none"
       )}
       height={undefined}

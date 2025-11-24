@@ -40,7 +40,6 @@ export function MCPDrawer({ open, onOpenChange, onToolsUpdate }: MCPDrawerProps)
 
     setIsConnecting(true)
 
-    // Add server with connecting status
     const newServer: MCPServer = {
       url: currentMcpUrl,
       status: "connecting",
@@ -49,7 +48,6 @@ export function MCPDrawer({ open, onOpenChange, onToolsUpdate }: MCPDrawerProps)
 
     setMcpServers((prev) => [...prev, newServer])
 
-    // Simulate connection and tool discovery
     setTimeout(() => {
       const mockTools: MCPTool[] = [
         {
@@ -81,7 +79,6 @@ export function MCPDrawer({ open, onOpenChange, onToolsUpdate }: MCPDrawerProps)
         ),
       )
 
-      // Update parent component with all available MCP tools
       const allMcpTools = mcpServers.flatMap((s) => s.tools).concat(mockTools)
       onToolsUpdate(allMcpTools)
 
@@ -93,7 +90,6 @@ export function MCPDrawer({ open, onOpenChange, onToolsUpdate }: MCPDrawerProps)
   const handleRemoveMcpServer = (urlToRemove: string) => {
     setMcpServers((prev) => prev.filter((server) => server.url !== urlToRemove))
 
-    // Update parent component
     const remainingTools = mcpServers.filter((server) => server.url !== urlToRemove).flatMap((server) => server.tools)
     onToolsUpdate(remainingTools)
   }

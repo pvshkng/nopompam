@@ -50,7 +50,6 @@ const parseFormContent = (content?: string): FormContent => {
       data: parsed.data || { ...defaultJobForm },
     };
   } catch {
-    // Fallback: default to job form
     return { type: "job", data: { ...defaultJobForm } };
   }
 };
@@ -66,7 +65,6 @@ const PureDossierForm = ({
 }) => {
   const [form, setForm] = useState<FormContent>(parseFormContent(content));
 
-  // Switch form type
   const switchFormType = (type: FormType) => {
     setForm((prev) => {
       const newForm: FormContent =
@@ -78,7 +76,6 @@ const PureDossierForm = ({
     });
   };
 
-  // Update field
   const updateField = (field: string, value: string) => {
     if (readOnly) return;
     setForm((prev) => {
