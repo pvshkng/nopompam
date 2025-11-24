@@ -5519,7 +5519,7 @@ const rawData =
     }
 }
 
-export function convertTimeSeriesData(/* rawData: any */) {
+export function convertTimeSeriesData() {
 
     try {
         const timeSeries = rawData["Weekly Time Series"];

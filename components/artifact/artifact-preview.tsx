@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 import "@/styles/streaming-effect.css";
 import { NotebookPen, LoaderCircle } from "lucide-react";
-import { ToolInvocation } from "ai";
+import { UIToolInvocation, Tool } from "ai";
 
 type ArtifactPreviewProps = {
-  toolInvocation: ToolInvocation;
+  toolInvocation: UIToolInvocation<Tool>;
   artifactId: string;
   artifacts: any[];
   setArtifacts: any;
@@ -19,10 +19,7 @@ export function ArtifactPreview(props: ArtifactPreviewProps) {
     toolInvocation,
     artifactId,
     artifacts,
-    setArtifacts,
-    dossierOpen,
     setDossierOpen,
-    activeTab,
     setActiveTab,
   } = props;
   const artifact =
@@ -43,7 +40,6 @@ export function ArtifactPreview(props: ArtifactPreviewProps) {
     >
       {artifact ? (
         <>
-          {/* <div className="font-bold mb-1">{artifact.title}</div> */}
           <span className="flex flex-row text-blue-500 items-center gap-2">
             {toolInvocation?.state !== "result" ? (
               <LoaderCircle size={16} className="!animate-spin !opacity-100" />

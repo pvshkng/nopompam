@@ -41,9 +41,6 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
               "rounded-br-none",
               "relative",
               "max-w-[80%]"
-
-              //"after:w-0 after:h-0 after:absolute after:-bottom-2 after:right-0",
-              //"after:!border-transparent after:!border-t-black/20 after:!border-r-black/20 after:border-[4px]"
             )
           : "rounded-bl-[0] w-full"
       )}

@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import { MODELS } from "@/lib/constants/models";
 import * as React from "react";
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -10,7 +9,6 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 
 export const ModelSelector = (props: any) => {
@@ -23,8 +21,8 @@ export const ModelSelector = (props: any) => {
       <button
         className={cn(
           "px-2 py-1 !m-0",
-          "bg-stone-700 text-stone-200 text-[10px]", 
-          "overflow-hidden w-28 h-full",
+          "bg-blue-400 text-white text-[10px]", 
+          "overflow-hidden w-28 h-full rounded-md",
           "border-input focus-visible:border-ring focus-visible:ring-ring/50 inline-flex shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
         )}
         onClick={() => setOpen(true)}

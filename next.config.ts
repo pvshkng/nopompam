@@ -14,28 +14,12 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-    experimental: {
-    serverActions: {
-      bodySizeLimit: '5mb',
-    },
-  },
   transpilePackages: ['@mdxeditor/editor'],
   experimental: {
     serverActions: {
       bodySizeLimit: '5mb',
     },
   },
-
-  // webpack: (config) => {
-  //   // this will override the experiments
-  //   config.experiments = { ...config.experiments, topLevelAwait: true }
-  //   // this will just update topLevelAwait property of config.experiments
-  //   // config.experiments.topLevelAwait = true
-  //   return config
-  // },
-  // turbopack: {
-  //   // ...
-  // },
 };
 
 export default nextConfig;

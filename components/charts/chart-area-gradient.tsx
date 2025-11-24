@@ -12,15 +12,6 @@ import { convertTimeSeriesData } from "./time-series-converter";
 
 export const description = "An area chart with gradient fill";
 
-/* const chartData = [
-  { date: "January", value: 186 },
-  { date: "February", value: 305 },
-  { date: "March", value: 237 },
-  { date: "April", value: 73 },
-  { date: "May", value: 209 },
-  { date: "June", value: 214 },
-]; */
-
 const chartConfig = {
   value: {
     label: "value",

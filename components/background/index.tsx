@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import React from "react";
 
 export function GridBackground() {
@@ -19,10 +18,8 @@ export function GridBackground() {
         radial-gradient(circle 500px at 20% 100%, rgba(139,92,246,0.3), transparent),
         radial-gradient(circle 500px at 100% 80%, rgba(59,130,246,0.3), transparent)
       `,
-            //backgroundSize: "48px 48px, 48px 48px, 100% 100%, 100% 100%",
           }}
         />
-        {/* Your Content Here */}
       </div>
     </>
   );
