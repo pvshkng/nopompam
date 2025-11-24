@@ -49,15 +49,12 @@ const PureDossierBrowser = ({
 
     const params: string[] = [];
 
-    // Add page navigation
     if (currentPage > 1) {
       params.push(`page=${currentPage}`);
     }
 
-    // Add zoom level
     params.push(`zoom=${zoom}`);
 
-    // Add search term for highlighting (use first highlight if available)
     if (textHighlights.length > 0) {
       params.push(`search=${encodeURIComponent(textHighlights[0])}`);
     }

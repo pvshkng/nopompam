@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 
@@ -53,7 +53,6 @@ interface DataDocument {
   content: any;
 }
 
-const defaultModel = "gemini-2.5-flash";
 const chatConfig = {
   experimental_throttle: 50,
   transport: new DefaultChatTransport({
@@ -74,7 +73,6 @@ function PureRoot(props: PureRootProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [model, setModel] = useState("gemini-2.5-flash");
   const [threads, setThreads] = useState<Thread[]>(initialThreads || []);
-  const lastMessageRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [dynamicSpacerHeight, setDynamicSpacerHeight] = useState(0);
 
@@ -86,9 +84,9 @@ function PureRoot(props: PureRootProps) {
   };
 
   // prettier-ignore
-  const { containerRef, scrollToBottom, spacerHeight , handleScroll, isBottom, lastUserElementRef,messageRefs } = useScrollToBottom();
+  const { containerRef, scrollToBottom,handleScroll, isBottom, lastUserElementRef,messageRefs } = useScrollToBottom();
   // prettier-ignore
-  const { activeTab, setActiveTab, dossierOpen, setDossierOpen, resetDossier } = useDossierStore();
+  const { dossierOpen } = useDossierStore();
   const { input, setInput, clearInput, files, clearFiles, setFiles } =
     useInputStore();
 
@@ -96,7 +94,6 @@ function PureRoot(props: PureRootProps) {
     ...chatConfig,
     id: _id,
     messages: initialMessages,
-    onFinish: useCallback(({ message }) => {}, []),
     onData: useCallback(
       (data) => {
         processDataEvent(data.type, data.data, dataHandlerContext, data);
@@ -113,7 +110,6 @@ function PureRoot(props: PureRootProps) {
     const timer = setTimeout(() => {
       if (!containerRef.current) return;
 
-      // Find last user message ID
       const lastUserMessage = messages.findLast((m) => m.role === "user");
       if (!lastUserMessage) return;
 
@@ -125,10 +121,7 @@ function PureRoot(props: PureRootProps) {
       const containerHeight = containerRef.current.clientHeight;
       const lastMessageHeight = lastUserElement.offsetHeight;
 
-      const newSpacerHeight = Math.max(
-        0,
-        containerHeight - lastMessageHeight //- 1000
-      );
+      const newSpacerHeight = Math.max(0, containerHeight - lastMessageHeight);
       setDynamicSpacerHeight(newSpacerHeight);
     }, 100);
 

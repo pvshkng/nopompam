@@ -64,7 +64,6 @@ const TooltipTrigger = React.forwardRef<SVGGElement, { children: React.ReactNode
     return (
       <g
         ref={(node) => {
-          // Maintain both refs
           triggerRef.current = node;
           if (typeof forwardedRef === "function") {
             forwardedRef(node);

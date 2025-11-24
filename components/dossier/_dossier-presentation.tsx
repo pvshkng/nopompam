@@ -60,7 +60,6 @@ const PureDossierPresentation = ({
       handleContentChange(JSON.stringify(newState));
       return newState;
     });
-    // Close sidebar on mobile after selection
     if (window.innerWidth < 768) {
       setShowSidebar(false);
     }

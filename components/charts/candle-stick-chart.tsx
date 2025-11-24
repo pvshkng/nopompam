@@ -1,8 +1,6 @@
 import React, { CSSProperties } from "react";
 import { scaleBand, scaleLinear, max, min } from "d3";
 
-// Sample OHLC data (Open, High, Low, Close)
-
 const rawData = {
   "Meta Data": {
     "1. Information":
@@ -730,16 +728,12 @@ const _data = [
 ];
 
 function convertRawDataToChartData(rawData: any) {
-  // Extract time series data
   const timeSeries = rawData["Time Series (5min)"];
 
-  // Convert to array and sort by date
   return Object.entries(timeSeries)
     .map(([timestamp, values]: [string, any]) => {
-      // Parse timestamp
       const date = new Date(timestamp);
 
-      // Format date as "M/D HH:MM AM/PM"
       const formattedDate =
         date.toLocaleDateString("en-US", {
           month: "numeric",
@@ -752,7 +746,6 @@ function convertRawDataToChartData(rawData: any) {
           hour12: true,
         });
 
-      // Convert string values to numbers
       return {
         date: formattedDate,
         open: parseFloat(values["1. open"]),
@@ -761,16 +754,12 @@ function convertRawDataToChartData(rawData: any) {
         close: parseFloat(values["4. close"]),
       };
     })
-    .reverse(); // Reverse to get oldest first
+    .reverse();
 }
-
-// Example usage:
 
 export function CandlestickChart(props: any) {
   const { d } = props;
   const data = convertRawDataToChartData(rawData);
-  
-  // Scales
   const xScale = scaleBand()
     .domain(data.map((d) => d.date))
     .range([0, 100])
@@ -779,31 +768,11 @@ export function CandlestickChart(props: any) {
   const allPrices = data.flatMap((d) => [d.open, d.high, d.low, d.close]);
   const yScale = scaleLinear()
     .domain([min(allPrices) ?? 0, max(allPrices) ?? 0])
-    .range([100, 0]); // Inverted for price chart
+    .range([100, 0]);
 
   return (
-    <div
-      className="relative w-full h-96 rounded-sm bg-white border border-stone-200 !p-5"
-      /* style={
-        {
-          "--marginTop": "20px",
-          "--marginRight": "60px",
-          "--marginBottom": "60px",
-          "--marginLeft": "60px",
-        } as CSSProperties
-      } */
-    >
-      {/* Chart Area */}
-      <div
-        className="absolute inset-0 z-10 !p-5"
-        /* style={{
-          top: "var(--marginTop)",
-          right: "var(--marginRight)",
-          bottom: "var(--marginBottom)",
-          left: "var(--marginLeft)",
-        }} */
-      >
-        {/* Grid lines */}
+    <div className="relative w-full h-96 rounded-sm bg-white border border-stone-200 !p-5">
+      <div className="absolute inset-0 z-10 !p-5">
         <svg
           className="absolute inset-0 w-full h-full"
           preserveAspectRatio="none"
@@ -825,7 +794,6 @@ export function CandlestickChart(props: any) {
             </pattern>
           </defs>
 
-          {/* Horizontal grid lines */}
           {yScale.ticks(6).map((value, i) => (
             <line
               key={`h-${i}`}
@@ -840,7 +808,6 @@ export function CandlestickChart(props: any) {
             />
           ))}
 
-          {/* Vertical grid lines */}
           {data.map((d, i) => (
             <line
               key={`v-${i}`}
@@ -856,7 +823,6 @@ export function CandlestickChart(props: any) {
           ))}
         </svg>
 
-        {/* Candlesticks */}
         <div className="absolute inset-0">
           {data.map((d, index) => {
             const xPos = xScale(d.date)!;
@@ -874,7 +840,6 @@ export function CandlestickChart(props: any) {
 
             return (
               <div key={index} className="absolute inset-0">
-                {/* High-Low Wick */}
                 <div
                   className={`absolute ${isGreen ? "bg-black" : "bg-black"}`}
                   style={{
@@ -886,7 +851,6 @@ export function CandlestickChart(props: any) {
                   }}
                 />
 
-                {/* Body */}
                 <div
                   className={`absolute border ${
                     isGreen ? "bg-white border-black" : "bg-black border-black"
@@ -895,7 +859,7 @@ export function CandlestickChart(props: any) {
                     left: `${xPos + (xScale.bandwidth() - candleWidth) / 2}%`,
                     top: `${bodyTop}%`,
                     width: `${candleWidth}%`,
-                    height: `${Math.max(bodyHeight, 0.5)}%`, // Minimum height for doji
+                    height: `${Math.max(bodyHeight, 0.5)}%`,
                   }}
                 />
               </div>
@@ -904,7 +868,6 @@ export function CandlestickChart(props: any) {
         </div>
       </div>
 
-      {/* Y Axis Labels (Left) */}
       <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between py-5">
         {yScale.ticks(6).map((value, i) => (
           <div
@@ -916,19 +879,6 @@ export function CandlestickChart(props: any) {
         ))}
       </div>
 
-      {/* Y Axis Labels (Right) */}
-      {/*  <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-between py-5">
-        {yScale.ticks(6).map((value, i) => (
-          <div
-            key={i}
-            className="text-xs text-gray-500 tabular-nums pl-2 flex items-center h-0"
-          >
-            {value.toFixed(1)}
-          </div>
-        ))}
-      </div> */}
-
-      {/* X Axis Labels (Bottom) */}
       <div
         className="absolute bottom-0 left-0 right-0 flex justify-between px-12"
         style={{
@@ -946,7 +896,6 @@ export function CandlestickChart(props: any) {
         ))}
       </div>
 
-      {/* Current Price Indicator */}
       <div
         className="absolute right-0 bg-stone-500 text-white px-2 py-1 text-xs font-medium"
         style={{

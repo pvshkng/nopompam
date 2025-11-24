@@ -8,19 +8,15 @@ import { getProvider } from "@/lib/ai/provider"
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-import { web } from "@/lib/ai/tool/web";
-import { document } from "@/lib/ai/tool/document"
 import { search } from "@/lib/ai/tool/search";
 import { chart } from "@/lib/ai/tool/chart";
 import { createText } from "@/lib/ai/tool/document-create-text";
 import { createSheet } from "@/lib/ai/tool/document-create-sheet";
 import { createPython } from "@/lib/ai/tool/document-create-python";
 import { createSql } from "@/lib/ai/tool/document-create-sql";
-import { mock } from "./mock";
 
 import { getMemoryBankMCPClient } from "@/lib/mcp";
 import { constructMemory } from "@/lib/prompt/memory"
-import { m } from "motion/react";
 
 export const maxDuration = 60;
 
@@ -35,10 +31,6 @@ export async function POST(req: NextRequest) {
             headers: await headers(),
         });
         const user = session?.user?.email
-        /* if (!session) {
-            const result = await mock();
-            return result
-        } */
 
         let memoryResource = null;
         let memoryTools = {};
@@ -61,7 +53,6 @@ export async function POST(req: NextRequest) {
         const provider = getProvider(model);
         const instruction = contructSystemPrompt(memoryString)
         const stream = createUIMessageStream({
-            // originalMessages: messages,
             execute: ({ writer }) => {
                 const artifactProps = { threadId: id, user: user, getMemory: () => memory, writer: writer }
                 try {
@@ -70,7 +61,6 @@ export async function POST(req: NextRequest) {
                         system: instruction,
                         prompt: modelMessages,
                         tools: {
-                            // web: web({}),
                             createText: createText(artifactProps),
                             createSheet: createSheet(artifactProps),
                             createPython: createPython(artifactProps),
@@ -79,19 +69,16 @@ export async function POST(req: NextRequest) {
                             chart: chart(),
                             ...(memoryTools || {})
 
-                            // web: web({ writer }),
-                            // document: document({ threadId: id, user: user, getMemory: () => memory, writer: writer }),
                             // code_execution: google.tools.codeExecution({}),
                             // google_search: google.tools.googleSearch({}),
                             // url_context: google.tools.urlContext({}),
-
 
                         },
                         stopWhen: stepCountIs(5),
                         onError(error) {
                             console.error("Error in chat route: ", error);
                         },
-                        prepareStep: async ({ model, stepNumber, steps, messages }) => {
+                        prepareStep: async ({ messages }) => {
                             memory = messages
                             return { messages: messages }
                         },

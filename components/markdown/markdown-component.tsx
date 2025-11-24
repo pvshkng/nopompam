@@ -5,7 +5,6 @@ import { Fragment } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { codeToHast } from "shiki/bundle/web";
 import { codeToHtml } from "shiki";
-// import { CodeBlock } from "./code-container";
 import { cn } from "@/lib/utils";
 import { Copy } from "lucide-react";
 import { BarChartHorizontal } from "@/components/charts/bar-chart-horizontal";
@@ -17,7 +16,6 @@ import { Link } from "lucide-react";
 export const components: Partial<any> = {
   // @ts-ignore
   p: ({ children }) => {
-    // Check if children is a custom block-level component
     if (
       children &&
       typeof children === "object" &&

@@ -3,10 +3,7 @@ import { UIMessage } from "ai";
 import { memo, useMemo } from "react";
 import Image from "next/image";
 
-// Message renderer
 import remarkGfm from "remark-gfm";
-// import remarkMath from "remark-math";
-// import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import { components } from "@/components/markdown/markdown-component";
 
@@ -17,7 +14,6 @@ import { GradientText } from "@/components/chat-message-area/message-gradient-te
 import "@/styles/pulse.css";
 import { File } from "lucide-react";
 
-// Tool components
 import { Web } from "@/components/tools/web";
 import { Document } from "@/components/tools/document";
 import { Search } from "@/components/tools/search";
@@ -31,16 +27,6 @@ type MessageBlockProps = {
 
 export const PureMessageBlock = (props: MessageBlockProps) => {
   const { status, m, isLast } = props;
-
-  const markdownOptions = useMemo(
-    () => ({
-      remarkPlugins: m.role === "user" ? [] : [remarkGfm],
-      rehypePlugins: m.role === "user" ? [] : [rehypeRaw],
-      components: m.role === "user" ? {} : components,
-      remarkRehypeOptions: {},
-    }),
-    [m.role]
-  );
 
   return (
     <div
@@ -57,7 +43,6 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
             )
           : "rounded-bl-[0] w-full"
       )}
-      //style={{ minHeight: isLast && m.role == "assistant" ? "30dvh" : "auto" }}
     >
       {m.parts.map((p, j) => {
         switch (p.type) {
@@ -128,8 +113,6 @@ export const PureMessageBlock = (props: MessageBlockProps) => {
                 <Document tool={p} />
               </div>
             );
-          // default:
-          //   return <></>;
         }
       })}
 

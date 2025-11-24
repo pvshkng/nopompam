@@ -12,7 +12,6 @@ const data = [
 
 export function BarChartHorizontal(props) {
   const { d } = props;
-  // Scales
   const yScale = scaleBand()
     .domain(data.map((d) => d.key))
     .range([0, 100])
@@ -35,7 +34,6 @@ export function BarChartHorizontal(props) {
         } as CSSProperties
       }
     >
-      {/* Chart Area */}
       <div
         className="absolute inset-0
           z-10
@@ -46,7 +44,6 @@ export function BarChartHorizontal(props) {
           overflow-visible
         "
       >
-        {/* Bars with Rounded Right Corners */}
         {data.map((d, index) => {
           const barWidth = xScale(d.value);
           const barHeight = yScale.bandwidth();
@@ -59,7 +56,7 @@ export function BarChartHorizontal(props) {
                 top: `${yScale(d.key)}%`,
                 width: `${barWidth}%`,
                 height: `${barHeight}%`,
-                borderRadius: "0 0 0 0", // Rounded right corners
+                borderRadius: "0 0 0 0",
               }}
               className={`absolute bg-stone-400`}
             />
@@ -70,7 +67,6 @@ export function BarChartHorizontal(props) {
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
-          {/* Grid lines */}
           {xScale
             .ticks(8)
             .map(xScale.tickFormat(8, "d"))
@@ -91,7 +87,7 @@ export function BarChartHorizontal(props) {
               </g>
             ))}
         </svg>
-        {/* X Axis (Values) */}
+
         {xScale.ticks(4).map((value, i) => (
           <div
             key={i}
@@ -106,7 +102,6 @@ export function BarChartHorizontal(props) {
         ))}
       </div>
 
-      {/* Y Axis (Letters) */}
       <div
         className="
           h-[calc(100%-var(--marginTop)-var(--marginBottom))]

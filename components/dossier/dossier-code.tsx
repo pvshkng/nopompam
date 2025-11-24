@@ -46,7 +46,6 @@ const PureDossierCode = ({
   const [executing, setExecuting] = useState(false);
   const { pyodide, loadPyodide, loading: pyodideLoading } = usePyodide();
 
-  // Memoize language extension
   const languageExtension = useMemo(() => {
     switch (kind) {
       case "javascript":
@@ -63,7 +62,6 @@ const PureDossierCode = ({
     }
   }, [kind]);
 
-  // Memoize update listener
   const updateListener = useMemo(
     () =>
       EditorView.updateListener.of((update) => {
@@ -75,7 +73,6 @@ const PureDossierCode = ({
     [readOnly, handleContentChange]
   );
 
-  // Memoize extensions
   const extensions = useMemo(
     () => [
       basicSetup,
@@ -89,7 +86,6 @@ const PureDossierCode = ({
     [languageExtension, readOnly, updateListener]
   );
 
-  // Initialize CodeMirror once
   useEffect(() => {
     if (containerRef.current && !editorRef.current) {
       const startState = EditorState.create({
@@ -109,18 +105,15 @@ const PureDossierCode = ({
         editorRef.current = null;
       }
     };
-  }, []); // Only run once
+  }, []); 
 
-  // Update editor content when content prop changes (streaming)
   useEffect(() => {
     if (!editorRef.current || content === undefined) return;
 
     const currentContent = editorRef.current.state.doc.toString();
 
-    // Skip update if content is the same
     if (currentContent === content) return;
 
-    // Mark as internal update to prevent triggering handleContentChange
     isInternalUpdateRef.current = true;
 
     const cursorPos = editorRef.current.state.selection.main.head;
@@ -132,7 +125,6 @@ const PureDossierCode = ({
         to: currentContent.length,
         insert: content,
       },
-      // Preserve cursor position, or move to end if streaming
       selection:
         readOnly || isAtEnd
           ? { anchor: content.length }
@@ -141,13 +133,11 @@ const PureDossierCode = ({
 
     editorRef.current.dispatch(transaction);
 
-    // Reset flag after update
     requestAnimationFrame(() => {
       isInternalUpdateRef.current = false;
     });
   }, [content, readOnly]);
 
-  // Update extensions when language or readOnly changes
   useEffect(() => {
     if (!editorRef.current) return;
 
@@ -169,7 +159,6 @@ const PureDossierCode = ({
     });
   }, [extensions]);
 
-  // Execute code
   const executeCode = useCallback(async () => {
     if (!editorRef.current) return;
 
@@ -220,7 +209,6 @@ const PureDossierCode = ({
     }
   }, [kind, pyodide, loadPyodide]);
 
-  // Memoize SQL columns
   const sqlColumns: Column<SqlResult>[] = useMemo(
     () =>
       sqlResults.length > 0

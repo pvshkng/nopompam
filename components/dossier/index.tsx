@@ -17,8 +17,6 @@ function PureDossier(props: any) {
   const { messages = [] } = props;
 
   const {
-    dossierOpen,
-    documents,
     activeTab,
     getDocument,
     updateDocumentContent,
@@ -36,13 +34,6 @@ function PureDossier(props: any) {
       updateDocumentContent(activeDocument.id, content);
     }
   };
-  /* <BlankDocument messages={messages} /> */
-  // <DossierBrowser
-  //   content={"https://arxiv.org/pdf/1708.08021"}
-  //   handleContentChange={handleContentChange}
-  //   readOnly={/* activeDocument.isStreaming */ false}
-  //   textHighlights={["Precise type checking"]}
-  // />;
   const renderContent = () => {
     if (activeTab === "home" || !activeDocument) {
       return <BlankDocument messages={messages} />;

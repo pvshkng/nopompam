@@ -17,9 +17,8 @@ import {
 import { convertTimeSeriesData } from "./time-series-converter";
 import { memo } from "react";
 
-function PureAreaChartGradient(/* props: any */) {
-  //const { rawData } = props;
-  const formattedData = convertTimeSeriesData(/* rawData */) || [];
+function PureAreaChartGradient() {
+  const formattedData = convertTimeSeriesData() || [];
   let data = formattedData.map((d) => ({ ...d, date: new Date(d.date) }));
   let xScale = scaleTime()
     .domain([data[0].date, data[data.length - 1].date])
@@ -56,21 +55,17 @@ function PureAreaChartGradient(/* props: any */) {
         w-full
         overflow-visible"
       >
-        {/* Chart area */}
         <svg
           viewBox="0 0 100 100"
           className="w-full h-full overflow-visible"
           preserveAspectRatio="none"
         >
-          {/* Area */}
-          {/* <AnimatedArea> */}
           <path
             d={areaPath}
             className="text-blue-200"
             fill="url(#outlinedAreaGradient)"
           />
           <defs>
-            {/* Gradient definition */}
             <linearGradient
               id="outlinedAreaGradient"
               x1="0"
@@ -90,7 +85,6 @@ function PureAreaChartGradient(/* props: any */) {
               />
             </linearGradient>
           </defs>
-          {/* Line */}
           <path
             d={d}
             fill="none"
@@ -99,12 +93,10 @@ function PureAreaChartGradient(/* props: any */) {
             strokeWidth="1.5"
             vectorEffect="non-scaling-stroke"
           />
-          {/* Invisible Tooltip Area */}
           {data.map((d, index) => (
             <ClientTooltip key={index}>
               <TooltipTrigger>
                 <g className="group/tooltip">
-                  {/* Tooltip Line */}
                   <line
                     x1={xScale(d.date)}
                     y1={0}
@@ -116,7 +108,6 @@ function PureAreaChartGradient(/* props: any */) {
                     vectorEffect="non-scaling-stroke"
                     style={{ pointerEvents: "none" }}
                   />
-                  {/* Invisible area closest to a specific point for the tooltip trigger */}
                   <rect
                     x={(() => {
                       const prevX =
@@ -157,31 +148,9 @@ function PureAreaChartGradient(/* props: any */) {
               </TooltipContent>
             </ClientTooltip>
           ))}
-          {/* </AnimatedArea> */}
         </svg>
 
-        {/* X axis */}
-        {/* {data.map((day, i) => {
-          // show 1 every x labels
-          if (i % 6 !== 0 || i === 0 || i >= data.length - 3) return;
-          return (
-            <div
-              key={i}
-              style={{
-                left: `${xScale(day.date)}%`,
-                top: "90%",
-              }}
-              className="absolute text-xs text-zinc-500 -translate-x-1/2"
-            >
-              {day.date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })}
-            </div>
-          );
-        })} */}
       </div>
-      {/* Y axis */}
       {yScale
         .ticks(8)
         .map(yScale.tickFormat(8, "d"))
