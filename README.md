@@ -1,5 +1,4 @@
 ## Prerequisites
-
 Before setting up the project, ensure you have the following installed:
 
 - Node.js
@@ -19,5 +18,5 @@ Before setting up the project, ensure you have the following installed:
 - ```npm run dev```
 
 4. Run with Docker (Optional)
-- docker build -t nopompam .
-- docker run -p 3000:3000 --env-file .env.local nopompam
+- ```docker build -t agochat .```
+- ```docker run -p 3000:3000 --env-file .env.local agochat```
