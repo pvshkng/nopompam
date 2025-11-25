@@ -26,7 +26,16 @@ export const components: Partial<any> = {
     }
     return <p>{children}</p>;
   },
-  a: ({ children, className, href, ...props }) => (
+  a: ({
+    children,
+    className,
+    href,
+    ...props
+  }: {
+    children: React.ReactNode;
+    className: React.HTMLAttributes<any>;
+    href: any;
+  }) => (
     <>
       <a
         href={href}
@@ -76,13 +85,13 @@ export const components: Partial<any> = {
       </span>
     );
   },
-  tldr: ({ children }) => {
+  tldr: ({ children }: { children: React.ReactNode }) => {
     return <TLDR>{children}</TLDR>;
   },
-  followup: ({ children }) => {
+  followup: ({ children }: { children: React.ReactNode }) => {
     return <FollowUp>{children}</FollowUp>;
   },
-  think: ({ children }) => {
+  think: ({ children }: { children: React.ReactNode }) => {
     return <p>{children}</p>;
   },
   pre: ({
@@ -94,7 +103,7 @@ export const components: Partial<any> = {
     className?: string;
   }) => {
     let code = "";
-    let language: BundledLanguage = "";
+    let language: BundledLanguage | any = "";
     if (children && children.props) {
       const match = /language-(\w+)/.exec(children.props.className || "");
       if (match) {
@@ -188,7 +197,7 @@ const HighlightedCodeBlock = memo(
       return () => {
         isMounted = false;
       };
-    }, [code, language]); // Only re-run when code or language changes
+    }, [code, language]);
 
     return (
       <div
@@ -198,8 +207,6 @@ const HighlightedCodeBlock = memo(
           "[&_*]:!opacity-100",
           "[&_*]:!animate-none",
           "flex flex-col mx-auto size-full mb-4",
-          //"[&_div]:border",
-          //"[&_div]:border-blue-800",
           "!text-white"
         )}
       >
@@ -219,7 +226,6 @@ const HighlightedCodeBlock = memo(
         </div>
         <div
           className={cn(
-            //"rounded-b-md",
             "!border-t-0",
             "[&_pre]:p-2",
             "[&_pre]:overflow-x-auto",
@@ -244,5 +250,4 @@ const HighlightedCodeBlock = memo(
   }
 );
 
-// Add display name for debugging
 HighlightedCodeBlock.displayName = "HighlightedCodeBlock";

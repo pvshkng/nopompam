@@ -1,10 +1,9 @@
 import { cn } from "@/lib/utils";
 import { ModelSelector } from "@/components/chat-model-selector";
-import { useState } from "react";
-import { LLMDrawer } from "../prototype/llm-drawer";
+
 export const UserInputOptions = (props: any) => {
   const { model, setModel } = props;
-  const [optionOpen, setOptionOpen] = useState(false);
+
   return (
     <>
       <div className={cn("flex", "m-1 h-full w-full", "max-w-[800px]")}>
@@ -20,7 +19,6 @@ export const UserInputOptions = (props: any) => {
           </p>
         </div>
       </div>
-      <LLMDrawer open={optionOpen} onOpenChange={setOptionOpen} />
     </>
   );
 };

@@ -17,17 +17,21 @@ export function MonacoWithShiki() {
     async function setupShiki() {
       // Create a Shiki highlighter
       const highlighter = await createHighlighter({
-        themes: ["github-light"], 
+        themes: ["github-light"],
         langs: ["javascript", "typescript", "html", "css"],
       });
 
       // Register Shiki themes and languages with Monaco
+      // @ts-ignore
+      // TODO: fix type
       shikiToMonaco(highlighter, window.monaco);
     }
 
     setupShiki();
   }, []);
-
+  
+  // @ts-ignore
+  // TODO: fix type
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
   }

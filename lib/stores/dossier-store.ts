@@ -18,7 +18,7 @@ export interface Document {
 export type DossierStore = {
     dossierOpen: boolean;
     documents: Document[];
-    activeTab: string | null; // 'home' | document.id
+    activeTab: string | null;
     chatDocuments: Document[];
 };
 
@@ -91,7 +91,6 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
         activeTab: null
     }),
 
-    // Tab management
     setActiveTab: (tab) => set({ activeTab: tab }),
 
     switchTab: (tab) => set({
@@ -103,7 +102,6 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
         const state = get();
         const document = state.documents.find(doc => doc.id === tabId);
 
-        // Check for unsaved changes
         if (document?.hasUnsavedChanges) {
             const confirmClose = window.confirm(
                 `You have unsaved changes in "${document.title}". Are you sure you want to close this tab?`
@@ -113,10 +111,8 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
             }
         }
 
-        // Close tab logic
         let newActiveTab = state.activeTab;
         if (state.activeTab === tabId) {
-            // Find next tab to activate
             const remainingDocs = state.documents.filter(doc => doc.id !== tabId);
             newActiveTab = remainingDocs.length > 0 ? remainingDocs[0].id : 'home';
         }
@@ -125,14 +121,11 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
         return true;
     },
 
-    // Document management
     addDocument: (document) => {
-        // Check if document already exists
         const state = get();
         const existingDoc = state.documents.find(doc => doc.id === document.id);
         if (existingDoc) {
             console.warn(`Document with id "${document.id}" already exists in the dossier.`);
-            //switch tab to existing document
             set({ activeTab: existingDoc.id, dossierOpen: true });
             return;
         } else {
@@ -241,7 +234,11 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
         messages.forEach(message => {
             if (message.parts) {
                 message.parts.forEach(part => {
+                    // @ts-ignore
+                    // TODO: Fix type
                     if (validTypes.includes(part.type) && part.output) {
+                        // @ts-ignore
+                        // TODO: Fix type
                         const output = part.output as { id: string; title: string; kind: string; content: string };
                         toolDocuments.push({
                             id: output.id,
@@ -254,10 +251,8 @@ export const useDossierStore = create<DossierStore & DossierActions>((set, get) 
             }
         });
 
-        // Only update if documents actually changed
         const currentDocs = get().chatDocuments;
 
-        // Deep comparison to prevent unnecessary updates
         if (JSON.stringify(toolDocuments) !== JSON.stringify(currentDocs)) {
             set({ chatDocuments: toolDocuments });
         }

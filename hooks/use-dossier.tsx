@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 export function useDossier() {
   const [dossierOpen, setDossierOpen] = useState(false);
